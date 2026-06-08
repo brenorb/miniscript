@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "optimize:demos": "node scripts/optimize-design-demos.mjs",
     "test": "vitest run",
     "lint": "eslint .",
     "preview": "vite preview"

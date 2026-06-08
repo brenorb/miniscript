@@ -14,6 +14,7 @@ import {
   inspectExamples,
   repairExamples,
 } from '../data/examples'
+import { optimizedDesignDemos } from '../data/optimizedDesignDemos'
 import type { CompileContext, ScriptSummary } from './miniscriptTooling'
 import { summarizeExpression } from './miniscriptTooling'
 
@@ -69,7 +70,7 @@ export type AssistantRequest = DesignRequest | InspectRequest | CompareRequest
 type ProgressCallback = (progress: AssistantProgress) => void
 
 const designProgram = ax(
-  'request:string -> policy:string, explanation:string, cautions:string[]',
+  'designBrief:string -> policy:string, explanation:string, cautions:string[]',
   {
     description:
       'Design Bitcoin Miniscript policies. Only use supported policy functions: pk, after, older, sha256, hash256, ripemd160, hash160, and, or, thresh. Return policy syntax only, never prose in the policy field.',
@@ -77,17 +78,11 @@ const designProgram = ax(
   },
 )
 
-designProgram.setExamples(
-  designExamples.map((example) => ({
-    request: example.request,
-    policy: example.policy,
-    explanation: example.explanation,
-    cautions: example.cautions,
-  })),
-)
+designProgram.setId('design')
+designProgram.setDemos(optimizedDesignDemos)
 
 const inspectProgram = ax(
-  'expression:string, summary:string -> explanation:string, cautions:string[]',
+  'expressionText:string, analysisSummary:string -> explanation:string, cautions:string[]',
   {
     description:
       'Explain a Miniscript policy or miniscript expression using the compiler/analyzer summary. Focus on who can spend, when they can spend, and what operational risks exist.',
@@ -97,15 +92,15 @@ const inspectProgram = ax(
 
 inspectProgram.setExamples(
   inspectExamples.map((example) => ({
-    expression: example.expression,
-    summary: example.summary,
+    expressionText: example.expression,
+    analysisSummary: example.summary,
     explanation: example.explanation,
     cautions: example.cautions,
   })),
 )
 
 const repairProgram = ax(
-  'request:string, failedPolicy:string, compilerFeedback:string -> policy:string, repairSummary:string, cautions:string[]',
+  'repairBrief:string, invalidPolicy:string, compilerFeedback:string -> correctedPolicy:string, repairSummary:string, cautions:string[]',
   {
     description:
       'Repair invalid Miniscript policy syntax. Return a corrected policy that only uses valid policy primitives and matches the stated intent as closely as possible.',
@@ -115,17 +110,17 @@ const repairProgram = ax(
 
 repairProgram.setExamples(
   repairExamples.map((example) => ({
-    request: example.request,
-    failedPolicy: example.failedPolicy,
+    repairBrief: example.request,
+    invalidPolicy: example.failedPolicy,
     compilerFeedback: example.compilerFeedback,
-    policy: example.policy,
+    correctedPolicy: example.policy,
     repairSummary: example.repairSummary,
     cautions: example.cautions,
   })),
 )
 
 const compareProgram = ax(
-  'policyA:string, summaryA:string, policyB:string, summaryB:string -> comparison:string, preferred:string',
+  'leftPolicy:string, leftAnalysis:string, rightPolicy:string, rightAnalysis:string -> comparisonText:string, preferenceText:string',
   {
     description:
       'Compare two Miniscript constructions. Be explicit about tradeoffs in authority, timelocks, and operational simplicity.',
@@ -135,12 +130,12 @@ const compareProgram = ax(
 
 compareProgram.setExamples(
   compareExamples.map((example) => ({
-    policyA: example.policyA,
-    summaryA: example.summaryA,
-    policyB: example.policyB,
-    summaryB: example.summaryB,
-    comparison: example.comparison,
-    preferred: example.preferred,
+    leftPolicy: example.policyA,
+    leftAnalysis: example.summaryA,
+    rightPolicy: example.policyB,
+    rightAnalysis: example.summaryB,
+    comparisonText: example.comparison,
+    preferenceText: example.preferred,
   })),
 )
 
@@ -183,7 +178,9 @@ export async function loadAssistant(
           stage: 'draft',
           detail: 'Drafting a policy from the request',
         })
-        const draft = await designProgram.forward(llm, { request: request.prompt })
+        const draft = await designProgram.forward(llm, {
+          designBrief: request.prompt,
+        })
         let summary = await summarizeExpression(draft.policy, request.context)
 
         if (summary.error || !summary.valid) {
@@ -192,11 +189,14 @@ export async function loadAssistant(
             detail: 'Repairing the draft against the compiler',
           })
           const repaired = await repairProgram.forward(llm, {
-            request: request.prompt,
-            failedPolicy: draft.policy,
+            repairBrief: request.prompt,
+            invalidPolicy: draft.policy,
             compilerFeedback: summary.error ?? '[compile error]',
           })
-          summary = await summarizeExpression(repaired.policy, request.context)
+          summary = await summarizeExpression(
+            repaired.correctedPolicy,
+            request.context,
+          )
         }
 
         onProgress?.({
@@ -204,8 +204,8 @@ export async function loadAssistant(
           detail: 'Explaining the final compiled structure',
         })
         const explanation = await inspectProgram.forward(llm, {
-          expression: summary.normalizedInput,
-          summary: buildSummary(summary),
+          expressionText: summary.normalizedInput,
+          analysisSummary: buildSummary(summary),
         })
 
         return {
@@ -227,8 +227,8 @@ export async function loadAssistant(
           detail: 'Translating the analysis into plain English',
         })
         const explanation = await inspectProgram.forward(llm, {
-          expression: summary.normalizedInput,
-          summary: buildSummary(summary),
+          expressionText: summary.normalizedInput,
+          analysisSummary: buildSummary(summary),
         })
         return {
           mode: 'inspect',
@@ -245,17 +245,17 @@ export async function loadAssistant(
       const left = await summarizeExpression(request.left, request.context)
       const right = await summarizeExpression(request.right, request.context)
       const comparison = await compareProgram.forward(llm, {
-        policyA: left.normalizedInput,
-        summaryA: buildSummary(left),
-        policyB: right.normalizedInput,
-        summaryB: buildSummary(right),
+        leftPolicy: left.normalizedInput,
+        leftAnalysis: buildSummary(left),
+        rightPolicy: right.normalizedInput,
+        rightAnalysis: buildSummary(right),
       })
       return {
         mode: 'compare',
         left,
         right,
-        comparison: comparison.comparison,
-        preferred: comparison.preferred,
+        comparison: comparison.comparisonText,
+        preferred: comparison.preferenceText,
       }
     },
   }
@@ -263,10 +263,11 @@ export async function loadAssistant(
 
 export async function optimizeDesignDemos(studentAI: AxAIService) {
   const optimizer = new AxBootstrapFewShot({ studentAI })
+  designProgram.setId('design')
   return optimizer.compile(
     designProgram,
     designExamples.map((example) => ({
-      request: example.request,
+      designBrief: example.request,
       policy: example.policy,
       explanation: example.explanation,
       cautions: example.cautions,

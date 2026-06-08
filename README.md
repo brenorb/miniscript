@@ -47,9 +47,24 @@ The assistant is not zero-shot. It uses structured Ax programs plus curated demo
 Relevant files:
 
 - `src/data/examples.ts`
+- `src/data/optimizedDesignDemos.ts`
 - `src/lib/assistant.ts`
 
 `src/lib/assistant.ts` also exposes `optimizeDesignDemos(studentAI)` so the design program can be re-tuned with `AxBootstrapFewShot` using a stronger teacher/student model during development.
+
+The repo includes a local optimization harness:
+
+```bash
+npm run optimize:demos
+```
+
+That script:
+
+- uses Ax bootstrap optimization
+- runs against local `ollama` with `qwen3:8b`
+- mixes spreadsheet-derived and generated training examples
+- emits `src/data/optimizedDesignDemos.ts`
+- writes a report to `docs/design-optimization-report.json`
 
 ## Flowcharts
 

@@ -1,0 +1,93 @@
+{
+  "model": "qwen3:8b",
+  "trainingExamples": [
+    {
+      "source": "generated",
+      "designBrief": "Create a 2-of-3 family recovery policy with Alice, Bob, and Carol.",
+      "policy": "thresh(2,pk(Alice),pk(Bob),pk(Carol))"
+    },
+    {
+      "source": "generated",
+      "designBrief": "Spend with Alice immediately, or let Bob spend alone after 144 blocks.",
+      "policy": "or(pk(Alice),and(pk(Bob),older(144)))"
+    },
+    {
+      "source": "generated",
+      "designBrief": "Require Alice and Bob together, or allow Carol after block 900000.",
+      "policy": "or(and(pk(Alice),pk(Bob)),and(pk(Carol),after(900000)))"
+    },
+    {
+      "source": "generated",
+      "designBrief": "A vault path where Alice signs plus a hash preimage, or a 2-of-3 backup.",
+      "policy": "or(and(pk(Alice),sha256(H)),thresh(2,pk(Alice),pk(Bob),pk(Carol)))"
+    },
+    {
+      "source": "sheet",
+      "designBrief": "Create a 2FA wallet where the user and service sign together, but after roughly 90 days the user can recover alone.",
+      "policy": "and(pk(user),or(99@pk(service),older(12960)))"
+    },
+    {
+      "source": "sheet",
+      "designBrief": "Design a treasury wallet where the treasurer must sign and any 3 of 5 committee members must also approve.",
+      "policy": "and(pk(treasurer),thresh(3,pk(member_1),pk(member_2),pk(member_3),pk(member_4),pk(member_5)))"
+    },
+    {
+      "source": "sheet",
+      "designBrief": "Create a contest payout that needs the correct SHA256 preimage and then allows any one of six participant keys to claim.",
+      "policy": "and(sha256(H),thresh(1,pk(participant_1),pk(participant_2),pk(participant_3),pk(participant_4),pk(participant_5),pk(participant_6)))"
+    },
+    {
+      "source": "sheet",
+      "designBrief": "Design a business wallet that becomes spendable only after 2024-01-01 and still requires 2 of 3 keys.",
+      "policy": "and(thresh(2,pk(key_1),pk(key_2),pk(key_3)),after(1704153600))"
+    }
+  ],
+  "executedExamples": [
+    {
+      "source": "generated",
+      "designBrief": "Create a 2-of-3 family recovery policy with Alice, Bob, and Carol.",
+      "policy": "thresh(2,pk(Alice),pk(Bob),pk(Carol))"
+    },
+    {
+      "source": "sheet",
+      "designBrief": "Create a 2FA wallet where the user and service sign together, but after roughly 90 days the user can recover alone.",
+      "policy": "and(pk(user),or(99@pk(service),older(12960)))"
+    }
+  ],
+  "stats": {
+    "totalCalls": 2,
+    "successfulDemos": 1,
+    "estimatedTokenUsage": 0,
+    "earlyStopped": false,
+    "resourceUsage": {
+      "totalTokens": 0,
+      "totalTime": 0,
+      "avgLatencyPerEval": 0,
+      "costByModel": {}
+    },
+    "convergenceInfo": {
+      "converged": false,
+      "finalImprovement": 0,
+      "stagnationRounds": 0,
+      "convergenceThreshold": 0.01
+    },
+    "bestScore": 0,
+    "bestConfiguration": {}
+  },
+  "demos": [
+    {
+      "traces": [
+        {
+          "source": "generated",
+          "designBrief": "Create a 2-of-3 family recovery policy with Alice, Bob, and Carol.",
+          "policy": "thresh(2,pk(Alice),pk(Bob),pk(Carol))",
+          "explanation": "This requires any two of the three keys. It is the standard compact expression for a family recovery quorum.",
+          "cautions": [
+            "All keys should be distinct and backed up independently."
+          ]
+        }
+      ],
+      "programId": "design"
+    }
+  ]
+}
