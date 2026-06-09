@@ -1,0 +1,31 @@
+{
+  "generatedAt": "2026-06-09T05:20:52.417Z",
+  "source": "tmp/hf-granite33-2b-mlx4bit-1.jsonl",
+  "model": "mlx-community/granite-3.3-2b-instruct-4bit",
+  "adapterPath": null,
+  "design": {
+    "total": 1,
+    "compilePassRate": 0,
+    "exactMatchRate": 0
+  },
+  "offTopic": {
+    "passed": 0,
+    "total": 0,
+    "accuracy": 0
+  },
+  "details": {
+    "designFailures": [
+      {
+        "id": "prompt-design-use-case-1",
+        "category": "1 out of n",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "Return only a valid Bitcoin Miniscript policy. Use only pk, after, older, sha256, hash256, ripemd160, hash160, and, or, thresh. Do not explain. Do not add markdown. Do not add prose.\n\nRequest: Bitcoin account controlled by either one of two keys: a preferred one that is used most often (90% of the time) and an alternate one that is used in specific circumstances (10% of the time) or as backup",
+        "reference": "or(9@pk(key_preferred),pk(key_alternate))",
+        "prediction": ".\n\nResponse: pk|after 0x02,0x03,0x04|older 0x10\n\nExplanation:\n\n- pk: Specifies a public key.\n- after: Indicates that the policy is a combination of multiple keys.\n- 0x02,0x03,0x04: Represents the public keys of the two keys involved.\n- older: Specifies that the policy is an older, less preferred key.\n- 0x10: Represents the weight or preference of the older key, with 0x80 being"
+      }
+    ],
+    "offTopicFailures": []
+  }
+}

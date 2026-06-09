@@ -6,6 +6,7 @@ import {
 } from './lib/designOptimization.mjs'
 import {
   buildHfTrainingDatasets,
+  hfHardNegativeCorpusPath,
   writeHfDatasetArtifacts,
 } from './lib/hfTrainingData.mjs'
 
@@ -22,18 +23,30 @@ async function readBenchmarkModels() {
 }
 
 async function main() {
-  const [{ designTrainingSet, designEvalSet }, benchmarkModels, repairExamplesRaw] =
+  const [
+    { designTrainingSet, designEvalSet },
+    benchmarkModels,
+    repairExamplesRaw,
+    hardNegativeExamplesRaw,
+  ] =
     await Promise.all([
       loadCorpus(),
       readBenchmarkModels(),
       readFile('data/corpus/repair-examples.json', 'utf8'),
+      readFile(hfHardNegativeCorpusPath, 'utf8').catch(() => ''),
     ])
 
   const repairExamples = JSON.parse(repairExamplesRaw)
+  const hardNegativeExamples = hardNegativeExamplesRaw
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => JSON.parse(line))
   const datasets = buildHfTrainingDatasets({
     designTrainingSet,
     designEvalSet,
     repairExamples,
+    hardNegativeExamples,
     benchmarkModels,
   })
 

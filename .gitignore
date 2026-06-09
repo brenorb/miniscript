@@ -13,6 +13,7 @@ dist-ssr
 *.local
 artifacts/
 scripts/__pycache__/
+tmp/
 
 # Editor directories and files
 .vscode/*

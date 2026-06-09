@@ -9,6 +9,12 @@ export const hfDatasetReportPath = path.join(
   'docs',
   'hf-training-report.json',
 )
+export const hfHardNegativeCorpusPath = path.join(
+  process.cwd(),
+  'data',
+  'corpus',
+  'hf-hard-negatives.jsonl',
+)
 
 const refusalMessage =
   'I only handle Bitcoin Miniscript work here. I can design a policy from an intent, inspect an existing policy or miniscript, compare two constructions, compile them, and show the Mermaid flowchart.'
@@ -200,6 +206,24 @@ function toPromptCompletion(prompt, completion) {
   }
 }
 
+function toConversationalPromptCompletion(prompt, completion) {
+  return toPromptCompletion(
+    [{ role: 'user', content: prompt }],
+    [{ role: 'assistant', content: completion }],
+  )
+}
+
+function normalizeText(value) {
+  return String(value || '').replace(/\s+/g, ' ').trim()
+}
+
+function slugify(value) {
+  return normalizeText(value)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
 function replaceFirstPolicyKeyword(policy, fromKeyword, toKeyword) {
   const marker = `${fromKeyword}(`
   const index = policy.indexOf(marker)
@@ -296,15 +320,38 @@ export function makeRejectedPolicy(policy) {
   return `${policy})`
 }
 
+export function buildHardNegativeExamplesFromPredictions(predictions, source = 'hf-predictions') {
+  const sourceSlug = slugify(source) || 'hf-predictions'
+  return predictions
+    .filter((row) => ['design', 'repair', 'off-topic'].includes(row.task))
+    .filter((row) => normalizeText(row.prompt) && normalizeText(row.reference))
+    .filter(
+      (row) =>
+        normalizeText(row.prediction) &&
+        normalizeText(row.prediction) !== normalizeText(row.reference),
+    )
+    .map((row) => ({
+      id: `hard-negative-${sourceSlug}-${row.id}`,
+      task: row.task,
+      source,
+      category: row.category,
+      prompt: row.prompt,
+      chosen: row.reference,
+      rejected: row.prediction,
+    }))
+}
+
 export function buildHfTrainingDatasets({
   designTrainingSet,
   designEvalSet,
   repairExamples,
+  hardNegativeExamples = [],
   benchmarkModels = [],
 }) {
   const offTopicCases = buildOffTopicCases()
   const repairSplit = splitModulo(repairExamples, 5)
   const offTopicSplit = splitModulo(offTopicCases, 5)
+  const hardNegativeSplit = splitModulo(hardNegativeExamples, 5)
   const refusalText = buildRefusalText()
 
   const sftTrain = [
@@ -394,6 +441,13 @@ export function buildHfTrainingDatasets({
         buildDpoOffTopicRejected(example.category),
       ),
     })),
+    ...hardNegativeSplit.train.map((example) => ({
+      id: example.id,
+      task: example.task,
+      source: example.source,
+      category: example.category,
+      ...toPreferencePair(example.prompt, example.chosen, example.rejected),
+    })),
   ]
 
   const dpoEval = [
@@ -430,6 +484,13 @@ export function buildHfTrainingDatasets({
         buildDpoOffTopicRejected(example.category),
       ),
     })),
+    ...hardNegativeSplit.eval.map((example) => ({
+      id: example.id,
+      task: example.task,
+      source: example.source,
+      category: example.category,
+      ...toPreferencePair(example.prompt, example.chosen, example.rejected),
+    })),
   ]
 
   const sftPolicyTrain = [
@@ -438,14 +499,17 @@ export function buildHfTrainingDatasets({
       task: 'design',
       source: example.source,
       category: example.category,
-      ...toPromptCompletion(buildStrictDesignPrompt(example.request), example.policy),
+      ...toConversationalPromptCompletion(
+        buildStrictDesignPrompt(example.request),
+        example.policy,
+      ),
     })),
     ...repairSplit.train.map((example) => ({
       id: `sft-policy-repair-train-${example.id}`,
       task: 'repair',
       source: example.source,
       category: example.errorType,
-      ...toPromptCompletion(
+      ...toConversationalPromptCompletion(
         buildStrictRepairPrompt(example),
         example.correctedPolicy,
       ),
@@ -455,7 +519,7 @@ export function buildHfTrainingDatasets({
       task: 'off-topic',
       source: 'generated-off-topic',
       category: example.category,
-      ...toPromptCompletion(
+      ...toConversationalPromptCompletion(
         buildStrictOffTopicPrompt(example.prompt),
         refusalText,
       ),
@@ -468,14 +532,17 @@ export function buildHfTrainingDatasets({
       task: 'design',
       source: example.source,
       category: example.category,
-      ...toPromptCompletion(buildStrictDesignPrompt(example.request), example.policy),
+      ...toConversationalPromptCompletion(
+        buildStrictDesignPrompt(example.request),
+        example.policy,
+      ),
     })),
     ...repairSplit.eval.map((example) => ({
       id: `sft-policy-repair-eval-${example.id}`,
       task: 'repair',
       source: example.source,
       category: example.errorType,
-      ...toPromptCompletion(
+      ...toConversationalPromptCompletion(
         buildStrictRepairPrompt(example),
         example.correctedPolicy,
       ),
@@ -485,7 +552,7 @@ export function buildHfTrainingDatasets({
       task: 'off-topic',
       source: 'generated-off-topic',
       category: example.category,
-      ...toPromptCompletion(
+      ...toConversationalPromptCompletion(
         buildStrictOffTopicPrompt(example.prompt),
         refusalText,
       ),
@@ -536,6 +603,7 @@ export function buildHfTrainingDatasets({
         promptEval: 'data/hf/prompt-eval.jsonl',
       },
       counts: {
+        hardNegativeExamples: hardNegativeExamples.length,
         sftTrain: sftTrain.length,
         sftEval: sftEval.length,
         sftPolicyTrain: sftPolicyTrain.length,
@@ -557,6 +625,7 @@ export function buildHfTrainingDatasets({
         dpoEval: buildCategoryCounts(dpoEval.map((entry) => ({ category: entry.task }))),
       },
       offTopicPromptCount: offTopicCases.length,
+      hardNegativeSource: 'data/corpus/hf-hard-negatives.jsonl',
       benchmarkModels,
       recommendedExperiments: [
         {
@@ -567,7 +636,7 @@ export function buildHfTrainingDatasets({
         {
           stage: 'dpo',
           model: 'Qwen/Qwen2.5-1.5B-Instruct',
-          reason: 'Use the SFT adapter as the policy model and prefer exact policy outputs over compile-valid but weaker variants.',
+          reason: 'Use the SFT adapter as the policy model and prefer exact policy outputs over real hard-negative generations, not only mutated policies.',
         },
         {
           stage: 'teacher-or-next-candidate',

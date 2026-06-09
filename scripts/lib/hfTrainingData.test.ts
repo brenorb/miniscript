@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import {
+  buildHardNegativeExamplesFromPredictions,
   buildHfTrainingDatasets,
   buildOffTopicCases,
   makeRejectedPolicy,
@@ -59,8 +60,17 @@ describe('hf training datasets', () => {
     expect(datasets.sftTrain.some((entry) => entry.task === 'repair')).toBe(true)
     expect(datasets.sftTrain.some((entry) => entry.task === 'off-topic')).toBe(true)
     expect(datasets.dpoTrain.every((entry) => entry.prompt.length === 1)).toBe(true)
-    expect(datasets.sftPolicyTrain.every((entry) => typeof entry.prompt === 'string')).toBe(true)
-    expect(datasets.sftPolicyEval.every((entry) => typeof entry.completion === 'string')).toBe(true)
+    expect(
+      datasets.sftPolicyTrain.every(
+        (entry) => Array.isArray(entry.prompt) && entry.prompt[0]?.role === 'user',
+      ),
+    ).toBe(true)
+    expect(
+      datasets.sftPolicyEval.every(
+        (entry) =>
+          Array.isArray(entry.completion) && entry.completion[0]?.role === 'assistant',
+      ),
+    ).toBe(true)
     expect(datasets.report.counts.sftTrain).toBeGreaterThan(3)
     expect(datasets.report.counts.dpoEval).toBeGreaterThan(1)
   })
@@ -70,5 +80,34 @@ describe('hf training datasets', () => {
 
     expect(rejected).not.toBe('thresh(2,pk(key_1),pk(key_2),pk(key_3))')
     expect(rejected.startsWith('thresh(')).toBe(true)
+  })
+
+  it('builds reusable hard-negative preference rows from bad model generations', () => {
+    const hardNegatives = buildHardNegativeExamplesFromPredictions([
+      {
+        id: 'prompt-design-1',
+        task: 'design',
+        category: '2 of 3',
+        prompt: 'Return only a policy',
+        reference: 'thresh(2,pk(alice),pk(bob),pk(carol))',
+        prediction: 'Explain the tradeoffs first.',
+      },
+      {
+        id: 'prompt-design-2',
+        task: 'design',
+        category: '2 of 3',
+        prompt: 'Return only a policy',
+        reference: 'or(pk(alice),pk(bob))',
+        prediction: 'or(pk(alice),pk(bob))',
+      },
+    ])
+
+    expect(hardNegatives).toHaveLength(1)
+    expect(hardNegatives[0]).toMatchObject({
+      id: 'hard-negative-hf-predictions-prompt-design-1',
+      task: 'design',
+      chosen: 'thresh(2,pk(alice),pk(bob),pk(carol))',
+      rejected: 'Explain the tradeoffs first.',
+    })
   })
 })

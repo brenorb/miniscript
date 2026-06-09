@@ -1,0 +1,101 @@
+{
+  "generatedAt": "2026-06-09T05:11:48.477Z",
+  "source": "tmp/hf-qwen25-05b-policy-10-fixed-8.jsonl",
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "adapterPath": "artifacts/sft-qwen25-05b-policy-10-fixed",
+  "design": {
+    "total": 8,
+    "compilePassRate": 0,
+    "exactMatchRate": 0
+  },
+  "offTopic": {
+    "passed": 0,
+    "total": 0,
+    "accuracy": 0
+  },
+  "details": {
+    "designFailures": [
+      {
+        "id": "prompt-design-use-case-1",
+        "category": "1 out of n",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "Return only a valid Bitcoin Miniscript policy. Use only pk, after, older, sha256, hash256, ripemd160, hash160, and, or, thresh. Do not explain. Do not add markdown. Do not add prose.\n\nRequest: Bitcoin account controlled by either one of two keys: a preferred one that is used most often (90% of the time) and an alternate one that is used in specific circumstances (10% of the time) or as backup",
+        "reference": "or(9@pk(key_preferred),pk(key_alternate))",
+        "prediction": ". The preferred key should be chosen randomly from all available keys. The alternate key should be chosen based on the user's preference for security and privacy. The preferred key should have a higher probability of being selected than the alternate key. \n\nThe primary goal is to ensure that the account remains secure and protected against unauthorized access. Additionally, it is important to minimize the risk of data loss due to accidental deletion or theft. To achieve this, the preferred key must be chosen with a high degree of certainty, while the alternate key can be chosen with a lower degree of certainty but still provide adequate protection against potential threats. \n\nPlease provide a detailed plan"
+      },
+      {
+        "id": "prompt-design-use-case-6",
+        "category": "1 out of n",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "Return only a valid Bitcoin Miniscript policy. Use only pk, after, older, sha256, hash256, ripemd160, hash160, and, or, thresh. Do not explain. Do not add markdown. Do not add prose.\n\nRequest: A married couple wants to have a joint Bitcoin account for their day-to-day expenses which either of them can spend from.",
+        "reference": "or(pk(wife_key),pk(husband_key))",
+        "prediction": "They want to ensure that the transaction is secure and they do not want to use any third-party wallets. The account should be able to handle transactions up to $10,000. \n\nThe policy must include:\n\n- A minimum balance requirement\n- An upper limit on the amount of funds that can be spent in one transaction\n- A threshold for when the transaction will be considered successful\n\nPlease provide a detailed explanation of how this policy would work, including the specific rules for each parameter. Additionally, please provide a sample code snippet in Python that implements the policy using the `bitcoin` library. The code should include error handling for"
+      },
+      {
+        "id": "prompt-design-use-case-7",
+        "category": "and",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "Return only a valid Bitcoin Miniscript policy. Use only pk, after, older, sha256, hash256, ripemd160, hash160, and, or, thresh. Do not explain. Do not add markdown. Do not add prose.\n\nRequest: Parents want to set up an account for their teenage child. For now, the child can spend the funds with confirmation from either parent. When he turns 21 on November 4 2028, he can spend the funds on his own.",
+        "reference": "and(pk(child_key),thresh(1,pk(mother_key),pk(father_key),after(1856908800)))",
+        "prediction": "The child has no access to any other accounts. He will be able to use the funds in the following ways:\n\n- Spend it directly\n- Transfer it to another person's account\n- Deposit it into a bank account\n\nThe child is 13 years old at the time of setup. The parents have agreed that the child should receive the funds as soon as possible. They do not wish to wait until they are older. The child has been living with them since birth. The child has never had any money before. The child does not know how to use computers or the internet. The child has never used a credit card before."
+      },
+      {
+        "id": "prompt-design-use-case-15",
+        "category": "and",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "Return only a valid Bitcoin Miniscript policy. Use only pk, after, older, sha256, hash256, ripemd160, hash160, and, or, thresh. Do not explain. Do not add markdown. Do not add prose.\n\nRequest: A user and a 2FA service need to sign off, but after 90 days the user alone is enough so the funds don't get stuck if the 3rd party service becomes unavailable.",
+        "reference": "and(pk(user),or(99@pk(service),older(12960)))",
+        "prediction": "The user should be able to specify whether they want to use their own private key for signing or have it sent to them via email. The 2FA service should also allow users to choose between using a password or a recovery code. The request should include a detailed explanation of how the system will ensure that the funds are transferred successfully even if the 3rd party service goes down.\n**Request:**\n\nA user and a 2FA service need to sign off, but after 90 days the user alone is sufficient so the funds don't get stuck if the 3rd party service becomes unavailable. The user should be able to"
+      },
+      {
+        "id": "prompt-design-use-case-20",
+        "category": "andor",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "Return only a valid Bitcoin Miniscript policy. Use only pk, after, older, sha256, hash256, ripemd160, hash160, and, or, thresh. Do not explain. Do not add markdown. Do not add prose.\n\nRequest: A technology company has a special fund for R&D projects managed by the CTO under the control of the CEO and CFO. The CTO needs the confirmation from either the CEO or CFO to spend the funds.",
+        "reference": "and(pk(cto_key),or(pk(cfo_key),pk(ceo_key)))",
+        "prediction": "The CTO wants to ensure that the funds are spent in compliance with the Bitcoin Miniscript protocol. To do this, they need to validate the transaction using the Bitcoin Miniscript validator. However, the CTO is unsure about how to proceed as there are no specific rules provided for such validation within the current framework.\n\nGiven these constraints, what steps should the CTO take to validate the transaction using the Bitcoin Miniscript validator? Please provide a detailed explanation for each step.\nTo validate the transaction using the Bitcoin Miniscript validator, the CTO should follow these steps:\n\n1. **Understand the Transaction**: First,"
+      },
+      {
+        "id": "prompt-design-use-case-26",
+        "category": "andor",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "Return only a valid Bitcoin Miniscript policy. Use only pk, after, older, sha256, hash256, ripemd160, hash160, and, or, thresh. Do not explain. Do not add markdown. Do not add prose.\n\nRequest: A hacker is selling valuable data to an anonymous buyer. The data is contained in an encrypted file. Through zero-knowledge proofs, the hacker can cryptographically prove that the data is genuine and the decryption key hashes to a certain value H without revealing the key itself. Since there is no trust relation between buyer and seller, they use an HTLC scheme to proceed with the trade. The buyer sends the agreed bitcoin amount to the seller but uses the decryption key hash to make sure the seller discloses the decryption key when claiming the funds. If the seller doesn't claim the funds within an hour, the buyer is able to reclaim the funds.",
+        "reference": "or(and(pk(seller),hash256(abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789)),and(pk(buyer),older(6)))",
+        "prediction": "The buyer has a private key of 1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef123456789"
+      },
+      {
+        "id": "prompt-design-use-case-31",
+        "category": "hashlock",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "Return only a valid Bitcoin Miniscript policy. Use only pk, after, older, sha256, hash256, ripemd160, hash160, and, or, thresh. Do not explain. Do not add markdown. Do not add prose.\n\nRequest: In the event of my death, the executor of my will has the private key to my wallet and will pass it on to my children. As a security measure, the key only moves the funds together with a passphrase that has been communicated separately to my children.",
+        "reference": "and(pk(executor_key),hash256(abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789))",
+        "prediction": "The executor is required to keep this key safe in a secure location until they are ready to use it for their own purposes. \n\nThe executor should be able to access the funds through the public address associated with the key. However, if the executor does not have the necessary keys, they must provide a new key from the same wallet. If the executor fails to provide a new key within 30 days, the funds will revert to the original owner. \n\nPlease ensure that all transactions involving the funds are recorded in the blockchain using the appropriate transaction type (e.g., transfer, withdraw) and include the sender's and recipient's addresses along"
+      },
+      {
+        "id": "prompt-design-use-case-34",
+        "category": "n out of n",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "Return only a valid Bitcoin Miniscript policy. Use only pk, after, older, sha256, hash256, ripemd160, hash160, and, or, thresh. Do not explain. Do not add markdown. Do not add prose.\n\nRequest: A council with 11 participants that can spend the funds if a majority reaches an agreement and only after 40 days.",
+        "reference": "and(older(5760),thresh(6,pk(key_1),pk(key_2),pk(key_3),pk(key_4),pk(key_5),pk(key_6),pk(key_7),pk(key_8),pk(key_9),pk(key_10),pk(key_11)))",
+        "prediction": "The council must have at least one member who is a miner of Bitcoin. The policy should be designed to ensure that no single participant has more than 30% of the total votes in any given day's vote count. Additionally, the policy should include a mechanism for early withdrawal from the council if necessary. \n\nThe council will meet every 4 weeks, and each meeting will last for 8 hours. The council members are as follows:\n\n- Member A: 70%\n- Member B: 20%\n- Member C: 10%\n- Member D: 10%\n- Member E: 10"
+      }
+    ],
+    "offTopicFailures": []
+  }
+}

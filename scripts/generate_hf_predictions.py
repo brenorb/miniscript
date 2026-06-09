@@ -59,6 +59,12 @@ def read_jsonl(path: Path) -> list[dict]:
     return rows
 
 
+def message_content(value):
+    if isinstance(value, list):
+        return "\n".join(str(entry.get("content", "")).strip() for entry in value).strip()
+    return str(value or "").strip()
+
+
 def load_model(args: argparse.Namespace):
     source = args.adapter_path or args.model_id
     if not source:
@@ -116,7 +122,7 @@ def main() -> None:
                 )
                 prompt_text = prompt_messages[-1]["content"]
             else:
-                reference = row.get("completion", row.get("reference", ""))
+                reference = message_content(row.get("completion", row.get("reference", "")))
                 prompt_value = row["prompt"]
                 if isinstance(prompt_value, list):
                     text = tokenizer.apply_chat_template(

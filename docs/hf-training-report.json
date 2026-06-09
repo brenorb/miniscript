@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-09T04:30:40.243Z",
+  "generatedAt": "2026-06-09T05:14:41.578Z",
   "files": {
     "sftTrain": "data/hf/sft-train.jsonl",
     "sftEval": "data/hf/sft-eval.jsonl",
@@ -10,12 +10,13 @@
     "promptEval": "data/hf/prompt-eval.jsonl"
   },
   "counts": {
+    "hardNegativeExamples": 40,
     "sftTrain": 417,
     "sftEval": 51,
     "sftPolicyTrain": 180,
     "sftPolicyEval": 51,
-    "dpoTrain": 290,
-    "dpoEval": 51,
+    "dpoTrain": 322,
+    "dpoEval": 59,
     "promptEval": 51
   },
   "taskCounts": {
@@ -40,17 +41,18 @@
       "off-topic": 14
     },
     "dpoTrain": {
-      "design": 220,
+      "design": 252,
       "repair": 17,
       "off-topic": 53
     },
     "dpoEval": {
-      "design": 32,
+      "design": 40,
       "repair": 5,
       "off-topic": 14
     }
   },
   "offTopicPromptCount": 67,
+  "hardNegativeSource": "data/corpus/hf-hard-negatives.jsonl",
   "benchmarkModels": [
     "qwen2.5:1.5b",
     "phi4-mini",
@@ -65,7 +67,7 @@
     {
       "stage": "dpo",
       "model": "Qwen/Qwen2.5-1.5B-Instruct",
-      "reason": "Use the SFT adapter as the policy model and prefer exact policy outputs over compile-valid but weaker variants."
+      "reason": "Use the SFT adapter as the policy model and prefer exact policy outputs over real hard-negative generations, not only mutated policies."
     },
     {
       "stage": "teacher-or-next-candidate",
