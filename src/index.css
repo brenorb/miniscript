@@ -11,6 +11,7 @@
   --muted: #9da8bd;
   --accent: #d3c19b;
   --accent-strong: #f0dfb9;
+  --chart-ink: #263144;
   --danger: #ffb4af;
   --shadow: 0 28px 80px rgba(0, 0, 0, 0.28);
   font-family: 'Instrument Sans', sans-serif;
@@ -136,7 +137,7 @@ label span,
 
 .segmented {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(112px, 1fr));
   gap: 8px;
 }
 
@@ -153,8 +154,15 @@ label span,
 }
 
 .segmented button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 16px;
   padding: 11px 10px;
+  min-width: 0;
+  text-align: center;
+  font-size: 0.96rem;
+  line-height: 1.1;
 }
 
 .segmented button.active,
@@ -380,6 +388,18 @@ select:focus,
   width: 100%;
   height: auto;
   min-width: 240px;
+}
+
+.flowchart-preview svg .label,
+.flowchart-preview svg .label text,
+.flowchart-preview svg .nodeLabel,
+.flowchart-preview svg .edgeLabel,
+.flowchart-preview svg .edgeLabel text,
+.flowchart-preview svg foreignObject,
+.flowchart-preview svg foreignObject *,
+.flowchart-preview svg span.nodeLabel {
+  color: var(--chart-ink) !important;
+  fill: var(--chart-ink) !important;
 }
 
 .composer {

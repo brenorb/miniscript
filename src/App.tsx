@@ -13,6 +13,7 @@ import type {
   AssistantResult,
 } from './lib/assistant'
 import { buildOffTopicReply, evaluateScope } from './lib/assistantScope'
+import { formatUnknownError } from './lib/formatUnknownError'
 import type { CompileContext, ScriptSummary } from './lib/miniscriptTooling'
 
 type RunState = 'idle' | 'loading-model' | 'running' | 'error'
@@ -156,7 +157,7 @@ function App() {
       setRunState('idle')
     } catch (caught) {
       setRunState('error')
-      setError(caught instanceof Error ? caught.message : String(caught))
+      setError(formatUnknownError(caught))
     }
   }
 
@@ -616,11 +617,14 @@ function FlowchartCard({ chart }: { chart: string }) {
         themeVariables: {
           background: '#11151c',
           primaryColor: '#d6c6a2',
-          primaryTextColor: '#11151c',
+          primaryTextColor: '#263144',
           primaryBorderColor: '#8e8268',
           lineColor: '#a6acb8',
           secondaryColor: '#efe7d5',
+          secondaryTextColor: '#263144',
           tertiaryColor: '#1a202a',
+          tertiaryTextColor: '#263144',
+          textColor: '#263144',
           fontFamily: 'IBM Plex Mono',
         },
       })

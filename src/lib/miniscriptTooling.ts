@@ -9,6 +9,7 @@ import {
   ready,
 } from '@bitcoinerlab/miniscript-policies'
 
+import { formatUnknownError } from './formatUnknownError'
 import { policyToMermaid, sanitizePolicyInput } from './policyFlowchart'
 
 export type CompileContext = 'p2wsh' | 'taproot'
@@ -149,7 +150,7 @@ export async function summarizeExpression(
       context,
       policyLike ? 'policy' : 'miniscript',
       sanitizedInput,
-      error instanceof Error ? error.message : String(error),
+      formatUnknownError(error),
     )
   }
 
@@ -170,7 +171,7 @@ export async function summarizeExpression(
       policyLike ? 'policy' : 'miniscript',
       miniscript,
       policyError ??
-        (error instanceof Error ? error.message : String(error)),
+        formatUnknownError(error),
       policyCompilerSane,
       policyCompilerSublevel,
     )

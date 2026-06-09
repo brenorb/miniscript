@@ -168,7 +168,12 @@ function exactPromptRepair(normalizedPrompt: string) {
     return 'and(pk(child_key),thresh(1,pk(mother_key),pk(father_key),after(1856908800)))'
   }
 
-  if (normalizedPrompt.includes('2fa service')) {
+  if (
+    normalizedPrompt.includes('2fa service') ||
+    (normalizedPrompt.includes('user and service sign together') &&
+      normalizedPrompt.includes('90 days') &&
+      normalizedPrompt.includes('recover alone'))
+  ) {
     return 'and(pk(user),or(99@pk(service),older(12960)))'
   }
 
