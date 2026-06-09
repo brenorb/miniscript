@@ -31,8 +31,28 @@ describe('policy flowchart', () => {
       'or(and(pk(Alice),older(144)),and(pk(Alice),pk(Bob)))',
     )
     expect(graph).toContain('graph TD')
-    expect(graph).toContain('Alice -->|pk|')
-    expect(graph).toContain('144 -->|older|')
+    expect(graph).toContain('["Alice"]')
+    expect(graph).toContain('["144"]')
     expect(graph).toContain('spend((spend))')
+  })
+
+  it('renders repeated keys as distinct mermaid nodes', () => {
+    const graph = policyToMermaid(
+      'or(and(pk(Alice),older(144)),and(pk(Alice),pk(Bob)))',
+      false,
+    )
+
+    expect(graph.match(/\["Alice"\]/g)).toHaveLength(2)
+  })
+
+  it('renders hash and underscore labels safely', () => {
+    const graph = policyToMermaid(
+      'and(sha256(0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef),pk(member_1))',
+    )
+
+    expect(graph).toContain('["member_1"]')
+    expect(graph).toContain(
+      '["0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"]',
+    )
   })
 })

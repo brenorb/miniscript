@@ -359,13 +359,15 @@ class MermaidBuilder {
 
   private renderNode(node: PolicyNode, parentId: string | null): string {
     if (isLeaf(node)) {
+      const leafId = this.nextId(node.kind)
+      this.lines.push(`${leafId}[${this.quoteLabel(node.value)}]`)
       if (parentId === null) {
         const nodeId = this.nextId('thresh')
         this.lines.push(`${nodeId}{"Check 1/1"}`)
-        this.lines.push(`${this.label(node.value)} -->|${node.kind}| ${nodeId}`)
+        this.lines.push(`${leafId} -->|${node.kind}| ${nodeId}`)
         return nodeId
       }
-      this.lines.push(`${this.label(node.value)} -->|${node.kind}| ${parentId}`)
+      this.lines.push(`${leafId} -->|${node.kind}| ${parentId}`)
       return parentId
     }
 
@@ -387,8 +389,8 @@ class MermaidBuilder {
     return nodeId
   }
 
-  private label(value: string | number): string {
-    return String(value).replaceAll('"', '\\"')
+  private quoteLabel(value: string | number): string {
+    return `"${String(value).replaceAll('"', '\\"')}"`
   }
 
   toString(): string {

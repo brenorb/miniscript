@@ -57,11 +57,11 @@ export const designExamples: DesignDemo[] = [
   },
   {
     request:
-      'A vault path where Alice signs plus a hash preimage, or a 2-of-3 backup.',
+      'A vault path where a hot key signs plus a hash preimage, or a 2-of-3 cold backup with Alice, Bob, and Carol.',
     policy:
-      'or(and(pk(Alice),sha256(H)),thresh(2,pk(Alice),pk(Bob),pk(Carol)))',
+      'or(and(pk(AliceHot),sha256(0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef)),thresh(2,pk(Alice),pk(Bob),pk(Carol)))',
     explanation:
-      'The hot path uses Alice plus a preimage. The fallback path is a 2-of-3 quorum among the three keys.',
+      'The hot path uses a designated hot key plus a preimage. The fallback path is a 2-of-3 quorum among the three cold keys.',
     cautions: ['Hashlocks need reliable preimage handling and distribution.'],
   },
 ]

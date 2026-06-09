@@ -1,0 +1,221 @@
+{
+  "design": [
+    {
+      "id": "use-case-12",
+      "source": "sheet-use-cases",
+      "category": "and",
+      "request": "A non-profit organization receives funds from a donor but can only spend them with the express approval of said donor.",
+      "policy": "and(pk(nonprofit_key),and(pk(donor_key))",
+      "explanation": "This miniscript policy ensures that public funds can only be spent with the joint approval of the non-profit's director (`nonprofit_key`) and the donor (`donor_key`).",
+      "confirmed": true
+    },
+    {
+      "id": "use-case-22",
+      "source": "sheet-use-cases",
+      "category": "andor",
+      "request": "Two parties bet on a future event with a binary outcome. An oracle service generates two random secrets and associates them to the two outcomes. They publish the hashes of both of these secrets before the event but will only publish the secret associated with the actual outcome when it happens. The two parties can now make use of these hashes in committing to a bitcoin script that will direct the funds based on the event outcome according to the terms of the bet.",
+      "policy": "or(and(pk(better_1),hash256(H1)),and(pk(better_2),hash256(H2)))",
+      "explanation": "This miniscript policy allows two parties, `better_1` and `better_2`, to participate in a bet on a future event with two possible outcomes. The policy requires that either `better_1`'s public key signs a transaction that uses the preimage of the hash `H1`, or `better_2`'s public key signs a transaction that reveals the preimage of the hash `H2`. The hashes H1 and H2 are associated with the two possible outcomes of the event and are published before the event occurs. When the event happens, the oracle service will reveal the secret associated with the actual outcome, allowing the winning party to claim the funds. This policy ensures that only the party with the correct secret can claim the funds based on the outcome of the bet.",
+      "confirmed": true
+    },
+    {
+      "id": "use-case-27",
+      "source": "sheet-use-cases",
+      "category": "andor",
+      "request": "A father lets his two teenage sons go on an exchange trip accompanied by a caregiver. In order to avoid fees with international transfers, he deposits funds in a wallet that can be used by his children with the supervision of the caregiver but keeps the option of recovering the funds himself.",
+      "policy": "or(N@and(pk(caregiver),thresh(1,pk(son_1),pk(son_2))),pk(father))",
+      "explanation": "This miniscript policy provides two authorization scenarios in an `or` statement:\n1. One of the sons signs along with the caregiver.\n2. The father signs\nThe first scenario is more likely to be used, as indicated by `N@` (with N>1).",
+      "confirmed": true
+    },
+    {
+      "id": "use-case-38",
+      "source": "sheet-use-cases",
+      "category": "n out of n",
+      "request": "Write a miniscript for a wallet that only moves funds if, in addition to the key, two passphrases are given",
+      "policy": "thresh(3,pk(key),sha256(0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef)),sha256(0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef))",
+      "explanation": "This miniscript policy requires three conditions to be met in order to move funds: possession of a specific key, and the revelation of two specific passphrases. The `and` operator is used to combine these conditions. The first condition, `pk(key)`, ensures that the transaction is signed with the specified key. The second and third conditions, both written as `sha256(H)` and `sha256(H)`, require the preimages of two 64-character HEX to be revealed, representing the two passphrases. By combining these 3 conditions under the `thresh` operator (with threshold equal to 3), the proposed policy ensures that both the key and the passphrases are provided before allowing the funds to be moved as required.",
+      "confirmed": true
+    },
+    {
+      "id": "use-case-70",
+      "source": "sheet-use-cases",
+      "category": "threshold",
+      "request": "I'm setting up an authorization system involving three parties. I need a Bitcoin script for authorization from two of the three parties.",
+      "policy": "thresh(2,pk(party_1),pk(party_2),p(party_3))",
+      "explanation": "This miniscript policy uses the `thresh` operator with a threshold of 2, thereby requiring that any two out of the three parties (`party_1`, `party_2`, `party_3`) must authorize a transaction by signing with their key.",
+      "confirmed": true
+    },
+    {
+      "id": "training-design-99",
+      "source": "sheet-training",
+      "category": "error",
+      "request": "The following miniscript policy does not compile:\nor(99@and(pk(pk(key_employee); older(25920)); pk(key_company)\n\nPropose a corrected policy and explain what caused the error and how the corrected policy addresses it.",
+      "policy": "or(99@and(pk(pk(key_employee),older(25920)),pk(key_company)",
+      "explanation": "Suggested policy with corrections:\n\n\nThe error in the original Bitcoin miniscript policy `or(99@and(pk(pk(key_employee); older(25920)); pk(key_company)` is a violation of the rule that subpolicies in \"or\" & \"and\" must be separated by a comma, instead they were separated by semicolons. To fix this, the policy was refactored to `or(99@and(pk(pk(key_employee),older(25920)),pk(key_company)`, where the subpolicies are separated by a comma, meeting the requirement \"([ N@]POL,[N@]POL)\" & \"and(POL,POL)\".",
+      "confirmed": true
+    },
+    {
+      "id": "training-design-127",
+      "source": "sheet-training",
+      "category": "comparison",
+      "request": "Compare the following two miniscript policies:",
+      "policy": "hash256(abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789)",
+      "explanation": "`hash256(H)` applies the SHA-256 hash function twice while `sha256(H)` applies it once. But the spending cost is the same as the on-chain footprint is the same for both operators.",
+      "confirmed": true
+    },
+    {
+      "id": "training-design-128",
+      "source": "sheet-training",
+      "category": "comparison",
+      "request": "Compare the following two miniscript policies:",
+      "policy": "sha256(0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef)",
+      "explanation": "`sha256(H)` results in a 64-character hexadecimal hash while `ripemd160(H)` only results in a 40-character hexadecimal hash. Therefore `ripemd160(H)` has a smaller on-chain footprint and is less costly to spend.",
+      "confirmed": true
+    },
+    {
+      "id": "training-design-129",
+      "source": "sheet-training",
+      "category": "comparison",
+      "request": "Compare the following two miniscript policies:",
+      "policy": "hash160(abcdef0123456789abcdef0123456789abcdef01)",
+      "explanation": "`hash160(H)` applies the SHA-256 hash function followed by the RIPEMD-160 hash function while `ripemd160(H)` only applies the RIPEMD-160 hash function. But the spending cost is the same as the on-chain footprint is the same for both operators.",
+      "confirmed": true
+    },
+    {
+      "id": "spirit-design-31",
+      "source": "spirit-miniscript-examples",
+      "category": "archived-design",
+      "request": "write a miniscript like the one above where you need 3 keys or 2 others.",
+      "policy": "or(and(pk(key_1),pk(key_2),pk(key_3)),and(pk(key_4),pk(key_5)))",
+      "explanation": "Certainly, let's explain the Bitcoin Miniscript provided in the prompt:\n\n```miniscript\nor(and(pk(key_1), and(pk(key_2), pk(key_3))), and(pk(key_4), pk(key_5)))\n```\n\nThis Miniscript is designed to create a condition where you need either three specific keys or any two keys from a different set to sign a Bitcoin transaction:\n\n- `or(..., ...)`:\n - This Miniscript condition combines two sub-conditions using the logical \"OR\" operator. It means that either the first set of conditions (the \"and(pk(key_1), and(pk(key_2), pk(key_3)))\" part) or the second set of conditions (the \"and(pk(key_4), pk(key_5))\" part) needs to be satisfied for the script to validate a transaction.\n\n- `and(pk(key_1), and(pk(key_2), pk(key_3))`:\n - The first set of conditions requires three specific keys, `key_1`, `key_2`, and `key_3`, to sign the transaction. In other words, it mandates that all three of these keys are required for authorization.\n\n- `and(pk(key_4), pk(key_5))`:\n - The second set of conditions requires two specific keys, `key_4` and `key_5`, to sign the transaction. It implies that either of these two keys can authorize the transaction.\n\nIn plain terms, this Miniscript enforces the following logic:\n\n- To spend funds from the associated Bitcoin address, you either need all three private keys (`key_1`, `key_2`, and `key_3`) to sign the transaction, or you need just two out of the set of keys (`key_4` and `key_5`) to authorize the transaction. This setup provides a flexible and secure way to control access to the funds, accommodating different combinations of key authorization.",
+      "confirmed": true
+    }
+  ],
+  "analysis": [
+    {
+      "id": "sheet-script-analyses-50",
+      "source": "sheet-script-analyses",
+      "category": "andor",
+      "policy": "or(and(pk(pk(key_employee),older(25920)),99@pk(key_company)",
+      "analysis": "This Bitcoin miniscript policy specifies that funds can be spent in one of two ways:\n1. Public key `key_company` signs\n2. Both the public key named `key_employee` signs and a waiting period of 25920 blocks (approximately 180 days) has passed since the transaction was included in a block.\nThe first path is 99 times more likely to be used than the second.",
+      "confirmed": true
+    },
+    {
+      "id": "training-analysis-118",
+      "source": "sheet-training",
+      "category": "script analysis",
+      "policy": "after(144)",
+      "analysis": "The `after(NUM)` policy term specifies that the transaction can only be included in a block or considered valid after a certain point in time. If `NUM` is less than 500 million, it represents a block height, meaning the transaction can only be included after the blockchain reaches that height; if `NUM` is 500 million or greater, it represents a Unix timestamp, and the transaction can only be included after the corresponding date and time has passed. Note that the time-based nLockTime is compared to the 11-block median time past (the median timestamp of the 11 blocks preceding the block in which the transaction is mined), and that median time past tends to lag the block time by about one hour (give or take).",
+      "confirmed": true
+    },
+    {
+      "id": "training-analysis-119",
+      "source": "sheet-training",
+      "category": "script analysis",
+      "policy": "and(POL_1,POL_2)",
+      "analysis": "The `and(POL_1,POL_2)` policy term specifies that both subpolicies, `POL_1` and `POL_2`, must be satisfied in order for the transaction to be valid. This means that whatever conditions or requirements are defined by `POL_1` and `POL_2` must both be met simultaneously.",
+      "confirmed": true
+    },
+    {
+      "id": "training-analysis-120",
+      "source": "sheet-training",
+      "category": "script analysis",
+      "policy": "hash160(HEX)",
+      "analysis": "The `hash160(HEX)` policy term specifies that the spender provides a piece of data (preimage) that, when processed through the SHA-256 hash function followed by the RIPEMD-160 hash function, results in the specified 40-character hexadecimal string represented by `HEX`. This ensures that the spender has knowledge of the original data that hashes to the given value.",
+      "confirmed": true
+    },
+    {
+      "id": "training-analysis-121",
+      "source": "sheet-training",
+      "category": "script analysis",
+      "policy": "hash256(HEX)",
+      "analysis": "The `hash256(HEX)` policy term specifies that a participant provides a piece of data (preimage) that, when processed through the SHA-256 hash function twice, results in the specified 64-character hexadecimal string represented by `HEX`. This ensures that the spender has knowledge of the original data that hashes to the given value.",
+      "confirmed": true
+    },
+    {
+      "id": "training-analysis-122",
+      "source": "sheet-training",
+      "category": "script analysis",
+      "policy": "older(144)",
+      "analysis": "The `older(NUM)` policy term specifies that the transaction can only be included in a block if at least `NUM` blocks have been mined since the transaction's input was last confirmed in a block. Assuming an average block time of 10 minutes, this means the transaction must wait approximately `NUM * 10` minutes before it becomes valid for inclusion in the blockchain.",
+      "confirmed": true
+    },
+    {
+      "id": "training-analysis-123",
+      "source": "sheet-training",
+      "category": "script analysis",
+      "policy": "or(N@POL_1,POL_2)",
+      "analysis": "The `or(N@POL_1,POL_2)` policy term specifies that to unlock the funds, either one of two subpolicies must be satisfied: `POL_1` or `POL_2`. The `N@` before `POL_1` indicates that `POL_1` is `N` times more likely to be chosen or satisfied compared to `POL_2` when constructing a transaction.",
+      "confirmed": true
+    },
+    {
+      "id": "training-analysis-124",
+      "source": "sheet-training",
+      "category": "script analysis",
+      "policy": "or(POL_1,N@POL_2)",
+      "analysis": "The `or(POL_1,N@POL_2)` policy term specifies that to unlock the funds, either one of two subpolicies must be satisfied: `POL_1` or `POL_2`. The `N@` before `POL_2` indicates that `POL_2` is `N` times more likely to be chosen or satisfied compared to `POL_1` when constructing a transaction.",
+      "confirmed": true
+    },
+    {
+      "id": "training-analysis-125",
+      "source": "sheet-training",
+      "category": "script analysis",
+      "policy": "or(POL_1,POL_2)",
+      "analysis": "The `or(POL_1,POL_2)` policy term specifies that to unlock the funds protected by this policy, either one of two subpolicies, `POL_1` or `POL_2`, must be satisfied.",
+      "confirmed": true
+    },
+    {
+      "id": "training-analysis-127",
+      "source": "sheet-training",
+      "category": "script analysis",
+      "policy": "ripemd160(HEX)",
+      "analysis": "The `ripemd160(HEX)` policy term specifies that the spender provides a piece of data (preimage) that, when processed through the RIPEMD-160 hash function, results in the specified 40-character hexadecimal string represented by `HEX`. This ensures that the spender has knowledge of the original data that hashes to the given value.",
+      "confirmed": true
+    },
+    {
+      "id": "training-analysis-128",
+      "source": "sheet-training",
+      "category": "script analysis",
+      "policy": "sha256(HEX)",
+      "analysis": "The `sha256(HEX)` policy term specifies that a participant provides a piece of data (preimage) that, when processed through the SHA-256 hash function, results in the specific 64-character hexadecimal string represented by `HEX`. This ensures that the spender has knowledge of the original data that hashes to the given value.",
+      "confirmed": true
+    },
+    {
+      "id": "training-analysis-129",
+      "source": "sheet-training",
+      "category": "script analysis",
+      "policy": "thresh(144,POL_1,POL_2,...,POL_n)",
+      "analysis": "The `thresh(NUM,POL_1,POL_2,...,POL_n)` policy term specifies that at least `NUM` of the specified subpolicies (`POL_1`, `POL_2`, ..., `POL_n`) are fulfilled in order for the transaction to be valid. Each subpolicy (`POL_1`, `POL_2`, ..., `POL_n`) represents a separate condition that can be met independently.",
+      "confirmed": true
+    },
+    {
+      "id": "training-analysis-171",
+      "source": "sheet-training",
+      "category": "script analysis",
+      "policy": "thresh(3,phone_key,home_key,office_key,vault_key,service_key)",
+      "analysis": "This Bitcoin miniscript policy requires the signatures of three out of five specified public keys (`phone_key`, `home_key`, 'office_key, `vault_key`, `service_key`).",
+      "confirmed": true
+    }
+  ],
+  "comparisons": [
+    {
+      "id": "comparison-6",
+      "source": "sheet-comparisons",
+      "leftPolicy": "thresh(2,pk(key1),pk(key2),pk(key3))",
+      "rightPolicy": "or(and(pk(key1),pk(key2)),or(and(pk(key1),pk(key3)),and(pk(key2),pk(key3))))",
+      "leftOutput": "Miniscript output:\nmulti(2,key1,key2,key3)\n\nSpending cost analysis:\nScript: 105 WU\nInput: 147.000000 WU\nTotal: 252.000000 WU\n\nResulting script structure:\n2 <key1> <key2> <key3> 3 OP_CHECKMULTISIG",
+      "rightOutput": "[compile error]",
+      "comparison": "The policy with the 'or' and 'and' operators, though it would seem logically equivalent to the 'thresh' policy, actually does not compile into script. Instead it produces an error."
+    }
+  ],
+  "repairs": [
+    {
+      "id": "repair-2",
+      "source": "sheet-errors",
+      "errorType": "comma",
+      "invalidPolicy": "or(99@and(pk(pk(key_employee); older(25920)); pk(key_company)",
+      "correctedPolicy": "or(99@and(pk(pk(key_employee),older(25920)),pk(key_company)",
+      "analysis": "The error in the original Bitcoin miniscript policy `or(99@and(pk(pk(key_employee); older(25920)); pk(key_company)` is a violation of the rule that subpolicies in \"or\" & \"and\" must be separated by a comma, instead they were separated by semicolons. To fix this, the policy was refactored to `or(99@and(pk(pk(key_employee),older(25920)),pk(key_company)`, where the subpolicies are separated by a comma, meeting the requirement \"([ N@]POL,[N@]POL)\" & \"and(POL,POL)\"."
+    }
+  ]
+}

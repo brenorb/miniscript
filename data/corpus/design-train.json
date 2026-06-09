@@ -1,0 +1,992 @@
+[
+  {
+    "id": "use-case-2",
+    "source": "sheet-use-cases",
+    "category": "1 out of n",
+    "request": "Bitcoin account for my day-to-day use. It should work with my signing device but also a backup key that I have in a vault in case the signing device is lost or damaged.",
+    "policy": "or(99@pk(regular_key),pk(backup_key))",
+    "explanation": "This miniscript policy is designed to accommodate the user's need for a primary and a backup method of accessing their Bitcoin account. The primary method is through the use of a signing device associated with the \"regular_key\", which is expected to be used for the majority of transactions, as indicated by the high relative probability weight of 99. The \"backup_key\" is a secondary method that is intended for use in exceptional circumstances, such as if the signing device is lost or damaged. This backup key is stored securely in a vault. The policy ensures that the user can continue to access their funds in either scenario, providing both convenience for everyday use and security in case of an emergency.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-3",
+    "source": "sheet-use-cases",
+    "category": "1 out of n",
+    "request": "An emergency fund that any of the top executives of a company (CEO, CFO, COO, CTO, CMO and CLO) can spend from.",
+    "policy": "or(pk(ceo),or(pk(cfo),or(pk(coo),or(pk(cto),or(pk(cmo),pk(clo))))))",
+    "explanation": "This miniscript policy allows for a transaction to be validated by any one of the six top executives. This is ideal in situations where multiple parties have shared control over funds and each party has the capability to independently authorize a transaction.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-4",
+    "source": "sheet-use-cases",
+    "category": "1 out of n",
+    "request": "Hello, I'd like a Bitcoin miniscript to o manage your bitcoin funds effectively, they set up a system where two senior members of the organization, such as the Executive Director and the Treasurer, each hold a key with the same individual authority to release this funds.",
+    "policy": "or(pk(director_1),pk(treasurer_2))",
+    "explanation": "This miniscript policy facilitates a payment scenario where there are two possible authorizers. The payment can be executed with the authorization from either of the two public keys, making it a flexible and convenient solution for transactions that have dual possible signatories.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-5",
+    "source": "sheet-use-cases",
+    "category": "1 out of n",
+    "request": "Parents want to set up a \"Bitcoin piggybank\" for their younger child. Either parent should be able to move the funds with their own key. The child can view his balance on an app but is too young to initiate transactions.",
+    "policy": "or(pk(mother_key),pk(father_key))",
+    "explanation": "This miniscript policy allows either parent to move the funds from the \"Bitcoin piggybank\" by requiring the signature of either the mother or the father. This ensures that both parents have equal control over the funds and can access them independently with their own keys.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-8",
+    "source": "sheet-use-cases",
+    "category": "and",
+    "request": "A joint Bitcoin wallet that requires two individuals, each holding a distinct key, to authorize transactions.",
+    "policy": "and(pk(key_1),pk(key_2))",
+    "explanation": "This miniscript policy requires that two distinct keys, `key_1` and `key_2`, are used to authorize transactions. Both individuals must sign the transaction with their respective keys in order for it to be valid.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-11",
+    "source": "sheet-use-cases",
+    "category": "and",
+    "request": "An account which starts as a 2-of-2 multisig between a user and a 2FA service, but after 90 days the user can sign on his own.",
+    "policy": "and(pk(key_user),or(99@pk(key_service),older(12960)))",
+    "explanation": "For the first 90 days (12960 blocks at an average of 10 minutes per block), both the user's key (`key_user`) and the 2FA service's key (`key_service`) are required to authorize a transaction. After 90 days have passed, the user’s key alone is enough to authorize a transaction. This script is useful for situations requiring strong security initially (via 2FA), but allowing more flexibility for the user after a certain period has elapsed which might be useful is the 2FA service is unusable for any reason.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-13",
+    "source": "sheet-use-cases",
+    "category": "and",
+    "request": "A setup where two parties must agree to spend.",
+    "policy": "and(pk(party_1),pk(party_2))",
+    "explanation": "This miniscript policy requires both `party_1` and `party_2` to sign in order to spend. It addresses the use case where two parties must agree to spend by ensuring that both parties' signatures are required. This means that neither party can unilaterally spend the funds without the consent of the other party. By using the `and` operator to combine the two `pk` (public key) subpolicies, the proposed policy enforces the requirement for both parties to participate in the spending process.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-14",
+    "source": "sheet-use-cases",
+    "category": "and",
+    "request": "A philanthropist has donated funds to his community and the funds collected are stored in a wallet. A five-member committee manages the portfolio and any fundraising expenses require approval from at least three committee members plus the treasurer.",
+    "policy": "and(pk(treasurer),thresh(3,pk(member_1),pk(member_2),pk(member_3),pk(member_4),pk(member_5)))",
+    "explanation": "This miniscript policy requires two conditions to be met using an `and` statement:\n1. Three of the five members must sign.\n2. The treasurer must sign.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-16",
+    "source": "sheet-use-cases",
+    "category": "and",
+    "request": "A contest with a Bitcoin prize that's open to a select few participants (say, 6 participants). The first to solve an elaborate puzzle set up by the organizer can claim the prize.",
+    "policy": "and(sha256(0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef),thresh(1,pk(participant_1),pk(participant_2),pk(participant_3),pk(participant_4),pk(participant_5),pk(participant_6)))",
+    "explanation": "This miniscript policy requires that both of the following conditions are met:\n1. One of the six designated participants must sign, which guarantees that only one of them can claim the prize.\n2. The preimage corresponding to the puzzle solution must be provided.\nNote that the puzzle solution should be a complex message. Otherwise a participant might brute-force the hash preimage and claim the prize without having actually solved the organizer's puzzle.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-17",
+    "source": "sheet-use-cases",
+    "category": "and",
+    "request": "A treasure hunt involving a series of stages is open to 5 pre-registered teams. Each stage reveals reveals an essential clue to solve the next stage. The first team to solve the last stage in the series gets to claim a 1 BTC prize.",
+    "policy": "and(sha256(0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef),thresh(1,pk(team_1),pk(team_2),pk(team_3),pk(team_4),pk(team_5)))",
+    "explanation": "This miniscript policy requires that both of the following conditions are met:\n1. One of the five pre-registered teams must sign, which guarantees that only one of them can claim the prize.\n2. The preimage corresponding to the last challenge's passphrase must be provided.\nNote that this passphrase be a complex message. Otherwise a participant might brute-force the hash preimage and claim the prize without having actually solved the series of challenges.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-18",
+    "source": "sheet-use-cases",
+    "category": "and",
+    "request": "Suppose you're setting up a three-key multisignature wallet for a business account. To authorize Bitcoin transactions, at least two keys from the three specified keys must be used, and transactions can only be processed from January 2 2024 onwards.",
+    "policy": "and(thresh(2,pk(key_1),pk(key_2),pk(key_3)),after(1704153600))",
+    "explanation": "The miniscript policy combines two conditions using the `and` operator, meaning both conditions must be met for the transaction to be valid. First, two out of the three specified keys must sign. Second, no transaction can be processed until the specified date (unix timestamp `1704153600`, which corresponds to January 2 2024) has been reached. This setup is useful for a business that wants to distribute control among multiple parties and also enforce a future start date for the use of the funds.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-19",
+    "source": "sheet-use-cases",
+    "category": "and",
+    "request": "Suppose you're setting up a multi-signature wallet for a business account with five keys. To authorize Bitcoin transactions, at least three keys from the five specified keys must be used, and transactions are only allowed after block height 869245.",
+    "policy": "and(thresh(3,pk(key_1),pk(key_2),pk(key_3),pk(key_4),pk(key_5)),after(869245))",
+    "explanation": "The miniscript policy combines two conditions using the `and` operator, meaning both conditions must be met for the transaction to be valid. First, three out of the five specified keys must sign. Second, no transaction can be processed until the specified block height (869245) has been reached. This setup is useful for a business that wants to distribute control among multiple parties and also enforce a future start date for the use of the funds.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-21",
+    "source": "sheet-use-cases",
+    "category": "andor",
+    "request": "Two parties, Alice and Bob, agree to a cross-chain atomic swap where bitcoin is exchanged for another cryptocurrency on another blockchain using HTLCs. The exchange works as follows. Alice generates a random secret and creates a transaction destined for Bob on blockchain `A` that uses that hash. She gives the hash to Bob who in turn creates a transaction on Bitcoin destined for Alice with that hash. If Alice claims the Bitcoin, she has to reveal the secret to Bob, who in turn can redeem the funds on blockchain `A`. In case the exchange doesn't happen both transactions also have an option to transfer the funds back to their original owner.",
+    "policy": "or(and(pk(Alice),hash256(abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789)),and(pk(Bob),older(12)))",
+    "explanation": "If Alice wants to claim the Bitcoin, she needs to provide the secret that matches the hash given to Bob (which will in turn allow Bob to claim the funds on the other blockchain). This is enforced by the `and(pk(Alice),hash256(H))` subpolicy. On the other hand, if Alice doesn't go through with the exchange, Bob can get his bitcoin back after a certain time has passed (12 blocks in this case). This is achieved by the `and(pk(Bob),older(12))` subpolicy.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-23",
+    "source": "sheet-use-cases",
+    "category": "andor",
+    "request": "A family business whose treasury can be spent by different cost center managers with authorization from the finance manager and can also be accessed directly by the owner.",
+    "policy": "or(and(pk(finance),thresh(1,pk(cc_1),pk(cc_2),pk(cc_3))),pk(owner))",
+    "explanation": "This miniscript policy provides two authorization scenarios:\n1. One of the cost center managers (`cc_1`, `cc_2`, `cc_3`) signs alongside the finance manager.\n2. The company owner signs.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-24",
+    "source": "sheet-use-cases",
+    "category": "andor",
+    "request": "A man sets up his bitcoin stash to be transmitted to his heir after his death without having to go through a lawyer or another third party. To do that, he commits his bitcoin to his heir but adds a hashlock that can only be unlocked with a secret preimage. He sets up a dead man's switch that will send the preimage to his heir in case he doesn't check in for a certain period of time. He also adds a provision in the bitcoin transaction to reclaim his stash in case he changes his mind about his will.",
+    "policy": "or(and(pk(heir),hash256(abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789)),pk(man))",
+    "explanation": "The policy consists of an `or` expression, which means that either one of the subpolicies must be satisfied. The first subpolicy is an `and` expression, requiring the heir's public key (`pk(heir)`) and the revelation of a secret preimage (`hash256(H)`). This ensures that the heir can access the stash only if they possess the secret preimage. The second subpolicy simply requires the owner's public key (`pk(man)`), allowing the owner to reclaim the stash at any time. By combining these conditions, the proposed policy addresses the use case by providing a mechanism for secure transmission to the heir and a provision for the owner to reclaim the stash if desired.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-25",
+    "source": "sheet-use-cases",
+    "category": "andor",
+    "request": "An escrow service acts as a trusted third party that holds Bitcoin committed by the buyer until the buyer receives the item they purchased from a seller online. Upon receipt, the buyer provides the secret preimage that allows the seller to unlock the funds. If the transaction doesn't come through, the escrow service can send the funds back to the buyer.",
+    "policy": "or(and(pk(seller),hash256(abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789)),pk(escrow))",
+    "explanation": "This miniscript policy states that either the seller's public key must be provided along with the revelation of a secret preimage that matches the hash256 value, or the escrow service's public key alone is sufficient. In the use case described, the buyer commits the funds to the escrow service, and upon receiving the item, provides the secret preimage to the seller, who can then unlock the funds. If the transaction does not go through, the escrow service can return the funds to the buyer. By requiring either the seller's key and preimage or the escrow service's key, this policy ensures that the funds can only be released to the intended parties involved in the transaction, providing a secure and trusted mechanism for online purchases.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-28",
+    "source": "sheet-use-cases",
+    "category": "andor",
+    "request": "Implement the Lightning BOLT #3 to_local policy which:\n1. allows the `local` node to claim back the funds it has committed to a lightning channel by broadcasting the latest commitment transaction (forced channel closing)\n2. allows the channel counterparty (`remote` node) to capture the funds in case the `local` node cheated by broadcasting an earlier commitment transaction (presumably with a more favorable balance than it is entitled to)",
+    "policy": "or(pk(key_revocation),and(pk(key_local),older(1008)))",
+    "explanation": "This miniscript policy enforces the rules of the Lightning Network's BOLT #3 for the `to_local` output of a commitment transaction. This output represents the funds that can be claimed by the local node (the owner of the funds) in case of a forced channel closing, but with a timelock that prevents immediate spending (`older(1008)`). This delay gives the channel counterparty a chance to react if the local node tries to broadcast an old state by using the `revocation key` to claim the funds for itself immediately. This dual-condition setup is crucial for maintaining the integrity and trustless nature of the Lightning Network's payment channels.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-29",
+    "source": "sheet-use-cases",
+    "category": "andor",
+    "request": "Implement the Lightning BOLT #3 received HTLC policy which:\n1. allows the receiving node (`local` node) to receive the funds when in possession of the payment hash preimage, either because it is the final recipient that generated the preimage or it gets the preimage from a downstream node (payment-success scenario)\n2. allows the channel counterparty (`remote` node) to recover the committed balance after a waiting period if the payment fails (payment-timeout scenario) or if the `local` node cheated by broadcasting an old commitment transaction (revocation scenario)",
+    "policy": "or(pk(key_revocation),and(pk(key_remote),or(and(pk(key_local),hash160(abcdef0123456789abcdef0123456789abcdef01)),older(1008))))",
+    "explanation": "The miniscript policy provided is designed to implement the received HTLC policy as specified in BOLT #3 of the Lightning Network. It outlines the conditions under which the funds locked in the HTLC can be claimed. The policy allows for three scenarios:\n- payment-success scenario: payment is claimed on time by the receiving node (`pk(key_local)`) using the payment hash preimage (`hash160(H)`)\n- payment-timeout scenario: payment is not processed within 1008 blocks (`older(1008)`) and the sender is able to claim the funds back (`pk(key_remote)`)\n- revocation scenario: the revocation key is used (`pk(key_revocation)`), which is a safety mechanism allowing funds to be claimed if a party tries to cheat by broadcasting an old state",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-30",
+    "source": "sheet-use-cases",
+    "category": "andor",
+    "request": "Suppose you have a situation where either one of two keys (KeyA or KeyB) can authorize a spending transaction, but the second key can do it only after a certain time elapses (say, 1 day)",
+    "policy": "or(pk(KeyA),and(pk(KeyB),older(144)))",
+    "explanation": "This miniscript policy allows for a spending transaction to be authorized by either `KeyA` or `KeyB`. However, in the case of `KeyB`, it can only authorize the transaction after a certain time elapses, specifically 1 day (144 blocks at an average block time of 10 minutes). This policy addresses the use case by providing flexibility in authorization, allowing for immediate spending with KeyA or delayed spending with KeyB, ensuring that the second key can only be used after the specified time period has passed.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-32",
+    "source": "sheet-use-cases",
+    "category": "hashlock",
+    "request": "I need a wallet where I need a key and a one-time password together to move the funds.",
+    "policy": "and(pk(key_1),sha256(0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef))",
+    "explanation": "This miniscript policy requires both a specific public key (`key_1`) and the revelation of a preimage that hashes to a specific value (`H`). In other words, it requires both a key and a one-time password to be provided in order to move the funds. The `and` operator ensures that both conditions must be satisfied for the transaction to be valid. This policy addresses the use case by enforcing the requirement of both a key and a one-time password, providing an additional layer of security for the funds in the wallet.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-33",
+    "source": "sheet-use-cases",
+    "category": "hashlock",
+    "request": "A testament that contains a Bitcoin key but also requires the answer to a question that the heir will have to find by following the instructions left by the deceased.",
+    "policy": "and(pk(testament_key),sha256(0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef))",
+    "explanation": "The proposed miniscript policy effectively encodes the conditions of the testament into a Bitcoin transaction script, requiring two distinct criteria to be met for the funds to be accessed. The first part of the policy, `pk(testament_key)`, mandates that the heir must provide a valid signature from a specific public key, presumably one that was shared with them by the deceased. This ensures that only the intended heir, who possesses the corresponding private key, can attempt to unlock the funds. The second part, `sha256(H)`, adds an additional layer of security by requiring the heir to provide a secret piece of information, the preimage of a SHA256 hash, which they would only be able to discover by following the instructions left behind. This preimage acts as the answer to a question or a series of clues that the deceased has prepared. Both conditions, the possession of the private key and the knowledge of the secret, must be satisfied simultaneously, as indicated by the `and` operator, for the transaction to be valid and the funds to be released. This dual requirement ensures that the testament's stipulations are honored, combining cryptographic proof of identity with a personalized test of knowledge.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-35",
+    "source": "sheet-use-cases",
+    "category": "n out of n",
+    "request": "A hacking competition open to any individual or team where 10 independent hacking challenges are submitted by the organizer. Each challenge reveals a private key when solved. All private keys are needed in order to claim the 0.5 BTC prize.",
+    "policy": "thresh(10,pk(problem_1),pk(problem_2),pk(problem_3),pk(problem_4),pk(problem_5),pk(problem_6),pk(problem_7),pk(problem_8),pk(problem_9),pk(problem_10))",
+    "explanation": "This miniscript policy requires that ten signatures be provided, corresponding to the ten private keys obtained by solving all the challenges. Note that different individuals or teams can collaborate by solving different challenges and sharing the private keys they obtained with one another.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-36",
+    "source": "sheet-use-cases",
+    "category": "n out of n",
+    "request": "A 3-of-3 multisig, requiring all specified private keys for spending.",
+    "policy": "thresh(3,pk(key_1),pk(key_2),pk(key_3))",
+    "explanation": "The miniscript policy `thresh(3, pk(key_1), pk(key_2), pk(key_3))` specifies a 3-of-3 multisig, meaning that in order to spend the funds, all three specified private keys (`key_1`, `key_2`, and `key_3`) must provide their signatures.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-39",
+    "source": "sheet-use-cases",
+    "category": "n out of n",
+    "request": "I need a Bitcoin script that involves authorization from three different keys stored in different locations.",
+    "policy": "thresh(3,pk(location_1),pk(location_2),pk(location_3))",
+    "explanation": "This miniscript policy ensures that keys from all 3 locations (`location_1`, `location_2`, `location_3`) have to sign any bitcoin transaction.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-40",
+    "source": "sheet-use-cases",
+    "category": "n out of n",
+    "request": "A corporation wants to enhance the security of its cryptocurrency treasury. To prevent unauthorized access and ensure corporate governance, the corporation decides to implement a multi-signature wallet where three corporate officers must agree to execute a transaction",
+    "policy": "thresh(3,pk(officer_1),pk(officer_2),pk(officer_3))",
+    "explanation": "This miniscript policy addresses the use case by requiring the agreement of three corporate officers to execute a transaction. Each officer is represented by a public key, named `officer_1`, `officer_2`, and `officer_3`. The `thresh` function with threshold 3 ensures that all three public keys must sign. This means that any transaction from the corporation's multi-signature wallet will only be valid if it is signed by all three officers, enhancing security and ensuring corporate governance by preventing unauthorized access to the cryptocurrency treasury.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-42",
+    "source": "sheet-use-cases",
+    "category": "n out of n",
+    "request": "A wallet with 4 keys where you need all 4 keys to spend the funds.",
+    "policy": "thresh(4,pk(key_1),pk(key_2),pk(key_3),pk(key_4))",
+    "explanation": "This miniscript policy uses a `thresh` policy with a threshold of 4 with 4 subpolicies, meaning all 4 subpolicies must be verified. Here, all four keys (`key_1`, `key_2`, `key_3`, `key_4`) are required to spend the funds.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-43",
+    "source": "sheet-use-cases",
+    "category": "n out of n",
+    "request": "For an additional layer of security, I require authorization from four of four different keys for any transaction.",
+    "policy": "thresh(4,pk(key1),pk(key2),pk(key3),pk(key4))",
+    "explanation": "This miniscript policy uses a `thresh` policy with a threshold of 4 with 4 subpolicies, meaning all 4 subpolicies must be verified. Here, all four keys (`key1`, `key2`, `key3`, `key4`) are required to authorize any transaction.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-44",
+    "source": "sheet-use-cases",
+    "category": "n out of n",
+    "request": "I'm setting up a system that requires three signatures for authorization, but I also want a time condition set for January 1st 2027.",
+    "policy": "thresh(4,pk(key1),pk(key2),pk(key3),after(1798761600))",
+    "explanation": "This miniscript policy requires four conditions to be met for authorization: the signatures of three specific public keys (`key1`, `key2`, and `key3`), and a time condition set for January 1st, 2027 (`after(1798761600)` where `1798761600` is the unix timestamp corresponding to the specified date). By using the `thresh` operator with threshold number 4, this policy ensures that all four conditions are satisfied.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-45",
+    "source": "sheet-use-cases",
+    "category": "n out of n",
+    "request": "I'm setting up a system that requires three signatures for authorization, but I also want a time condition set for block height 876518.",
+    "policy": "thresh(4,pk(key1),pk(key2),pk(key3),after(876518))",
+    "explanation": "This miniscript policy requires four conditions to be met for authorization: the signatures of three specific public keys (`key1`, `key2`, and `key3`) and a time condition set for block height 876518. By using the `thresh` operator with threshold number 4, this policy ensures that all four conditions are satisfied.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-48",
+    "source": "sheet-use-cases",
+    "category": "n out of n",
+    "request": "A wallet where six unique keys have to sign to carry out a transaction.",
+    "policy": "thresh(6,pk(key1),pk(key2),pk(key3),pk(key4),pk(key5),pk(key6))",
+    "explanation": "This miniscript policy requires that all six specified keys (`key1`, `key2`, ..., `key6`) sign a transaction in order for it to be considered valid.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-49",
+    "source": "sheet-use-cases",
+    "category": "n out of n",
+    "request": "A wallet with 7 keys where you need all 7 keys to spend the funds.",
+    "policy": "thresh(7,pk(key_1),pk(key_2),pk(key_3),pk(key_4),pk(key_5),pk(key_6),pk(key_7))",
+    "explanation": "This miniscript policy requires that all seven specified keys (`key_1`, `key_2`, ..., `key_7`) sign a transaction in order for it to be considered valid.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-50",
+    "source": "sheet-use-cases",
+    "category": "n out of n",
+    "request": "A script that requires the unanimous consensus of nine committee members to move wallet resources.",
+    "policy": "thresh(9,pk(member_1),pk(member_2),pk(member_3),pk(member_4),pk(member_5),pk(member_6),pk(member_7),pk(member_8),pk(member_9))",
+    "explanation": "This miniscript policy requires that all nine member keys (`member_1`, `member_2`, ..., `member_9`) sign to move wallet resources.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-52",
+    "source": "sheet-use-cases",
+    "category": "or",
+    "request": "Implement the Lightning BOLT #3 offered HTLC policy which:\n1. allows the channel counterparty (`remote` node) to claims the funds if in possession of the payment hash preimage (payment-success scenario) or the revocation key (revocation scenario)\n2. allows the offering node (`local` node) to recover the committed balance if the payment fails (payment-timeout scenario)",
+    "policy": "or(pk(key_revocation),and(pk(key_remote),or(pk(key_local),hash160(abcdef0123456789abcdef0123456789abcdef01))))",
+    "explanation": "The miniscript policy provided is designed to implement the offered HTLC policy as specified in BOLT #3 of the Lightning Network. It outlines the conditions under which the funds locked in the HTLC can be claimed. The policy allows for three scenarios:\n- payment-success scenario: payment is claimed on time by the receiving node (`pk(key_remote)`) using the payment hash preimage (`hash160(H)`)\n- payment-timeout scenario: the offering node gets its funds back (`pk(key_local)`)\n- revocation scenario: the revocation key is used (`pk(key_revocation)`), which is a safety mechanism allowing funds to be claimed if a party tries to cheat by broadcasting an old state",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-53",
+    "source": "sheet-use-cases",
+    "category": "or",
+    "request": "A wallet that can only be operated by three out of five employees together or by one of the two company's owners individually",
+    "policy": "or(thresh(3,pk(employee_1),pk(employee_2),pk(employee_3),pk(employee_4),pk(employee_5)),thresh(1,pk(owner_1),pk(owner_2)))",
+    "explanation": "This miniscript policy provides two alternative authorization scenarios:\n1. Three employees working together can authorize the transaction.\n2. Any one of the two company owners can individually authorize the transaction.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-54",
+    "source": "sheet-use-cases",
+    "category": "or",
+    "request": "A script where you need either a set of 3 keys or another set of 2 keys to sign in order to spend the bitcoins.",
+    "policy": "or(thresh(3,pk(key_1),pk(key_2),pk(key_3)),thresh(2,pk(key_4),pk(key_5)))",
+    "explanation": "This miniscript policy sets up two alternative paths for spending the bitcoins. The first path requires signatures from keys `key_1`, `key_2` and `key_3`. The second path requires signatures from keys `key_4` and `key_5`.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-55",
+    "source": "sheet-use-cases",
+    "category": "or",
+    "request": "A project approval committee can make decisions with the consensus of three out of five members to move the funds or by the project sponsor individually.",
+    "policy": "or(thresh(3,pk(member_1),pk(member_2),pk(member_3),pk(member_4),pk(member_5)),pk(sponsor))",
+    "explanation": "This miniscript policy provides two alternative authorization scenarios:\n1. Three project team members out of five can jointly authorize the transaction (`thresh(3, pk(member_1), pk(member_2), pk(member_3), pk(member_4), pk(member_5))`)\n2. The project sponsor can individually authorize the transaction (`pk(sponsor)`).",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-57",
+    "source": "sheet-use-cases",
+    "category": "or",
+    "request": "A charitable trust can be set up where 5 trustees must all agree on the disbursement of funds. If the trustees cannot come to a unanimous decision within a fiscal year, the funds can be automatically released to a previously agreed-upon beneficiary organization.",
+    "policy": "or(thresh(5,pk(Trustee1),pk(Trustee2),pk(Trustee3),pk(Trustee4),pk(Trustee5)),and(pk(BeneficiaryOrg),after(52560)))",
+    "explanation": "The miniscript policy is designed to control the disbursement of funds from a charitable trust. It offers two pathways for the release of funds: either all five trustees must agree on the transaction, or, if no unanimous decision is made within a fiscal year, the funds can be automatically released to a pre-designated beneficiary organization. The policy ensures that the trustees have control over the funds, but also includes a fail-safe mechanism to ensure that the funds are disbursed in a timely manner if the trustees cannot reach a consensus. This is achieved by requiring the beneficiary organization's signature and the condition that a fiscal year (approximated as 52,560 blocks or roughly one year) has passed, as indicated by the blockchain's `nLockTime`.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-59",
+    "source": "sheet-use-cases",
+    "category": "single sig",
+    "request": "The simplest Bitcoin script.",
+    "policy": "pk(key)",
+    "explanation": "This miniscript policy is the simplest Bitcoin script, which only requires that the transaction be signed with the private key corresponding to a given public key.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-60",
+    "source": "sheet-use-cases",
+    "category": "single sig",
+    "request": "A wallet which authorizes transactions with only my key.",
+    "policy": "pk(my_key)",
+    "explanation": "This miniscript policy specifies that only transactions signed with the public key \"my_key\" will be authorized. This means that any transaction attempting to spend funds from this wallet must include a valid signature from the corresponding private key. This policy ensures that only the owner of the private key associated with \"my_key\" can initiate transactions.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-62",
+    "source": "sheet-use-cases",
+    "category": "threshold",
+    "request": "A joint fund where any two out of nine contributors can authorize a transaction.",
+    "policy": "thresh(2,pk(contributor_1),pk(contributor_2),pk(contributor_3),pk(contributor_4),pk(contributor_5),pk(contributor_6),pk(contributor_7),pk(contributor_8),pk(contributor_9))",
+    "explanation": "This miniscript policy uses the `thresh` operator with a threshold of 2, thereby requiring that any two out of the nine contributors (`contributor_1`, `contributor_2`, ..., `contributor_9`) must authorize a transaction by signing with their key.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-63",
+    "source": "sheet-use-cases",
+    "category": "threshold",
+    "request": "A company has an emergency fund intended for critical situations. This fund is managed by four senior executives: the General Manager, the Finance Director, the Operations Director and the Head of Legal. Any two out of the four execs can approve a transfer.",
+    "policy": "thresh(2,pk(GM_key),pk(FIN_key),pk(OPS_key),pk(LEG_key))",
+    "explanation": "The miniscript policy is designed to control access to a company's emergency fund by requiring any two of the four senior executives to approve a transfer. The `thresh(2,...)` part of the policy sets the requirement that two signatures are needed, and the `pk(...)` conditions list the public keys of the General Manager, Finance Director, Operations Director, and Head of Legal. This ensures that no single executive can unilaterally access the funds, but any combination of two executives can jointly authorize a transaction, providing a balance between security and accessibility in critical situations.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-64",
+    "source": "sheet-use-cases",
+    "category": "threshold",
+    "request": "Design a script policy requiring any two out of seven specified keys for spending.",
+    "policy": "thresh(2,pk(key_1),pk(key_2),pk(key_3),pk(key_4),pk(key_5),pk(key_6),pk(key_7))",
+    "explanation": "This miniscript policy uses the `thresh` operator with a threshold to 2, ensuring that two of the seven specified keys (`key_1`, `key_2`, ..., `key_7`) must sign.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-65",
+    "source": "sheet-use-cases",
+    "category": "threshold",
+    "request": "A wallet requiring two out of six specific keys for spending.",
+    "policy": "thresh(2,pk(key_1),pk(key_2),pk(key_3),pk(key_4),pk(key_5),pk(key_6))",
+    "explanation": "This miniscript policy uses the `thresh` operator with a threshold to 2, ensuring that two of the six specified keys (`key_1`, `key_2`, ..., `key_6`) must sign.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-67",
+    "source": "sheet-use-cases",
+    "category": "threshold",
+    "request": "A joint fund requiring two out of four participants to authorize a transaction.",
+    "policy": "thresh(2,pk(participant_1),pk(participant_2),pk(participant_3),pk(participant_4))",
+    "explanation": "This miniscript policy uses the `thresh` operator with a threshold of 2, thereby requiring that any two out of the four participants (`participant_1`, `participant_2`, `participant_3`, `participant_4`) must authorize a transaction by signing with their key.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-68",
+    "source": "sheet-use-cases",
+    "category": "threshold",
+    "request": "A Bitcoin output that any two out of three specified participants can spend.",
+    "policy": "thresh(2,pk(participant_1),pk(participant_2),pk(participant_3))",
+    "explanation": "This miniscript policy uses the `thresh` operator with a threshold of 2, thereby requiring that any two out of the three participants (`participant_1`, `participant_2`, `participant_3`) must authorize a transaction by signing with their key.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-69",
+    "source": "sheet-use-cases",
+    "category": "threshold",
+    "request": "Two partners have pooled Bitcoin funds for a project and, in case of disagreement, a mediator can intervene and side with one of the two partners to move the funds.",
+    "policy": "thresh(2,pk(partner_1),pk(partner_2),pk(mediator))",
+    "explanation": "This miniscript policy requires the agreement of two out of the three parties involved, each having its own key (`partner_1`, `partner_2`, `mediator`). In the event of a disagreement between the two partners, the mediator can intervene and side with one of the partners to move the funds. This policy ensures that no single party can unilaterally control the funds, promoting fairness and preventing misuse of the pooled Bitcoin funds.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-71",
+    "source": "sheet-use-cases",
+    "category": "threshold",
+    "request": "Two parties engaged in a transaction lock funds in an escrow account involving escrow agent, who will release the funds when both parties' obligations are met. No single actor can unilaterally release the funds - not even the agent.",
+    "policy": "thresh(2,pk(party1),pk(party2),pk(agent))",
+    "explanation": "This miniscript policy uses the `thresh` operator with a threshold of 2, thereby requiring that any two out of the three actors (`party_1`, `party_2`, `agent`) must authorize a transaction by signing with their key.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-73",
+    "source": "sheet-use-cases",
+    "category": "threshold",
+    "request": "For my cold storage setup, I want my wallet to be protected by 3 keys - 1 in my phone, 1 at home and 1 at my workplace. To avoid the funds being stuck in case one of the 3 keys is lost or inaccessible, 2 out of 3 of the keys should be sufficient to move the funds.",
+    "policy": "thresh(2,pk(phone),pk(home),pk(work))",
+    "explanation": "This miniscript policy uses the `thresh` operator with a threshold of 2, thereby requiring that any two out of the three keys (`phone`, `home`, `work`) must sign the transaction. This setup provides both security and redundancy. On the one hand, the funds are protected because the keys are distributed across different locations and a single key alone is not sufficient to move the funds. On the other hand, the wallet owner can still access the funds even if one of the keys is lost or becomes inaccessible.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-74",
+    "source": "sheet-use-cases",
+    "category": "threshold",
+    "request": "A corporate fund where any three out of five board members must agree to spend",
+    "policy": "thresh(3,pk(board_member_1),pk(board_member_2),pk(board_member_3),pk(board_member_4),pk(board_member_5))",
+    "explanation": "This miniscript policy requires that any three out of the five board members (named `board_member_1` to `board_member_5`) must agree in order to spend from the corporate fund. Each board member is represented by a public key, and the policy uses the `thresh` operator to specify that three out of the five public keys must be satisfied.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-75",
+    "source": "sheet-use-cases",
+    "category": "threshold",
+    "request": "Establish a collective investment fund managed by three trustees, initially requiring unanimous consent from all three for any investment decisions. After 180 days, the policy shifts to allow decisions with any two out of the three trustees' signatures.",
+    "policy": "thresh(3,pk(key_1),pk(key_2),pk(key_3),older(25920))",
+    "explanation": "This miniscript policy uses the `thresh` operator with a threshold of 3, mean that any three out of the four conditions must be met. Three of these conditions are public key signatures (`pk(key_1)`, `pk(key_2)`, `pk(key_3)`) and the last one is a relative timelock (`older(25920)`). Before 25920 blocks have been mined (approximately 180 days), the last condition is not met so all 3 public key signatures are required, but after that only 2 out of those 3 signatures are necessary.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-76",
+    "source": "sheet-use-cases",
+    "category": "threshold",
+    "request": "A wallet with a time-based fail-safe mechanism which initially requires 3 keys to sign but after 90 days only 2 keys are required.",
+    "policy": "thresh(3,pk(key_1),pk(key_2),pk(key_3),older(12960))",
+    "explanation": "The proposed miniscript policy is designed to control the spending of funds from a Bitcoin wallet with a time-based fail-safe mechanism. Initially, it requires all three keys (`key_1`, `key_2`, and `key_3`) to sign a transaction, ensuring a high level of security through multi-signature authorization. However, the policy also includes a condition based on the `older` operator, which introduces a time-based element. After approximately 90 days, the `older(12960)` condition is satisfied, effectively reducing the threshold requirement from 3 signatures to 2. This means that after 90 days, any two of the three keys can authorize a transaction, serving as a fail-safe in case one of the keyholders is unavailable. The policy ensures that the wallet's funds remain secure but become more accessible over time if necessary.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-78",
+    "source": "sheet-use-cases",
+    "category": "threshold",
+    "request": "A collaborative fund where four members manage the wallet. The condition is such that any transaction must be approved by at least three of the four members, but after a certain time period (say, 6 months), only two members' approval is required.",
+    "policy": "thresh(3,pk(key_member1),pk(key_member2),pk(key_member3),pk(key_member4),older(25920))",
+    "explanation": "This miniscript policy uses the `thresh` operator with a threshold of 3, meaning that any three out of the five conditions must be met. Four of these conditions are public key signatures (`pk(key_member1)`, `pk(key_member2)`, `pk(key_member3)`, `pk(key_member4)`) and the last one is a relative timelock (`older(25920)`). Before 25920 blocks have been mined (approximately 180 days), the last condition is not met so 3 of the 4 public key signatures are required, but after that only 2 out of those 4 signatures are necessary.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-79",
+    "source": "sheet-use-cases",
+    "category": "threshold",
+    "request": "Create a miniscript for a portfolio of funds managed by a decentralized committee with four decision-making members, where funds can only be invested with the agreement of at least three of them.",
+    "policy": "thresh(3,pk(member_1),pk(member_2),pk(member_3),pk(member_4))",
+    "explanation": "This miniscript policy uses the `thresh` operator with a threshold of 3, thereby requiring that any three out of the three members (`member_1`, `member_2`, `member_3`, `member_4`) must authorize a transaction by signing with their key.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-80",
+    "source": "sheet-use-cases",
+    "category": "threshold",
+    "request": "My two business partners, Emily and Alex, and I are pooling resources to invest in Bitcoin. We aim to set up a multisignature wallet that utilizes three keys: one under my control, one under Emily's control, and another under Alex's control. Initially, all three keys will be required to authorize Bitcoin transactions, but after 60 days, we'll switch to just two keys. After 120 days, any one of those keys can spend the funds.",
+    "policy": "thresh(3,pk(me),pk(emily),pk(alex),older(8640),older(17280))",
+    "explanation": "This miniscript policy uses the `thresh` operator with a threshold of 3, meaning that any three out of the five conditions must be met. Three of these conditions are public key signatures (`pk(me)`, `pk(emily)`, `pk(alex)`) and the remaining two are relative timelocks (`older(8640)`, `older(17280)`). Before 8640 blocks have been mined (approximately 60 days), the two timelock conditions are not met so all 3 public key signatures are required. Between 8640 blocks and 17280 blocks (approximately 120 days), one of the two timelock condition is met so 2 out of 3 public key signatures are required. After 17280 blocks, both of the timelock conditions are met so only 1 out of 3 public key signatures is required.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-81",
+    "source": "sheet-use-cases",
+    "category": "threshold",
+    "request": "My two business associates, Lisa and Eric, and I have decided to invest in Bitcoin. Our plan is to establish a multisignature wallet featuring three keys: one in my possession, one in Lisa's possession, and another in Eric's possession. Initially, all three keys will be required for Bitcoin transaction authorization, but after a year, we'll switch to using just two keys. After two years, our lawyer can sign for one of us.",
+    "policy": "thresh(3,pk(me),pk(lisa),pk(eric),older(52560),and(older(105120),pk(lawyer)))",
+    "explanation": "This miniscript policy uses the `thresh` operator with a threshold of 3, meaning that any three out of the five conditions must be met. Three of these conditions are public key signatures (`pk(me)`, `pk(lisa)`, `pk(eric)`) and the remaining two are a relative timelocks (`older(52560)`) and the combination of a relative timelock with a public key signature (`and(older(105120), pk(lawyer))`). Before 52560 blocks have been mined (approximately 1 year), the two timelock conditions are not met so all 3 signatures from you, Lisa and Eric are required. Between 52560 blocks and 105120 blocks (approximately 2 years), one of the timelock conditions is met so 2 out of these 3 signatures are required. After 105120 blocks, the lawyer can also contribute one of the 2 signatures required.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-83",
+    "source": "sheet-use-cases",
+    "category": "threshold",
+    "request": "In our family, we are setting up a long-term savings plan in Bitcoin. We've decided to create a multisignature wallet with three keys: one for me, one for my mother, and one for my grandfather. To authorize Bitcoin transactions, all three keys must be used, unless a 180-day deadline is reached, when only two keys will be needed.",
+    "policy": "thresh(3,pk(me),pk(mother),pk(grandfather),older(25920))",
+    "explanation": "This miniscript policy uses the `thresh` operator with a threshold of 3, meaning that any three out of the four conditions must be met. Three of these conditions are public key signatures (`pk(me)`, `pk(mother)`, `pk(grandfather)`) and the last one is a relative timelock (`older(25920)`). Before 25920 blocks have been mined (approximately 180 days), the last condition is not met so all 3 public key signatures are required, but after that only 2 out of those 3 signatures are necessary.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-84",
+    "source": "sheet-use-cases",
+    "category": "threshold",
+    "request": "I'm involved in a business partnership, and we want to secure our Bitcoin funds with legal representation. I need a Bitcoin script involving three signatures: mine and my partner's, and one from our legal representative. Additionally, we'd like to reduce the requirement to just two signatures after 10,000 blocks.",
+    "policy": "thresh(3,pk(my_key),pk(partner_key),pk(legalrep_key),older(10000))",
+    "explanation": "This miniscript policy uses the `thresh` operator with a threshold of 3, meaning that any three out of the four conditions must be met. Three of these conditions are public key signatures (`pk(my_key)`, `pk(partner_key)`, `pk(legalrep_key)`) and the last one is a relative timelock (`older(10000)`). Before 10000 blocks have been mined (approximately 70 days), the last requirement is not met so all 3 public key signatures are required, but after that only 2 out of those 3 signatures are necessary. The multisig setup with three geographically distributed keys gives this wallet good security, while the timelock adds more flexibility and robustness.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-85",
+    "source": "sheet-use-cases",
+    "category": "threshold",
+    "request": "Envision a multisig Miniscript where any three out of eleven specified participants can authorize a transaction.",
+    "policy": "thresh(3,pk(participant_1),pk(participant_2),pk(participant_3),pk(participant_4),pk(participant_5),pk(participant_6),pk(participant_7),pk(participant_8),pk(participant_9),pk(participant_10),pk(participant_11))",
+    "explanation": "This miniscript policy uses the `thresh` operator with a threshold of 3, thereby requiring that any three out of the eleven participants (`participant_1`, `participant_2`, ..., `participant_11`) must authorize a transaction by signing with their key.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-86",
+    "source": "sheet-use-cases",
+    "category": "threshold",
+    "request": "In a multisig scenario where any three out of four participants can authorize a transaction, what would be the Miniscript policy?",
+    "policy": "thresh(3,pk(participant_1),pk(participant_2),pk(participant_3),pk(participant_4))",
+    "explanation": "This miniscript policy uses the `thresh` operator with a threshold of 3, thereby requiring that any three out of the four participants (`participant_1`, `participant_2`, `participant_3`, `participant_4`) must authorize a transaction by signing with their key.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-88",
+    "source": "sheet-use-cases",
+    "category": "threshold",
+    "request": "I want a 3x3 multisig wallet that can only spend its coins after 20 days.",
+    "policy": "thresh(4,pk(key_1),pk(key_2),pk(key_3),older(2880))",
+    "explanation": "This miniscript policy uses the `thresh` operator with a threshold of 4, meaning that all four conditions must be met. Three of these conditions are public key signatures (`pk(key_1)`, `pk(key_2)`, `pk(key_3)`) and the last one is a relative timelock (`older(2880)`). This means all 3 public keys must sign and the spending transaction has to wait until 2880 blocks have elapsed (approximately 20 days) since the funding transaction.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-89",
+    "source": "sheet-use-cases",
+    "category": "threshold",
+    "request": "In a decentralized organization, where a vote of at least 80% is needed for spending, what would be the Miniscript?",
+    "policy": "thresh(4,pk(member_1),pk(member_2),pk(member_3),pk(member_4),pk(member_5))",
+    "explanation": "This miniscript policy uses the `thresh` operator with a threshold of 4, thereby requiring that any four out of the five members (`member_1`, `member_2`, ..., `member_5`) must authorize a transaction by signing with their key.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-90",
+    "source": "sheet-use-cases",
+    "category": "threshold",
+    "request": "A DAO (decentralized autonomous organization) has 10 members. An absolute majority (> 50%) of the members is needed to spend the funds.",
+    "policy": "thresh(6,pk(member1),pk(member2),pk(member3),pk(member4),pk(member5),pk(member6),pk(member7),pk(member8),pk(member9),pk(member10))",
+    "explanation": "The miniscript policy described is designed to control the spending of funds by a DAO with 10 members. It stipulates that in order to authorize a transaction, signatures from more than half of the members (specifically, at least 6 out of 10) are required. This ensures that no single member or small group can unilaterally spend the funds without a majority consensus, reflecting the democratic and decentralized nature of the organization's decision-making process. Each `pk(memberX)` term represents the requirement for a signature from that particular member, and the `thresh(6, ...)` term enforces that a minimum of 6 members must agree and provide their signatures for the transaction to be valid.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-91",
+    "source": "sheet-use-cases",
+    "category": "threshold",
+    "request": "In a decentralized organization, where a supermajority vote of 70% is needed for spending, how would you structure the Miniscript?",
+    "policy": "thresh(7,pk(member_1),pk(member_2),pk(member_3),pk(member_4),pk(member_5),pk(member_6),pk(member_7),pk(member_8),pk(member_9),pk(member_10))",
+    "explanation": "This miniscript policy uses the `thresh` operator with a threshold of 7, thereby requiring that any seven out of the ten members (`member_1`, `member_2`, ..., `member_10`) must authorize a transaction by signing with their key. Seven out of ten corresponds to the 70% supermajority stated in the use case.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-93",
+    "source": "sheet-use-cases",
+    "category": "timelock",
+    "request": "A wallet that funds can't be taken out of for 2 days.",
+    "policy": "and(pk(key),older(288))",
+    "explanation": "This miniscript policy ensures that the funds in the wallet can only be spent if two conditions are met. First, the spending transaction must be signed by the specified public key (`pk(key)`). Second, the nSequence value of the spending transaction must have a value greater than or equal to 288 blocks (`older(288)`), which means approximately 2 days have passed since the funds were locked. This policy effectively prevents the funds from being taken out of the wallet for a period of 2 days, providing a time-based restriction on spending.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-94",
+    "source": "sheet-use-cases",
+    "category": "timelock",
+    "request": "A wallet with a time lock of 5 days.",
+    "policy": "and(pk(key),older(720))",
+    "explanation": "This policy specifies that two conditions must be met for funds to be spent from the wallet: First, a signature from a public key named \"key\" is required, ensuring that only the holder of the corresponding private key can authorize a transaction. Second, the transaction must only be valid after a period of 720 blocks has been mined, which roughly translates to 5 days (assuming an average block time of 10 minutes). This time lock is enforced by the `older(720)` clause, which means that the transaction cannot be included in the blockchain until the specified number of blocks has passed since the transaction was created. Together, these conditions create a wallet that can only be accessed by the rightful owner and only after a 5-day waiting period, effectively implementing a time-locked wallet as described in the use case.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-95",
+    "source": "sheet-use-cases",
+    "category": "timelock",
+    "request": "A Bitcoin output that I can unlock with my key, but only after a specific date and time.",
+    "policy": "and(pk(my_key),after(1893456000))",
+    "explanation": "This miniscript policy specifies that in order to unlock the Bitcoin output, both conditions in the `and` statement must be met: the signature of the public key `my_key` must be provided and the transaction nLockTime has to be greater than the specified date and time converted to unix timestamp `TIMESTAMP`.",
+    "confirmed": true
+  },
+  {
+    "id": "use-case-96",
+    "source": "sheet-use-cases",
+    "category": "timelock",
+    "request": "A wallet that funds can't be taken out of for 3 days.",
+    "policy": "and(pk(specific_key),older(432))",
+    "explanation": "This miniscript policy ensures that the funds in the wallet can only be spent if two conditions are met. First, the spending transaction must be signed by the specified public key (`pk(specific_key)`). Second, the nSequence value of the spending transaction must have a value greater than or equal to 432 blocks (`older(432)`), which means approximately 3 days have passed since the funds were locked. This policy effectively prevents the funds from being taken out of the wallet for a period of 3 days, providing a time-based restriction on spending.",
+    "confirmed": true
+  },
+  {
+    "id": "training-design-103",
+    "source": "sheet-training",
+    "category": "error",
+    "request": "The following miniscript policy does not compile:\nthresh(1, and(pk(key1),pk(key2)), and(pk(key1),pk(key3)))\n\nPropose a corrected policy and explain what caused the error and how the corrected policy addresses it.",
+    "policy": "and(pk(key1),or(pk(key2),pk(key3)))",
+    "explanation": "Suggested policy with corrections:\n\n\nThe error in the original Bitcoin miniscript policy is caused by a violation of the rule that the same key cannot appear in two different subpolicies. In the original policy, both `pk(key1)` and `pk(key1)` are used in different subpolicies, which is not allowed. To fix this, the policy was refactored in the corrected version by combining the two subpolicies that use `pk(key1)` into a single subpolicy using the `or` operator. This ensures that the same key is not repeated in different subpolicies, resolving the compilation error. The corrected policy is `and(pk(key1), or(pk(key2), pk(key3)))`.",
+    "confirmed": true
+  },
+  {
+    "id": "training-design-104",
+    "source": "sheet-training",
+    "category": "error",
+    "request": "The following miniscript policy does not compile:\nor(and(pk(A),pk(B)),and(pk(A),pk(C)))\n\nPropose a corrected policy and explain what caused the error and how the corrected policy addresses it.",
+    "policy": "thresh(2,pk(A),or(pk(B),pk(C)))",
+    "explanation": "Suggested policy with corrections:\n\n\nThe error in the original Bitcoin miniscript policy `or(and(pk(A),pk(B)),and(pk(A),pk(C)))` is a violation of the rule that the same key cannot appear in two different subpolicies. In this case, the key `A` is used in both subpolicies. To fix this, the policy was refactored to `thresh(2, pk(A), or(pk(B),pk(C)))`, where the common key `A` is included in one subpolicy only. This corrected policy satisfies the requirement of having at least two out of the three subpolicies (`pk(A)`, `pk(B)`, `pk(C)`) met.",
+    "confirmed": true
+  },
+  {
+    "id": "training-design-105",
+    "source": "sheet-training",
+    "category": "error",
+    "request": "The following miniscript policy does not compile:\nor(thresh(2, pk(partner_1), pk(op_1), pk(op_2), pk(op_3)), thresh(1, pk(partner_1), pk(partner_2)))\n\nPropose a corrected policy and explain what caused the error and how the corrected policy addresses it.",
+    "policy": "or(thresh(2,pk(op_1),pk(op_2),pk(op_3)),thresh(1,pk(partner_1),pk(partner_2)))",
+    "explanation": "Suggested policy with corrections:\n\n\nThe error in the original Bitcoin miniscript policy `or(thresh(2, pk(partner_1), pk(op_1), pk(op_2), pk(op_3)), thresh(1, pk(partner_1), pk(partner_2)))`is a violation of the rule that the same key cannot appear in two different subpolicies. In this case, the key `partner_1` is used in both subpolicies. To fix this, the policy was refactored to `or(thresh(2, pk(op_1), pk(op_2), pk(op_3)), thresh(1, pk(partner_1), pk(partner_2)))`, where the common key `partner_1` is included in one subpolicy only. The `thresh` operator appears as two subpolicies of \"or\" (or([N@]POL,[N@]POL)) that require one of subpolicies `thresh` are satisfied and specifies that a certain number of subpolicies must be met, in this case, at least 2 out of the 3 public key subpolicies pk(op_1), pk(op_2), pk(op_3)) must be satisfied, or at least 1 out of the 2 public key subpolicies pk(partner_1), pk(partner_2).'",
+    "confirmed": true
+  },
+  {
+    "id": "training-design-107",
+    "source": "sheet-training",
+    "category": "error",
+    "request": "The following miniscript policy does not compile:\nmulti(2, pk(keyA),pk(keyB),pk(keyC))\n\nPropose a corrected policy and explain what caused the error and how the corrected policy addresses it.",
+    "policy": "thresh(2,pk(keyA),pk(keyB),pk(keyC))",
+    "explanation": "Suggested policy with corrections:\n\n\nThe error in the original Bitcoin miniscript policy `multi(2, pk(keyA),pk(keyB),pk(keyC))` is caused by using the unsupported operator `multi` instead of the correct operator `thresh`. The `multi` operator is not a valid operator in Bitcoin miniscript. To fix the error, the operator `multi` was replaced with the correct operator `thresh` in the corrected policy `thresh(2, pk(keyA),pk(keyB),pk(keyC))`. The `thresh` operator specifies that a certain number of subpolicies must be met, in this case, at least 2 out of the 3 public key subpolicies (`pk(keyA)`, `pk(keyB)`, `pk(keyC)`) must be satisfied.",
+    "confirmed": true
+  },
+  {
+    "id": "training-design-109",
+    "source": "sheet-training",
+    "category": "error",
+    "request": "The following miniscript policy does not compile:\nthresh(2, pk(keyA), or(pk(keyB), pkkeyC)))\n\nPropose a corrected policy and explain what caused the error and how the corrected policy addresses it.",
+    "policy": "thresh(2,pk(keyA),or(pk(keyB),pk(keyC)))",
+    "explanation": "Suggested policy with corrections:\n\n\nThe error in the original Bitcoin miniscript policy is a mismatched parentheses. The closing parenthesis for the `or` operator is missing, causing a syntax error. In the corrected policy, the missing closing parenthesis is added after `pk(keyC)`, ensuring that the parentheses are balanced. This fixes the syntax error and allows the policy to be compiled successfully.",
+    "confirmed": true
+  },
+  {
+    "id": "training-design-110",
+    "source": "sheet-training",
+    "category": "error",
+    "request": "The following miniscript policy does not compile:\nthresh(2, pk(keyA), orpk(keyB), after(1081201)))\n\nPropose a corrected policy and explain what caused the error and how the corrected policy addresses it.",
+    "policy": "thresh(2,pk(keyA),or(pk(keyB),after(1081201)))",
+    "explanation": "Suggested policy with corrections:\n\n\nThe error in the original Bitcoin miniscript policy is a mismatched parentheses. The closing parenthesis after `after(1081201)` is one too many, causing a syntax error. In the corrected policy, the extra closing parenthesis is removed, and the `or` operator is used to combine the subpolicies `pk(keyB)` and `after(1081201)`. This ensures that the policy is properly formatted and can be compiled without errors.",
+    "confirmed": true
+  },
+  {
+    "id": "training-design-112",
+    "source": "sheet-training",
+    "category": "error",
+    "request": "The following miniscript policy does not compile:\nand, sha256(H), thresh(1, pk(team_key_1), pk(team_key_2), pk(team_key_3), pk(team_key_4), pk(team_key_5)))\n\n\nPropose a corrected policy and explain what caused the error and how the corrected policy addresses it.",
+    "policy": "and(sha256(0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef),thresh(1,pk(team_key_1),pk(team_key_2),pk(team_key_3),pk(team_key_4),pk(team_key_5)))",
+    "explanation": "Suggested policy with corrections:\n\n\nThe error in the original Bitcoin miniscript policy is a mismatched parentheses in `and, sha256(H), thresh(1, pk(team_key_1), pk(team_key_2), pk(team_key_3), pk(team_key_4), pk(team_key_5)))`. Theres a missing parenthesis right after `and`, involving the expression `sha256(H)`causing a syntax error. In the corrected policy, the parenthesis is added, and in order to fix this, the policy was refactored to `and(sha256(H), thresh(1, pk(team_key_1), pk(team_key_2), pk(team_key_3), pk(team_key_4), pk(team_key_5)))`. This ensures that the policy is properly formatted and can be compiled without errors.",
+    "confirmed": true
+  },
+  {
+    "id": "training-design-113",
+    "source": "sheet-training",
+    "category": "error",
+    "request": "The following miniscript policy does not compile:\nthresh(1, pk(key1), pk(key2), after(1081201))\n\nPropose a corrected policy and explain what caused the error and how the corrected policy addresses it.",
+    "policy": "thresh(2,pk(key1),pk(key2),after(1081201))",
+    "explanation": "Suggested policy with corrections:\n\n\nThe error in the original Bitcoin miniscript policy `thresh(1, pk(key1), pk(key2), after(1081201))` is that the threshold value is set to 1, which means only one out of the three subpolicies needs to be satisfied. However, the `after` subpolicy cannot satisfy the threshold on its own, so the threshold number should be 2 or more. In the corrected policy `thresh(2, pk(key1), pk(key2), after(1081201))`, the threshold value is set to 2, ensuring that at least two out of the three subpolicies need to be met. This fixes the error and ensures that the policy is valid.",
+    "confirmed": true
+  },
+  {
+    "id": "training-design-115",
+    "source": "sheet-training",
+    "category": "error",
+    "request": "The following miniscript policy does not compile:\nthresh(2, pk(key1), pk(key2), older(-100))\n\nPropose a corrected policy and explain what caused the error and how the corrected policy addresses it.",
+    "policy": "thresh(2,pk(key1),pk(key2),older(100))",
+    "explanation": "Suggested policy with corrections:\n\n\nThe error in the original Bitcoin miniscript policy `thresh(2, pk(key1), pk(key2), older(-100))` is caused by the negative value `-100` used in the `older` subpolicy. The `older` subpolicy requires a positive value for the nSequence value, so using a negative value is not allowed. In the corrected policy `thresh(2, pk(key1), pk(key2), older(100))`, the negative sign is removed, and the value is changed to `100`, which is a valid positive value for the `older` subpolicy. This correction ensures that the policy is syntactically correct and adheres to the rules of Bitcoin miniscript.",
+    "confirmed": true
+  },
+  {
+    "id": "training-design-116",
+    "source": "sheet-training",
+    "category": "error",
+    "request": "The following miniscript policy does not compile:\nthresh(3,pk(my_key),pk(lisa_key),pk(eric_key),older(1)year),and(older(2)years), pk(lawyer_key)))\n\nPropose a corrected policy and explain what caused the error and how the corrected policy addresses it.",
+    "policy": "thresh(3,pk(my_key),pk(lisa_key),pk(eric_key),older(52560),and(older(105120),pk(lawyer_key)))",
+    "explanation": "Suggested policy with corrections:\n\n\nThe error in the original Bitcoin miniscript policy `thresh(3,pk(my_key),pk(lisa_key),pk(eric_key),older1)year),and(older(2)years, pk(lawyer_key)))` is that the older value is set with a number of days expessed by a number and strings \"(1)year\" and \"(2)year\". The \"older\" policy itself establishes \"Require that the nLockTime/nSequence value is at least NUM. NUM cannot be 0\" , and this policy needs to be satisfied. In the corrected policy `thresh(3,pk(my_key),pk(lisa_key),pk(eric_key),older(52560),and(older(105120),pk(lawyer_key)))`, the older value is set to \"52560\" and \"105120\" respectively, expressed in blocks of the Bitcoin blockchain. On the Bitcoin blockchain, a new block is added, on average, every 10 minutes. To calculate how long \"52560\" and \"105120\" blocks represent, simply multiply the number of blocks by the average generation time of each block,ensuring that at least about 1 year and 2 years. This fixes the error and ensures that the policy is valid.",
+    "confirmed": true
+  },
+  {
+    "id": "training-design-119",
+    "source": "sheet-training",
+    "category": "error",
+    "request": "The following miniscript policy does not compile:\nand(pk(key_1),and(pk(key_1),pk(key_2)))\n\nPropose a corrected policy and explain what caused the error and how the corrected policy addresses it.",
+    "policy": "and(pk(key_1),and(pk(key_2),pk(key_3)))",
+    "explanation": "Suggested policy with corrections:\n\n\nThe error in the original Bitcoin miniscript policy `(pk(key_1),and(pk(key_1),pk(key_2)))` is a violation of the rule that the same key cannot appear in two different subpolicies. In this case, the key `key_1` is used in both subpolicies. To fix this, the policy was refactored to `and(pk(key_1),and(pk(key_2),pk(key_3)))`, where the common key `key_1` is included in one subpolicy only. This corrected policy satisfies the requirement of having at least two subpolicies for \"and\" (and(POL,POL)) that require one of subpolicies are satisfied, one of them being another subpolicy of yet another policy \"and\" (`pk(key_1)`, and `pk(key_2)`, `pk(key_3)`).",
+    "confirmed": true
+  },
+  {
+    "id": "training-design-120",
+    "source": "sheet-training",
+    "category": "error",
+    "request": "The following miniscript policy does not compile:\nand(pk(key1),and(pk(key2),and(pk(key3),HTLC(288))))\n\nPropose a corrected policy and explain what caused the error and how the corrected policy addresses it.",
+    "policy": "and(pk(key1),and(pk(key2),and(pk(key3),older(288))))",
+    "explanation": "Suggested policy with corrections:\n\n\nThe error in the original Bitcoin miniscript policy `and(pk(key1),and(pk(key2),and(pk(key3),HTLC(288))))` is caused by using the unsupported subpolicy `HTLC` instead of the suported subpolicies to timelock `older` or `after`. The `HTLC` subpolicy is not a valid subpolicy in Bitcoin miniscript. To fix the error, the subpolicy `HTLC` was replaced with the correct option to timelock `older` in the corrected policy `and(pk(key1),and(pk(key2),and(pk(key3),older(288))))`. The `older` operator specifies that a certain number of blocks need to be processed for the operation to be completed, in this case 288, which is approximately two days.",
+    "confirmed": true
+  },
+  {
+    "id": "spirit-design-9",
+    "source": "spirit-miniscript-examples",
+    "category": "archived-design",
+    "request": "How do I create a way that me and my 2 brothers have to sign a smart contract, but after 90 days we only need 2 siblings?",
+    "policy": "thresh(3,pk(my_key),pk(sibling_key_1),pk(sibling_key_2),older(12960))",
+    "explanation": "Certainly, let's explain the Bitcoin Miniscript provided in the prompt:\n\n```miniscript\nthresh(3, pk(my_key), pk(sibling_key_1), pk(sibling_key_2), older(12960))\n```\n\nThis Miniscript is designed to create a smart contract with specific authorization requirements:\n\n- `thresh(3, ...)`:\n - This part defines a \"threshold\" condition, which means that a certain number of conditions must be met for the script to be satisfied. In this case, the threshold is set to 3, indicating that three separate conditions must be satisfied for the script to pass.\n\n- `pk(my_key)`, `pk(sibling_key_1)`, `pk(sibling_key_2)`:\n - These conditions represent the requirement for each of the keys, namely `my_key`, `sibling_key_1`, and `sibling_key_2`, to sign the Bitcoin transaction. In other words, initially, all three keys must sign to authorize a transaction. This setup ensures that you and your two brothers need to collectively approve any Bitcoin transactions, providing a high level of security.\n\n- `older(12960)`:\n - This condition introduces a time-based requirement. It checks if the transaction is older than a specified block height or time, in this case, 12960 blocks. If the transaction is older than this threshold, it satisfies this condition.\n\nIn simpler terms, this Miniscript enforces the following logic:\n\n- Initially, to spend funds from the associated Bitcoin address, you, along with your two brothers (sibling_key_1 and sibling_key_2), must all sign the transaction. This means that the unanimous approval of all three parties is required to authorize Bitcoin transactions, ensuring a high level of security.\n\n- After 90 days (12960 blocks), the script relaxes the requirement, transitioning to a 2-out-of-3 multisignature condition. After this time period, only two out of the three keys will be sufficient to validate a transaction. This allows for more flexibility in managing smart contracts while maintaining a significant level of security.\n\nThis Miniscript provides a gradual relaxation of security, allowing for a more convenient and flexible management of smart contracts with your siblings after a specified time, while still maintaining a strong initial security posture.",
+    "confirmed": true
+  },
+  {
+    "id": "spirit-design-12",
+    "source": "spirit-miniscript-examples",
+    "category": "archived-design",
+    "request": "I want a bitcoin miniscriptone to pay one of two keys",
+    "policy": "or(pk(key_1),pk(key_2))",
+    "explanation": "",
+    "confirmed": true
+  },
+  {
+    "id": "spirit-design-13",
+    "source": "spirit-miniscript-examples",
+    "category": "archived-design",
+    "request": "I want bitcoin miniscript to pay one of three keys",
+    "policy": "or(pk(key_1),or(pk(key_2),pk(key_3)))",
+    "explanation": "",
+    "confirmed": true
+  },
+  {
+    "id": "spirit-design-16",
+    "source": "spirit-miniscript-examples",
+    "category": "archived-design",
+    "request": "I want to make the simplest bitcoin miniscript",
+    "policy": "pk(key_1)",
+    "explanation": "Certainly, let's explain the provided Bitcoin Miniscript:\n\n```miniscript\npk(key_1)\n```\n\nThis is one of the simplest Bitcoin Miniscripts you can create. It consists of a single condition:\n\n- `pk(key_1)`:\n - This condition represents the requirement for a specific public key, `key_1`, to sign the Bitcoin transaction. In other words, the transaction will be considered valid only if it is signed with the private key corresponding to `key_1`.\n\nIn plain terms, this Miniscript enforces the following logic:\n\n- It allows a Bitcoin transaction to be spent only if it is signed by a particular private key (`key_1`).\n\nThis Miniscript is straightforward and useful for scenarios where you want to protect your Bitcoin funds with a single private key. However, it lacks the additional security provided by multi-signature setups, which require multiple parties to authorize a transaction.",
+    "confirmed": true
+  },
+  {
+    "id": "spirit-design-21",
+    "source": "spirit-miniscript-examples",
+    "category": "archived-design",
+    "request": "I want bitcoin miniscript for five persons accept terms",
+    "policy": "and(pk(key_1),and(pk(key_2),and(pk(key_3),and(pk(key_4),pk(key_5)))))",
+    "explanation": "",
+    "confirmed": true
+  },
+  {
+    "id": "spirit-design-22",
+    "source": "spirit-miniscript-examples",
+    "category": "archived-design",
+    "request": "I want bitcoin miniscript for six persons accept terms",
+    "policy": "and(pk(key_1),and(pk(key_2),and(pk(key_3),and(pk(key_4),and(pk(key_5),pk(key_6))))))",
+    "explanation": "",
+    "confirmed": true
+  },
+  {
+    "id": "spirit-design-23",
+    "source": "spirit-miniscript-examples",
+    "category": "archived-design",
+    "request": "I want bitcoin miniscript for seven persons accept terms",
+    "policy": "and(pk(key_1),and(pk(key_2),and(pk(key_3),and(pk(key_4),and(pk(key_5),and(pk(key_6),pk(key_7)))))))",
+    "explanation": "",
+    "confirmed": true
+  },
+  {
+    "id": "spirit-design-24",
+    "source": "spirit-miniscript-examples",
+    "category": "archived-design",
+    "request": "I want a bitcoin miniscript to pay one of four keys",
+    "policy": "or(pk(key_1),or(pk(key_2),or(pk(key_3),pk(key_4))))",
+    "explanation": "",
+    "confirmed": true
+  },
+  {
+    "id": "spirit-design-26",
+    "source": "spirit-miniscript-examples",
+    "category": "archived-design",
+    "request": "I want bitcoin miniscript to pay one of six keys",
+    "policy": "or(pk(key_1),or(pk(key_2),or(pk(key_3),or(pk(key_4),or(pk(key_5),pk(key_6))))))",
+    "explanation": "",
+    "confirmed": true
+  },
+  {
+    "id": "spirit-design-27",
+    "source": "spirit-miniscript-examples",
+    "category": "archived-design",
+    "request": "I want bitcoin miniscript to pay one of seven keys",
+    "policy": "or(pk(key_1),or(pk(key_2),or(pk(key_3),or(pk(key_4),or(pk(key_5),or(pk(key_6),pk(key_7)))))))",
+    "explanation": "",
+    "confirmed": true
+  },
+  {
+    "id": "spirit-design-28",
+    "source": "spirit-miniscript-examples",
+    "category": "archived-design",
+    "request": "I want bitcoin miniscript to pay one of eight keys",
+    "policy": "or(pk(key_1),or(pk(key_2),or(pk(key_3),or(pk(key_4),or(pk(key_5),or(pk(key_6),or(pk(key_7),pk(key_8))))))))",
+    "explanation": "",
+    "confirmed": true
+  },
+  {
+    "id": "spirit-design-29",
+    "source": "spirit-miniscript-examples",
+    "category": "archived-design",
+    "request": "I want bitcoin miniscript to pay one of nine keys",
+    "policy": "or(pk(key_1),or(pk(key_2),or(pk(key_3),or(pk(key_4),or(pk(key_5),or(pk(key_6),or(pk(key_7),or(pk(key_8),pk(key_9)))))))))",
+    "explanation": "",
+    "confirmed": true
+  },
+  {
+    "id": "spirit-design-42",
+    "source": "spirit-miniscript-examples",
+    "category": "archived-design",
+    "request": "I need a Bitcoin script that allows me to use a preferred key but also has a backup key option",
+    "policy": "or(pk(key_likely),pk(key_unlikely))",
+    "explanation": "",
+    "confirmed": true
+  },
+  {
+    "id": "spirit-design-47",
+    "source": "spirit-miniscript-examples",
+    "category": "archived-design",
+    "request": "Imagine that I'm setting up a company with two partners, Alice and Bob. We've decided to create a multisignature wallet with three keys - one in my possession, one in Alice's possession, and another in Bob's possession. To authorize Bitcoin transactions, all three keys will need to be used, unless we decide to activate a 90-day rule, allowing only two keys to be required.",
+    "policy": "thresh(3,pk(my_key),pk(alice_key),pk(bob_key),older(12960))",
+    "explanation": "",
+    "confirmed": true
+  },
+  {
+    "id": "spirit-design-48",
+    "source": "spirit-miniscript-examples",
+    "category": "archived-design",
+    "request": "In our family, we are setting up a long-term savings plan in Bitcoin. We've decided to create a multisignature wallet with three keys: one for me, one for my mother, and one for my grandfather. To authorize Bitcoin transactions, all three keys must be used, unless a 90-day deadline is reached, when only two keys will be needed.",
+    "policy": "thresh(3,pk(my_key),pk(mother_key),pk(grandfather_key),older(12960))",
+    "explanation": "",
+    "confirmed": true
+  },
+  {
+    "id": "spirit-design-49",
+    "source": "spirit-miniscript-examples",
+    "category": "archived-design",
+    "request": "My two best friends, Chris and David, and I are entering into an agreement to invest in Bitcoin. We plan to set up a multisignature wallet with three keys - one in my possession, one in Chris's possession, and another in David's possession. All three keys will be required to authorize Bitcoin transactions, except after a 90-day period, when only two keys will be sufficient.",
+    "policy": "thresh(3,pk(my_key),pk(chris_key),pk(david_key),older(28800))",
+    "explanation": "",
+    "confirmed": true
+  },
+  {
+    "id": "spirit-design-51",
+    "source": "spirit-miniscript-examples",
+    "category": "archived-design",
+    "request": "I'm setting up a Bitcoin wallet with multiple keys. I need a script that involves three keys: one at home, one at my workplace, and the third held by my mother. Additionally, I want that after 1800 blocks have passed, only two keys should be required for transactions.",
+    "policy": "thresh(3,pk(home_key),pk(work_key),pk(mother_key),older(1800))",
+    "explanation": "",
+    "confirmed": true
+  },
+  {
+    "id": "spirit-design-52",
+    "source": "spirit-miniscript-examples",
+    "category": "archived-design",
+    "request": "I'm creating a security setup for my cryptocurrencies. I need a Bitcoin script that involves three keys: one kept at home, one at work, and another with my friend. And, after 12960 blocks, only two keys should be required to authorize transactions.",
+    "policy": "thresh(3,pk(home_key),pk(work_key),pk(friend_key),older(12960))",
+    "explanation": "",
+    "confirmed": true
+  },
+  {
+    "id": "spirit-design-53",
+    "source": "spirit-miniscript-examples",
+    "category": "archived-design",
+    "request": "I'm looking for a security solution for my digital coins. I need a Bitcoin script that involves three keys: one at my home, one at my workplace, and one held by my sister. Additionally, I want that, after 12960 blocks, only two keys should be required for transactions.",
+    "policy": "thresh(3,pk(home_key),pk(work_key),pk(sister_key),older(12960))",
+    "explanation": "",
+    "confirmed": true
+  },
+  {
+    "id": "spirit-design-54",
+    "source": "spirit-miniscript-examples",
+    "category": "archived-design",
+    "request": "I'm setting up a secure Bitcoin wallet with multiple keys. I need a script that involves three keys: one at my home, one at my workplace, and one held by my cousin. Additionally, I want that after 16200 blocks have passed, only two keys should be required for transactions",
+    "policy": "thresh(3,pk(home_key),pk(work_key),pk(cousin_key),older(16200))",
+    "explanation": "",
+    "confirmed": true
+  },
+  {
+    "id": "spirit-design-56",
+    "source": "spirit-miniscript-examples",
+    "category": "archived-design",
+    "request": "I'm planning for the long-term and want to set up a secure Bitcoin wallet. I need a script that involves three keys: one at home, one at my workplace, and one held by my daughter. Additionally, I want that after 6480 blocks have passed, only two keys should be required for transactions.",
+    "policy": "thresh(3,pk(home_key),pk(work_key),pk(daughter_key),older(6480))",
+    "explanation": "",
+    "confirmed": true
+  },
+  {
+    "id": "spirit-design-57",
+    "source": "spirit-miniscript-examples",
+    "category": "archived-design",
+    "request": "I'm setting up a Bitcoin wallet for a joint venture with my colleague, and my sister. I need a Bitcoin script that requires just two signatures out of three, and after a waiting period of 14,400 blocks, only one signature is needed for transactions",
+    "policy": "thresh(2,pk(my_key),pk(colleague_key),pk(sister_key),older(14400))",
+    "explanation": "",
+    "confirmed": true
+  },
+  {
+    "id": "spirit-design-58",
+    "source": "spirit-miniscript-examples",
+    "category": "archived-design",
+    "request": "I'm exploring a family-centric approach for my Bitcoin holdings. I want to set up a Bitcoin script involving two signatures out of three: one from my parent, one from my child, and one from my grandparent. Additionally, I'd like the requirement to change to just one signature after 7,200 blocks.",
+    "policy": "thresh(2,pk(parent_key),pk(child_key),pk(grandparent_key),older(7200))",
+    "explanation": "",
+    "confirmed": true
+  },
+  {
+    "id": "spirit-design-59",
+    "source": "spirit-miniscript-examples",
+    "category": "archived-design",
+    "request": "I'm involved in a business partnership, and we want to secure our Bitcoin funds with legal representation. I need a Bitcoin script involving two signatures: mine and my partner's, and one from our legal representative. Additionally, we'd like to reduce the requirement to just one signature after 10,000 blocks.",
+    "policy": "thresh(2,pk(my_key),pk(partner_key),pk(legal_rep_key),older(10000))",
+    "explanation": "",
+    "confirmed": true
+  },
+  {
+    "id": "spirit-design-61",
+    "source": "spirit-miniscript-examples",
+    "category": "archived-design",
+    "request": "I need a simple Bitcoin script to authorize transactions in a group. Only two keys are required",
+    "policy": "thresh(2,pk(member1_key),pk(member2_key))",
+    "explanation": "",
+    "confirmed": true
+  },
+  {
+    "id": "spirit-design-63",
+    "source": "spirit-miniscript-examples",
+    "category": "archived-design",
+    "request": "I need a robust Bitcoin script for triple security. The script should require three different keys to authorize transactions.",
+    "policy": "thresh(3,pk(key1),pk(key2),pk(key3))",
+    "explanation": "",
+    "confirmed": true
+  },
+  {
+    "id": "spirit-design-66",
+    "source": "spirit-miniscript-examples",
+    "category": "archived-design",
+    "request": "I need a Bitcoin script that involves authorization based on three different keys for different locations.",
+    "policy": "thresh(3,pk(my_key1),pk(my_key2),pk(my_key3))",
+    "explanation": "",
+    "confirmed": true
+  },
+  {
+    "id": "spirit-design-67",
+    "source": "spirit-miniscript-examples",
+    "category": "archived-design",
+    "request": "I'm setting up a security system for two parties, and I need a Bitcoin script for authorization with two keys.",
+    "policy": "thresh(2,pk(key1),pk(key2))",
+    "explanation": "",
+    "confirmed": true
+  },
+  {
+    "id": "spirit-design-73",
+    "source": "spirit-miniscript-examples",
+    "category": "archived-design",
+    "request": "I'm setting up an authorization system involving an owner, a trustee, and a third party. I need a Bitcoin script for authorization with three keys.",
+    "policy": "thresh(3,pk(owner_key),pk(trustee_key),pk(escrow_key))",
+    "explanation": "",
+    "confirmed": true
+  },
+  {
+    "id": "spirit-design-74",
+    "source": "spirit-miniscript-examples",
+    "category": "archived-design",
+    "request": "I need a Bitcoin script that allows authorization with my key, but only after a specific date and time.",
+    "policy": "thresh(2,pk(keyA),after(1662355200))",
+    "explanation": "",
+    "confirmed": true
+  },
+  {
+    "id": "spirit-design-75",
+    "source": "spirit-miniscript-examples",
+    "category": "archived-design",
+    "request": "I'm setting up a system that requires three signatures for authorization, but I also want a time condition",
+    "policy": "and(pk(key1),and(pk(key2),and(pk(key3),after(1670047200))))",
+    "explanation": "",
+    "confirmed": true
+  }
+]

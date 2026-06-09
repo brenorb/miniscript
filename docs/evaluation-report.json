@@ -1,0 +1,246 @@
+{
+  "generatedAt": "2026-06-08T22:07:26.104Z",
+  "dataset": {
+    "designTrain": 110,
+    "designEval": 32,
+    "analyses": 194,
+    "comparisons": 10,
+    "repairs": 22,
+    "compiledPolicies": 283,
+    "flowchartPolicies": 250
+  },
+  "scope": {
+    "passed": 296,
+    "total": 304,
+    "accuracy": 0.9736842105263158
+  },
+  "compiler": {
+    "passed": 283,
+    "total": 283,
+    "accuracy": 1
+  },
+  "flowchart": {
+    "passed": 250,
+    "total": 250,
+    "accuracy": 1
+  },
+  "repairs": {
+    "passed": 22,
+    "total": 22,
+    "accuracy": 1
+  },
+  "comparisons": {
+    "total": 10,
+    "coverage": 1
+  },
+  "optimization": {
+    "model": "qwen2.5:1.5b",
+    "trainingExamples": 110,
+    "executedExamples": 48,
+    "executionCoverage": 0.43636363636363634,
+    "heldOutTotal": 32,
+    "heldOutCompilePassRate": 0.71875,
+    "heldOutExactMatchRate": 0.1875,
+    "baselineCompilePassRate": 0.03125,
+    "baselineExactMatchRate": 0,
+    "bestScore": 0
+  },
+  "details": {
+    "scopeSample": [
+      {
+        "label": "design-train-1",
+        "prompt": "Bitcoin account for my day-to-day use. It should work with my signing device but also a backup key that I have in a vault in case the signing device is lost or damaged.",
+        "expectedInScope": true,
+        "actualInScope": true,
+        "reason": "bitcoin-miniscript",
+        "passed": true
+      },
+      {
+        "label": "design-train-2",
+        "prompt": "An emergency fund that any of the top executives of a company (CEO, CFO, COO, CTO, CMO and CLO) can spend from.",
+        "expectedInScope": true,
+        "actualInScope": true,
+        "reason": "bitcoin-miniscript",
+        "passed": true
+      },
+      {
+        "label": "design-train-3",
+        "prompt": "Hello, I'd like a Bitcoin miniscript to o manage your bitcoin funds effectively, they set up a system where two senior members of the organization, such as the Executive Director and the Treasurer, each hold a key with the same individual authority to release this funds.",
+        "expectedInScope": true,
+        "actualInScope": true,
+        "reason": "bitcoin-miniscript",
+        "passed": true
+      },
+      {
+        "label": "design-train-4",
+        "prompt": "Parents want to set up a \"Bitcoin piggybank\" for their younger child. Either parent should be able to move the funds with their own key. The child can view his balance on an app but is too young to initiate transactions.",
+        "expectedInScope": true,
+        "actualInScope": true,
+        "reason": "bitcoin-miniscript",
+        "passed": true
+      },
+      {
+        "label": "design-train-5",
+        "prompt": "A joint Bitcoin wallet that requires two individuals, each holding a distinct key, to authorize transactions.",
+        "expectedInScope": true,
+        "actualInScope": true,
+        "reason": "bitcoin-miniscript",
+        "passed": true
+      },
+      {
+        "label": "design-train-6",
+        "prompt": "An account which starts as a 2-of-2 multisig between a user and a 2FA service, but after 90 days the user can sign on his own.",
+        "expectedInScope": true,
+        "actualInScope": true,
+        "reason": "bitcoin-miniscript",
+        "passed": true
+      },
+      {
+        "label": "design-train-7",
+        "prompt": "A setup where two parties must agree to spend.",
+        "expectedInScope": true,
+        "actualInScope": true,
+        "reason": "bitcoin-miniscript",
+        "passed": true
+      },
+      {
+        "label": "design-train-8",
+        "prompt": "A philanthropist has donated funds to his community and the funds collected are stored in a wallet. A five-member committee manages the portfolio and any fundraising expenses require approval from at least three committee members plus the treasurer.",
+        "expectedInScope": true,
+        "actualInScope": true,
+        "reason": "bitcoin-miniscript",
+        "passed": true
+      },
+      {
+        "label": "design-train-9",
+        "prompt": "A contest with a Bitcoin prize that's open to a select few participants (say, 6 participants). The first to solve an elaborate puzzle set up by the organizer can claim the prize.",
+        "expectedInScope": true,
+        "actualInScope": true,
+        "reason": "bitcoin-miniscript",
+        "passed": true
+      },
+      {
+        "label": "design-train-10",
+        "prompt": "A treasure hunt involving a series of stages is open to 5 pre-registered teams. Each stage reveals reveals an essential clue to solve the next stage. The first team to solve the last stage in the series gets to claim a 1 BTC prize.",
+        "expectedInScope": true,
+        "actualInScope": false,
+        "reason": "off-topic",
+        "passed": false
+      },
+      {
+        "label": "design-train-11",
+        "prompt": "Suppose you're setting up a three-key multisignature wallet for a business account. To authorize Bitcoin transactions, at least two keys from the three specified keys must be used, and transactions can only be processed from January 2 2024 onwards.",
+        "expectedInScope": true,
+        "actualInScope": true,
+        "reason": "bitcoin-miniscript",
+        "passed": true
+      },
+      {
+        "label": "design-train-12",
+        "prompt": "Suppose you're setting up a multi-signature wallet for a business account with five keys. To authorize Bitcoin transactions, at least three keys from the five specified keys must be used, and transactions are only allowed after block height 869245.",
+        "expectedInScope": true,
+        "actualInScope": true,
+        "reason": "bitcoin-miniscript",
+        "passed": true
+      },
+      {
+        "label": "design-train-13",
+        "prompt": "Two parties, Alice and Bob, agree to a cross-chain atomic swap where bitcoin is exchanged for another cryptocurrency on another blockchain using HTLCs. The exchange works as follows. Alice generates a random secret and creates a transaction destined for Bob on blockchain `A` that uses that hash. She gives the hash to Bob who in turn creates a transaction on Bitcoin destined for Alice with that hash. If Alice claims the Bitcoin, she has to reveal the secret to Bob, who in turn can redeem the funds on blockchain `A`. In case the exchange doesn't happen both transactions also have an option to transfer the funds back to their original owner.",
+        "expectedInScope": true,
+        "actualInScope": true,
+        "reason": "bitcoin-miniscript",
+        "passed": true
+      },
+      {
+        "label": "design-train-14",
+        "prompt": "A family business whose treasury can be spent by different cost center managers with authorization from the finance manager and can also be accessed directly by the owner.",
+        "expectedInScope": true,
+        "actualInScope": true,
+        "reason": "bitcoin-miniscript",
+        "passed": true
+      },
+      {
+        "label": "design-train-15",
+        "prompt": "A man sets up his bitcoin stash to be transmitted to his heir after his death without having to go through a lawyer or another third party. To do that, he commits his bitcoin to his heir but adds a hashlock that can only be unlocked with a secret preimage. He sets up a dead man's switch that will send the preimage to his heir in case he doesn't check in for a certain period of time. He also adds a provision in the bitcoin transaction to reclaim his stash in case he changes his mind about his will.",
+        "expectedInScope": true,
+        "actualInScope": true,
+        "reason": "bitcoin-miniscript",
+        "passed": true
+      },
+      {
+        "label": "design-train-16",
+        "prompt": "An escrow service acts as a trusted third party that holds Bitcoin committed by the buyer until the buyer receives the item they purchased from a seller online. Upon receipt, the buyer provides the secret preimage that allows the seller to unlock the funds. If the transaction doesn't come through, the escrow service can send the funds back to the buyer.",
+        "expectedInScope": true,
+        "actualInScope": true,
+        "reason": "bitcoin-miniscript",
+        "passed": true
+      },
+      {
+        "label": "design-train-17",
+        "prompt": "Implement the Lightning BOLT #3 to_local policy which:\n1. allows the `local` node to claim back the funds it has committed to a lightning channel by broadcasting the latest commitment transaction (forced channel closing)\n2. allows the channel counterparty (`remote` node) to capture the funds in case the `local` node cheated by broadcasting an earlier commitment transaction (presumably with a more favorable balance than it is entitled to)",
+        "expectedInScope": true,
+        "actualInScope": true,
+        "reason": "bitcoin-miniscript",
+        "passed": true
+      },
+      {
+        "label": "design-train-18",
+        "prompt": "Implement the Lightning BOLT #3 received HTLC policy which:\n1. allows the receiving node (`local` node) to receive the funds when in possession of the payment hash preimage, either because it is the final recipient that generated the preimage or it gets the preimage from a downstream node (payment-success scenario)\n2. allows the channel counterparty (`remote` node) to recover the committed balance after a waiting period if the payment fails (payment-timeout scenario) or if the `local` node cheated by broadcasting an old commitment transaction (revocation scenario)",
+        "expectedInScope": true,
+        "actualInScope": true,
+        "reason": "bitcoin-miniscript",
+        "passed": true
+      },
+      {
+        "label": "design-train-19",
+        "prompt": "Suppose you have a situation where either one of two keys (KeyA or KeyB) can authorize a spending transaction, but the second key can do it only after a certain time elapses (say, 1 day)",
+        "expectedInScope": true,
+        "actualInScope": true,
+        "reason": "bitcoin-miniscript",
+        "passed": true
+      },
+      {
+        "label": "design-train-20",
+        "prompt": "I need a wallet where I need a key and a one-time password together to move the funds.",
+        "expectedInScope": true,
+        "actualInScope": true,
+        "reason": "bitcoin-miniscript",
+        "passed": true
+      },
+      {
+        "label": "design-train-21",
+        "prompt": "A testament that contains a Bitcoin key but also requires the answer to a question that the heir will have to find by following the instructions left by the deceased.",
+        "expectedInScope": true,
+        "actualInScope": true,
+        "reason": "bitcoin-miniscript",
+        "passed": true
+      },
+      {
+        "label": "design-train-22",
+        "prompt": "A hacking competition open to any individual or team where 10 independent hacking challenges are submitted by the organizer. Each challenge reveals a private key when solved. All private keys are needed in order to claim the 0.5 BTC prize.",
+        "expectedInScope": true,
+        "actualInScope": false,
+        "reason": "off-topic",
+        "passed": false
+      },
+      {
+        "label": "design-train-23",
+        "prompt": "A 3-of-3 multisig, requiring all specified private keys for spending.",
+        "expectedInScope": true,
+        "actualInScope": true,
+        "reason": "bitcoin-miniscript",
+        "passed": true
+      },
+      {
+        "label": "design-train-24",
+        "prompt": "I need a Bitcoin script that involves authorization from three different keys stored in different locations.",
+        "expectedInScope": true,
+        "actualInScope": true,
+        "reason": "bitcoin-miniscript",
+        "passed": true
+      }
+    ],
+    "compileFailures": [],
+    "repairFailures": []
+  }
+}

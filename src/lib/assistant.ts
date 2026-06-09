@@ -15,6 +15,7 @@ import {
   repairExamples,
 } from '../data/examples'
 import { optimizedDesignDemos } from '../data/optimizedDesignDemos'
+import { buildOffTopicReply, evaluateScope } from './assistantScope'
 import type { CompileContext, ScriptSummary } from './miniscriptTooling'
 import { summarizeExpression } from './miniscriptTooling'
 
@@ -26,6 +27,11 @@ export type AssistantProgress = {
 }
 
 export type AssistantResult =
+  | {
+      mode: 'guardrail'
+      message: string
+      suggestions: string[]
+    }
   | {
       mode: 'design'
       summary: ScriptSummary
@@ -173,6 +179,11 @@ export async function loadAssistant(
   return {
     modelId,
     async run(request: AssistantRequest): Promise<AssistantResult> {
+      const scope = evaluateScope(request)
+      if (!scope.inScope) {
+        return buildOffTopicReply(scope)
+      }
+
       if (request.mode === 'design') {
         onProgress?.({
           stage: 'draft',

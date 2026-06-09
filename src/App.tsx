@@ -1,7 +1,6 @@
 import {
   startTransition,
   useEffect,
-  useEffectEvent,
   useId,
   useRef,
   useState,
@@ -13,28 +12,53 @@ import type {
   AssistantRequest,
   AssistantResult,
 } from './lib/assistant'
+import { buildOffTopicReply, evaluateScope } from './lib/assistantScope'
 import type { CompileContext, ScriptSummary } from './lib/miniscriptTooling'
 
 type RunState = 'idle' | 'loading-model' | 'running' | 'error'
+
+type ConversationTurn = {
+  id: string
+  request: AssistantRequest
+  result: AssistantResult
+}
+
+const STARTERS = {
+  design: [
+    'Design a family recovery script where any two of Alice, Bob, and Carol can spend.',
+    'Create a 2FA wallet where the user and service sign together, but after roughly 90 days the user can recover alone.',
+    'Design a vault path where a hot key signs plus a hash preimage, or a 2-of-3 cold backup with Alice, Bob, and Carol.',
+  ],
+  inspect: [
+    'or(pk(Alice),and(pk(Bob),older(144)))',
+    'thresh(2,pk(Alice),pk(Bob),pk(Carol))',
+    'and(pk(user),or(99@pk(service),older(12960)))',
+  ],
+  compare: [
+    {
+      left: 'thresh(2,pk(Alice),pk(Bob),pk(Carol))',
+      right: 'or(and(pk(Alice),pk(Bob)),and(pk(Carol),after(900000)))',
+    },
+    {
+      left: 'or(pk(Alice),and(pk(Bob),older(144)))',
+      right: 'or(and(pk(Alice),older(144)),pk(Bob))',
+    },
+  ],
+} as const
 
 function App() {
   const [modelId, setModelId] = useState<SupportedModelId>(supportedModels[0].id)
   const [mode, setMode] = useState<'design' | 'inspect' | 'compare'>('design')
   const [context, setContext] = useState<CompileContext>('p2wsh')
-  const [prompt, setPrompt] = useState(
-    'Design a family recovery script where any two of Alice, Bob, and Carol can spend.',
-  )
-  const [leftPrompt, setLeftPrompt] = useState(
-    'thresh(2,pk(Alice),pk(Bob),pk(Carol))',
-  )
-  const [rightPrompt, setRightPrompt] = useState(
-    'or(and(pk(Alice),pk(Bob)),and(pk(Carol),after(900000)))',
-  )
+  const [prompt, setPrompt] = useState<string>(STARTERS.design[0])
+  const [leftPrompt, setLeftPrompt] = useState<string>(STARTERS.compare[0].left)
+  const [rightPrompt, setRightPrompt] = useState<string>(STARTERS.compare[0].right)
   const [runState, setRunState] = useState<RunState>('idle')
   const [progress, setProgress] = useState<AssistantProgress | null>(null)
-  const [result, setResult] = useState<AssistantResult | null>(null)
+  const [turns, setTurns] = useState<ConversationTurn[]>([])
   const [quickSummary, setQuickSummary] = useState<ScriptSummary | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const conversationEndRef = useRef<HTMLDivElement | null>(null)
   const assistantRef = useRef<{
     modelId: SupportedModelId
     run: (request: AssistantRequest) => Promise<AssistantResult>
@@ -43,18 +67,17 @@ function App() {
   const currentModel =
     supportedModels.find((model) => model.id === modelId) ?? supportedModels[0]
 
-  const handleProgress = useEffectEvent((nextProgress: AssistantProgress) => {
+  const handleProgress = (nextProgress: AssistantProgress) => {
     setProgress(nextProgress)
-  })
+  }
 
   useEffect(() => {
-    const source =
-      mode === 'compare'
-        ? leftPrompt
-        : prompt
+    conversationEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+  }, [turns, progress])
 
-    if (!source.trim()) {
-      setQuickSummary(null)
+  useEffect(() => {
+    const source = getPreviewSource(mode, prompt, leftPrompt)
+    if (!source) {
       return
     }
 
@@ -71,7 +94,7 @@ function App() {
           setQuickSummary(null)
         }
       }
-    }, 250)
+    }, 180)
 
     return () => {
       cancelled = true
@@ -90,27 +113,45 @@ function App() {
     return assistant
   }
 
+  function buildRequest(): AssistantRequest {
+    if (mode === 'compare') {
+      return {
+        mode,
+        left: leftPrompt,
+        right: rightPrompt,
+        context,
+      }
+    }
+
+    return {
+      mode,
+      prompt,
+      context,
+    }
+  }
+
   async function runAssistant() {
     setError(null)
     setProgress(null)
+
+    const request = buildRequest()
+    const scope = evaluateScope(request)
     setRunState('running')
+
     try {
-      const assistant = await ensureAssistant()
-      const nextResult =
-        mode === 'compare'
-          ? await assistant.run({
-              mode,
-              left: leftPrompt,
-              right: rightPrompt,
-              context,
-            })
-          : await assistant.run({
-              mode,
-              prompt,
-              context,
-            })
+      const result = !scope.inScope
+        ? buildOffTopicReply(scope)
+        : await (await ensureAssistant()).run(request)
+
       startTransition(() => {
-        setResult(nextResult)
+        setTurns((previous) => [
+          ...previous,
+          {
+            id: crypto.randomUUID(),
+            request,
+            result,
+          },
+        ])
       })
       setRunState('idle')
     } catch (caught) {
@@ -119,21 +160,27 @@ function App() {
     }
   }
 
-  return (
-    <div className="shell">
-      <header className="masthead">
-        <div className="eyebrow">Local Miniscript Workbench</div>
-        <h1>Compile policy drafts, inspect spending paths, and sketch the shape of authority.</h1>
-        <p className="lede">
-          This runs a small model in the browser through Ax + WebLLM, then forces
-          every answer through the real miniscript compiler and analyzer before it
-          is trusted.
-        </p>
-      </header>
+  const latestStructuredTurn = [...turns]
+    .reverse()
+    .find((turn) => turn.result.mode !== 'guardrail')
+  const visibleQuickSummary = getPreviewSource(mode, prompt, leftPrompt)
+    ? quickSummary
+    : null
 
-      <section className="control-grid">
-        <div className="panel control-panel">
-          <div className="panel-label">Assistant</div>
+  return (
+    <div className="app-shell">
+      <aside className="panel sidebar">
+        <div className="brand-lockup">
+          <div className="brand-kicker">Local Miniscript</div>
+          <h1>Chat, compile, inspect.</h1>
+          <p>
+            Ax handles the prompting. The compiler and analyzer decide what is
+            actually valid.
+          </p>
+        </div>
+
+        <section className="stack">
+          <div className="section-label">Mode</div>
           <div className="segmented">
             {(['design', 'inspect', 'compare'] as const).map((option) => (
               <button
@@ -146,71 +193,127 @@ function App() {
               </button>
             ))}
           </div>
+        </section>
 
-          <div className="two-up">
-            <label>
-              <span>Model</span>
-              <select
-                value={modelId}
-                onChange={(event) =>
-                  setModelId(event.target.value as SupportedModelId)
-                }
-              >
-                {supportedModels.map((model) => (
-                  <option key={model.id} value={model.id}>
-                    {model.label}
-                  </option>
-                ))}
-              </select>
-            </label>
+        <section className="stack">
+          <div className="section-label">Runtime</div>
+          <label>
+            <span>Model</span>
+            <select
+              value={modelId}
+              onChange={(event) =>
+                setModelId(event.target.value as SupportedModelId)
+              }
+            >
+              {supportedModels.map((model) => (
+                <option key={model.id} value={model.id}>
+                  {model.label}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            <span>Context</span>
+            <select
+              value={context}
+              onChange={(event) =>
+                setContext(event.target.value as CompileContext)
+              }
+            >
+              <option value="p2wsh">P2WSH</option>
+              <option value="taproot">Taproot</option>
+            </select>
+          </label>
+          <p className="meta-note">{currentModel.note}</p>
+        </section>
 
-            <label>
-              <span>Context</span>
-              <select
-                value={context}
-                onChange={(event) =>
-                  setContext(event.target.value as CompileContext)
-                }
-              >
-                <option value="p2wsh">P2WSH</option>
-                <option value="taproot">Taproot</option>
-              </select>
-            </label>
-          </div>
-
-          <p className="field-note">{currentModel.note}</p>
-
+        <section className="stack">
+          <div className="section-label">Starter prompts</div>
           {mode === 'compare' ? (
-            <div className="compare-fields">
-              <label>
-                <span>Candidate A</span>
-                <textarea
-                  value={leftPrompt}
-                  onChange={(event) => setLeftPrompt(event.target.value)}
-                  rows={7}
-                />
-              </label>
-              <label>
-                <span>Candidate B</span>
-                <textarea
-                  value={rightPrompt}
-                  onChange={(event) => setRightPrompt(event.target.value)}
-                  rows={7}
-                />
-              </label>
+            <div className="starter-list">
+              {STARTERS.compare.map((starter) => (
+                <button
+                  key={starter.left + starter.right}
+                  type="button"
+                  className="starter-card"
+                  onClick={() => {
+                    setLeftPrompt(starter.left)
+                    setRightPrompt(starter.right)
+                  }}
+                >
+                  <strong>Compare pair</strong>
+                  <span>{starter.left}</span>
+                  <span>{starter.right}</span>
+                </button>
+              ))}
             </div>
           ) : (
-            <label>
-              <span>{mode === 'design' ? 'Intent' : 'Policy or Miniscript'}</span>
-              <textarea
-                value={prompt}
-                onChange={(event) => setPrompt(event.target.value)}
-                rows={8}
-              />
-            </label>
+            <div className="starter-list">
+              {STARTERS[mode].map((starter) => (
+                <button
+                  key={starter}
+                  type="button"
+                  className="starter-card"
+                  onClick={() => setPrompt(starter)}
+                >
+                  <span>{starter}</span>
+                </button>
+              ))}
+            </div>
           )}
+        </section>
+      </aside>
 
-          <div className="actions">
+      <main className="chat-column">
+        <header className="panel chat-header">
+          <div>
+            <div className="section-label">Workspace</div>
+            <h2>Miniscript assistant</h2>
+          </div>
+          <div className="header-status">
+            {progress ? (
+              <>
+                <strong>{progress.stage}</strong>
+                <span>{progress.detail}</span>
+              </>
+            ) : (
+              <>
+                <strong>compiler guardrail</strong>
+                <span>Every structured answer is compiled before display.</span>
+              </>
+            )}
+          </div>
+        </header>
+
+        <section className="panel conversation">
+          {turns.length === 0 ? <EmptyConversation mode={mode} /> : null}
+
+          {turns.map((turn) => (
+            <ConversationTurnView key={turn.id} turn={turn} />
+          ))}
+
+          {runState === 'running' || runState === 'loading-model' ? (
+            <article className="message assistant">
+              <div className="message-badge">assistant</div>
+              <div className="message-card working-card">
+                <p>
+                  {runState === 'loading-model'
+                    ? 'Loading the local model.'
+                    : 'Running the prompt through the assistant and compiler.'}
+                </p>
+              </div>
+            </article>
+          ) : null}
+
+          <div ref={conversationEndRef} />
+        </section>
+
+        <section className="panel composer">
+          <div className="composer-header">
+            <div>
+              <div className="section-label">Prompt</div>
+              <h3>{mode === 'design' ? 'Describe the spending policy you want.' : mode === 'inspect' ? 'Paste a policy or miniscript expression.' : 'Compare two constructions.'}</h3>
+            </div>
             <button
               type="button"
               className="primary"
@@ -221,156 +324,255 @@ function App() {
                 ? 'Loading model'
                 : runState === 'running'
                   ? 'Running'
-                  : 'Run workbench'}
+                  : 'Send'}
             </button>
-            <div className="status">
-              {progress ? (
-                <>
-                  <strong>{progress.stage}</strong>
-                  <span>{progress.detail}</span>
-                </>
-              ) : (
-                <>
-                  <strong>compiler guardrail</strong>
-                  <span>Every result is compiled before display.</span>
-                </>
-              )}
-            </div>
           </div>
 
-          {error ? <p className="error">{error}</p> : null}
-        </div>
-
-        <div className="panel aside-panel">
-          <div className="panel-label">Live check</div>
-          {quickSummary ? (
-            <>
-              <p className="aside-title">
-                {quickSummary.kind === 'policy'
-                  ? 'Current input parses as a policy'
-                  : 'Current input parses as miniscript'}
-              </p>
-              <dl className="stats">
-                <div>
-                  <dt>Valid</dt>
-                  <dd>{String(quickSummary.valid)}</dd>
-                </div>
-                <div>
-                  <dt>Sane</dt>
-                  <dd>{String(quickSummary.sane)}</dd>
-                </div>
-                <div>
-                  <dt>Non-malleable</dt>
-                  <dd>{String(quickSummary.nonMalleable)}</dd>
-                </div>
-              </dl>
-              <p className="inline-code">{quickSummary.miniscript}</p>
-              {quickSummary.error ? (
-                <p className="error subtle">{quickSummary.error}</p>
-              ) : null}
-            </>
+          {mode === 'compare' ? (
+            <div className="compare-fields">
+              <label>
+                <span>Candidate A</span>
+                <textarea
+                  value={leftPrompt}
+                  onChange={(event) => setLeftPrompt(event.target.value)}
+                  rows={4}
+                />
+              </label>
+              <label>
+                <span>Candidate B</span>
+                <textarea
+                  value={rightPrompt}
+                  onChange={(event) => setRightPrompt(event.target.value)}
+                  rows={4}
+                />
+              </label>
+            </div>
           ) : (
-            <p className="empty-state">
-              Type a policy or miniscript expression to get an immediate parser/analyzer signal.
-            </p>
+            <label>
+              <span>{mode === 'design' ? 'Intent' : 'Expression'}</span>
+              <textarea
+                value={prompt}
+                onChange={(event) => setPrompt(event.target.value)}
+                rows={4}
+              />
+            </label>
           )}
-        </div>
-      </section>
 
-      {result ? <ResultView result={result} /> : <EmptyWorkbench />}
+          {error ? <p className="error">{error}</p> : null}
+        </section>
+      </main>
+
+      <aside className="panel inspector">
+        <div className="section-label">Inspector</div>
+        {visibleQuickSummary ? (
+          <InspectorSummary
+            title="Draft compiler check"
+            summary={visibleQuickSummary}
+            emphasizeInput
+          />
+        ) : latestStructuredTurn ? (
+          <LatestResultInspector turn={latestStructuredTurn} />
+        ) : (
+          <p className="empty-copy">
+            The right rail shows a live compiler check for policy-shaped input,
+            then falls back to the latest compiled answer.
+          </p>
+        )}
+      </aside>
     </div>
   )
 }
 
-function EmptyWorkbench() {
+function EmptyConversation({ mode }: { mode: 'design' | 'inspect' | 'compare' }) {
   return (
-    <section className="panel empty-workbench">
-      <div className="panel-label">Workbench output</div>
+    <div className="empty-chat">
+      <div className="section-label">Ready</div>
+      <h3>Start with the prompt box, not a landing page.</h3>
       <p>
-        The app is optimized for three tasks: drafting policies from intent,
-        inspecting existing constructions, and comparing alternatives after real
-        compilation.
+        {mode === 'design'
+          ? 'Describe the spending intent and the assistant will draft a policy, compile it, and show the resulting structure.'
+          : mode === 'inspect'
+            ? 'Paste an existing policy or miniscript and the app will explain it after a real compiler/analyzer pass.'
+            : 'Drop two candidates side by side and the assistant will compare the tradeoffs after compiling both.'}
       </p>
-    </section>
+    </div>
   )
 }
 
+function ConversationTurnView({ turn }: { turn: ConversationTurn }) {
+  return (
+    <>
+      <article className="message user">
+        <div className="message-badge">you</div>
+        <div className="message-card">
+          <RequestPreview request={turn.request} />
+        </div>
+      </article>
+
+      <article className="message assistant">
+        <div className="message-badge">assistant</div>
+        <div className="message-card">
+          <ResultView result={turn.result} />
+        </div>
+      </article>
+    </>
+  )
+}
+
+function RequestPreview({ request }: { request: AssistantRequest }) {
+  if (request.mode === 'compare') {
+    return (
+      <div className="request-grid">
+        <div>
+          <div className="section-label">Candidate A</div>
+          <pre>{request.left}</pre>
+        </div>
+        <div>
+          <div className="section-label">Candidate B</div>
+          <pre>{request.right}</pre>
+        </div>
+      </div>
+    )
+  }
+
+  return <p>{request.prompt}</p>
+}
+
 function ResultView({ result }: { result: AssistantResult }) {
+  if (result.mode === 'guardrail') {
+    return (
+      <div className="result-stack">
+        <p>{result.message}</p>
+        <ul className="suggestion-list">
+          {result.suggestions.map((suggestion) => (
+            <li key={suggestion}>{suggestion}</li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+
   if (result.mode === 'compare') {
     return (
-      <section className="result-grid">
-        <SummaryCard title="Candidate A" summary={result.left} />
-        <SummaryCard title="Candidate B" summary={result.right} />
-        <section className="panel narrative">
-          <div className="panel-label">Comparison</div>
-          <p>{result.comparison}</p>
-          <p className="preferred">{result.preferred}</p>
-        </section>
-      </section>
+      <div className="result-stack">
+        <p>{result.comparison}</p>
+        <p className="preferred">{result.preferred}</p>
+        <div className="compare-summary-grid">
+          <CompactSummary title="Candidate A" summary={result.left} />
+          <CompactSummary title="Candidate B" summary={result.right} />
+        </div>
+      </div>
     )
   }
 
   return (
-    <section className="result-grid">
-      <SummaryCard title="Compiled result" summary={result.summary} />
-      <section className="panel narrative">
-        <div className="panel-label">
-          {result.mode === 'design' ? 'Design rationale' : 'Inspection notes'}
+    <div className="result-stack">
+      <p>{result.explanation}</p>
+      <CompactSummary
+        title={result.mode === 'design' ? 'Compiled result' : 'Inspection result'}
+        summary={result.summary}
+      />
+      {result.summary.mermaid ? <FlowchartCard chart={result.summary.mermaid} /> : null}
+      <details className="details-block">
+        <summary>Show compiled output</summary>
+        <div className="details-grid">
+          <CodeBlock title="Input" code={result.summary.normalizedInput} />
+          <CodeBlock title="Miniscript" code={result.summary.miniscript} />
+          <CodeBlock title="ASM" code={result.summary.asm || '[no asm output]'} />
         </div>
-        <p>{result.explanation}</p>
-        <ul className="cautions">
+      </details>
+      {result.cautions.length > 0 ? (
+        <ul className="caution-list">
           {result.cautions.map((caution) => (
             <li key={caution}>{caution}</li>
           ))}
         </ul>
-      </section>
+      ) : null}
+      {result.summary.error ? <p className="error subtle">{result.summary.error}</p> : null}
+    </div>
+  )
+}
+
+function CompactSummary({
+  title,
+  summary,
+}: {
+  title: string
+  summary: ScriptSummary
+}) {
+  return (
+    <section className="summary-card">
+      <div className="summary-head">
+        <strong>{title}</strong>
+        <span>{summary.context}</span>
+      </div>
+      <div className="metric-row">
+        <span>valid {String(summary.valid)}</span>
+        <span>sane {String(summary.sane)}</span>
+        <span>non-malleable {String(summary.nonMalleable)}</span>
+      </div>
+      <pre>{summary.miniscript}</pre>
     </section>
   )
 }
 
-function SummaryCard({ title, summary }: { title: string; summary: ScriptSummary }) {
-  return (
-    <section className="panel summary-card">
-      <div className="panel-label">{title}</div>
-      <h2>{summary.kind === 'policy' ? 'Policy compiled' : 'Miniscript analyzed'}</h2>
-      <div className="chip-row">
-        <span>{summary.context}</span>
-        <span>valid: {String(summary.valid)}</span>
-        <span>sane: {String(summary.sane)}</span>
-        <span>non-malleable: {String(summary.nonMalleable)}</span>
-      </div>
+function LatestResultInspector({ turn }: { turn: ConversationTurn }) {
+  if (turn.result.mode === 'guardrail') {
+    return <p className="empty-copy">{turn.result.message}</p>
+  }
 
-      <CodeBlock title="Input" code={summary.normalizedInput} />
+  if (turn.result.mode === 'compare') {
+    return (
+      <div className="inspector-stack">
+        <InspectorSummary title="Candidate A" summary={turn.result.left} />
+        <InspectorSummary title="Candidate B" summary={turn.result.right} />
+      </div>
+    )
+  }
+
+  return <InspectorSummary title="Latest answer" summary={turn.result.summary} />
+}
+
+function InspectorSummary({
+  title,
+  summary,
+  emphasizeInput = false,
+}: {
+  title: string
+  summary: ScriptSummary
+  emphasizeInput?: boolean
+}) {
+  return (
+    <div className="inspector-stack">
+      <div className="summary-head">
+        <strong>{title}</strong>
+        <span>{summary.kind}</span>
+      </div>
+      <div className="metric-row">
+        <span>valid {String(summary.valid)}</span>
+        <span>sane {String(summary.sane)}</span>
+        <span>needs sig {String(summary.needsSignature)}</span>
+      </div>
+      <CodeBlock
+        title={emphasizeInput ? 'Draft input' : 'Input'}
+        code={summary.normalizedInput}
+      />
       <CodeBlock title="Miniscript" code={summary.miniscript} />
       <CodeBlock title="ASM" code={summary.asm || '[no asm output]'} />
-
-      {summary.mermaid ? (
-        <>
-          <FlowchartCard chart={summary.mermaid} />
-          <CodeBlock title="Mermaid source" code={summary.mermaid} />
-        </>
-      ) : null}
-
-      <section className="witness-grid">
-        <WitnessList
-          title="Non-malleable satisfactions"
-          items={summary.satisfactions.nonMalleable}
-        />
-        <WitnessList
-          title="Malleable satisfactions"
-          items={summary.satisfactions.malleable}
-        />
-      </section>
-
-      {summary.error ? <p className="error">{summary.error}</p> : null}
-    </section>
+      {summary.mermaid ? <FlowchartCard chart={summary.mermaid} /> : null}
+      <WitnessList
+        title="Non-malleable satisfactions"
+        items={summary.satisfactions.nonMalleable}
+      />
+      {summary.error ? <p className="error subtle">{summary.error}</p> : null}
+    </div>
   )
 }
 
 function CodeBlock({ title, code }: { title: string; code: string }) {
   return (
     <div className="code-block">
-      <div className="block-label">{title}</div>
+      <div className="section-label">{title}</div>
       <pre>{code}</pre>
     </div>
   )
@@ -379,7 +581,7 @@ function CodeBlock({ title, code }: { title: string; code: string }) {
 function WitnessList({ title, items }: { title: string; items: string[] }) {
   return (
     <div className="witness-list">
-      <div className="block-label">{title}</div>
+      <div className="section-label">{title}</div>
       {items.length > 0 ? (
         <ul>
           {items.map((item) => (
@@ -389,7 +591,7 @@ function WitnessList({ title, items }: { title: string; items: string[] }) {
           ))}
         </ul>
       ) : (
-        <p className="empty-list">None surfaced for this expression.</p>
+        <p className="empty-copy">No non-malleable witnesses surfaced.</p>
       )}
     </div>
   )
@@ -401,21 +603,24 @@ function FlowchartCard({ chart }: { chart: string }) {
 
   useEffect(() => {
     let active = true
+
     async function render() {
       if (!containerRef.current) {
         return
       }
+
       const mermaid = (await import('mermaid')).default
       mermaid.initialize({
         startOnLoad: false,
         theme: 'base',
         themeVariables: {
-          primaryColor: '#d5b06f',
-          primaryTextColor: '#1b140c',
-          primaryBorderColor: '#8e6c2e',
-          lineColor: '#d9c7a3',
-          secondaryColor: '#efe1c5',
-          tertiaryColor: '#0f0c08',
+          background: '#11151c',
+          primaryColor: '#d6c6a2',
+          primaryTextColor: '#11151c',
+          primaryBorderColor: '#8e8268',
+          lineColor: '#a6acb8',
+          secondaryColor: '#efe7d5',
+          tertiaryColor: '#1a202a',
           fontFamily: 'IBM Plex Mono',
         },
       })
@@ -424,6 +629,7 @@ function FlowchartCard({ chart }: { chart: string }) {
         containerRef.current.innerHTML = svg
       }
     }
+
     void render()
     return () => {
       active = false
@@ -432,10 +638,28 @@ function FlowchartCard({ chart }: { chart: string }) {
 
   return (
     <div className="flowchart-card">
-      <div className="block-label">Flowchart preview</div>
+      <div className="section-label">Flowchart</div>
       <div ref={containerRef} className="flowchart-preview" />
     </div>
   )
+}
+
+function getPreviewSource(
+  mode: 'design' | 'inspect' | 'compare',
+  prompt: string,
+  leftPrompt: string,
+) {
+  if (mode === 'inspect') {
+    return prompt.trim()
+  }
+  if (mode === 'compare') {
+    return leftPrompt.trim()
+  }
+  return /\b(?:pk|after|older|sha256|hash256|ripemd160|hash160|and|or|thresh)\s*\(/i.test(
+    prompt,
+  )
+    ? prompt.trim()
+    : ''
 }
 
 export default App

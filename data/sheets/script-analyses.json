@@ -1,0 +1,1223 @@
+{
+  "range": "'Script analyses'!A1:D910",
+  "values": [
+    [
+      "category",
+      "miniscript policy",
+      "analysis",
+      "confirmed?"
+    ],
+    [
+      "1 out of n",
+      "or(pk(key_1),or(pk(key_2),or(pk(key_3),or(pk(key_4),or(pk(key_5),or(pk(key_6),or(pk(key_7),or(pk(key_8),or(pk(key_9),pk(key_10))))))))))",
+      "This Bitcoin miniscript policy requires that the transaction is signed by one of the ten specified public keys (`key_1`, `key_2`, ..., `key_10`).",
+      "Y"
+    ],
+    [
+      "1 out of n",
+      "or(pk(key_1),or(pk(key_2),or(pk(key_3),or(pk(key_4),or(pk(key_5),or(pk(key_6),or(pk(key_7),pk(key_8))))))))",
+      "This Bitcoin miniscript policy requires that the transaction is signed by one of the eight specified public keys (`key_1`, `key_2`, ..., `key_8`).",
+      "Y"
+    ],
+    [
+      "1 out of n",
+      "or(pk(key_1),or(pk(key_2),or(pk(key_3),or(pk(key_4),or(pk(key_5),or(pk(key_6),pk(key_7)))))))",
+      "This Bitcoin miniscript policy requires that the transaction is signed by one of the seven specified public keys (`key_1`, `key_2`, ..., `key_7`).",
+      "Y"
+    ],
+    [
+      "1 out of n",
+      "or(pk(key_1),or(pk(key_2),or(pk(key_3),or(pk(key_4),or(pk(key_5),pk(key_6))))))",
+      "This Bitcoin miniscript policy requires that the transaction is signed by one of the six specified public keys (`key_1`, `key_2`, ..., `key_6`).",
+      "Y"
+    ],
+    [
+      "1 out of n",
+      "or(pk(key_1),or(pk(key_2),or(pk(key_3),or(pk(key_4),pk(key_5)))))",
+      "This Bitcoin miniscript policy requires that the transaction is signed by one of the five specified public keys (`key_1`, `key_2`, `key_3`, `key_4`, `key_5`).",
+      "Y"
+    ],
+    [
+      "1 out of n",
+      "or(pk(key_1),or(pk(key_2),or(pk(key_3),pk(key_4))))",
+      "This Bitcoin miniscript policy requires that the transaction is signed by one of the four specified public keys (`key_1`, `key_2`, `key_3`, `key_4`).",
+      "Y"
+    ],
+    [
+      "1 out of n",
+      "thresh(1, pk(holder_1), pk(holder_2), pk(holder_3))",
+      "This Bitcoin miniscript policy requires that the transaction is signed by one of the three specified public keys (`holder_1`, `holder_2`, `holder_3`).",
+      "Y"
+    ],
+    [
+      "1 out of n",
+      "thresh(1, pk(member_1), pk(member_2), pk(member_3), pk(member_4),pk(member_5))",
+      "This Bitcoin miniscript policy requires that the transaction is signed by one of the five members (member_1, member_2, member_3, member_4, member_5).",
+      "Y"
+    ],
+    [
+      "1 out of n",
+      "thresh(1, pk(member_1), pk(member_2), pk(member_3), pk(member_4))",
+      "This Bitcoin miniscript policy requires that the transaction is signed by one of the four members (member_1, member_2, member_3, member_4).",
+      "Y"
+    ],
+    [
+      "1 out of n",
+      "thresh(1, pk(parent_1_key), pk(parent_2_key), pk(child_key))",
+      "This Bitcoin miniscript policy requires that the transaction is signed by one of the three specified public keys (`parent_1_key`, `parent_2_key`, `child_key`).",
+      "Y"
+    ],
+    [
+      "1 out of n",
+      "thresh(1, pk(partner_1), pk(partner_2), pk(partner_3))",
+      "This Bitcoin miniscript policy requires that the transaction is signed by one of the three partners (`partner_1`, `partner_2`, `partner_3`).",
+      "Y"
+    ],
+    [
+      "1 out of n",
+      "thresh(1,pk(key_1),pk(key_2),pk(key_3),pk(key_4),pk(key_5),pk(key_6),pk(key_7),pk(key_8),pk(key_9),pk(key_10))",
+      "This Bitcoin miniscript policy requires that the transaction is signed by one of the ten specified public keys (`key_1`, `key_2`, ..., `key_10`).",
+      "Y"
+    ],
+    [
+      "1 out of n",
+      "thresh(1,pk(key_1),pk(key_2),pk(key_3),pk(key_4),pk(key_5),pk(key_6),pk(key_7),pk(key_8))",
+      "This Bitcoin miniscript policy requires that the transaction is signed by one of the eight specified public keys (`key_1`, `key_2`, ..., `key_8`).",
+      "Y"
+    ],
+    [
+      "1 out of n",
+      "thresh(1,pk(key_1),pk(key_2),pk(key_3),pk(key_4),pk(key_5),pk(key_6),pk(key_7))",
+      "This Bitcoin miniscript policy requires that the transaction is signed by one of the seven specified public keys (`key_1`, `key_2`, ..., `key_7`).",
+      "Y"
+    ],
+    [
+      "1 out of n",
+      "thresh(1,pk(key_1),pk(key_2),pk(key_3),pk(key_4),pk(key_5),pk(key_6))",
+      "This Bitcoin miniscript policy requires that the transaction is signed by one of the six specified public keys (`key_1`, `key_2`, ..., `key_6`).",
+      "Y"
+    ],
+    [
+      "1 out of n",
+      "thresh(1,pk(key_1),pk(key_2),pk(key_3),pk(key_4),pk(key_5))",
+      "This Bitcoin miniscript policy requires that the transaction is signed by one of the five specified public keys (`key_1`, `key_2`, `key_3`, `key_4`, `key_5`).",
+      "Y"
+    ],
+    [
+      "and",
+      "and(hash160(H), thresh(1, pk(key_1), pk(key_2), pk(key_3), pk(key_4)))\n",
+      "This Bitcoin miniscript policy requires that both of the following conditions are met:\n1. One of the four specified public keys (`key_1`, `key_2`, `key_3`, `key_4`) signs.\n2. A secret preimage that hashes to value `H` (using SHA-256 followed by RIPEMD-160) is provided.",
+      "Y"
+    ],
+    [
+      "and",
+      "and(hash160(H), thresh(1, pk(key_1), pk(key_2), pk(key_3)))\n\n",
+      "This Bitcoin miniscript policy requires that both of the following conditions are met:\n1. One of the three specified public keys (`key_1`, `key_2`, `key_3`) signs.\n2. A secret preimage that hashes to value `H` (using SHA-256 followed by RIPEMD-160) is provided.",
+      "Y"
+    ],
+    [
+      "and",
+      "and(hash256(H), thresh(1, pk(key_1), pk(key_2), pk(key_3), pk(key_4), pk(key_5)))\n",
+      "This Bitcoin miniscript policy requires that both of the following conditions are met:\n1. One of the five specified public keys (`key_1`, `key_2`, `key_3`, `key_4`, `key_5`) signs.\n2. A secret preimage that hashes to value `H` (using SHA-256 applied twice) is provided.",
+      "Y"
+    ],
+    [
+      "and",
+      "and(hash256(H), thresh(1, pk(key_1), pk(key_2), pk(key_3)))\n",
+      "This Bitcoin miniscript policy requires that both of the following conditions are met:\n1. One of the three specified public keys (`key_1`, `key_2`, `key_3`) signs.\n2. A secret preimage that hashes to value `H` (using SHA-256 applied twice) is provided.",
+      "Y"
+    ],
+    [
+      "and",
+      "and(hash256(H),thresh(1,pk(fan_key_1),pk(fan_key_2),pk(key_3)))",
+      "This Bitcoin miniscript policy requires that both of the following conditions are met:\n1. One of the four specified public keys (`fan_key_1`, `fan_key_2`, `fan_key_3`, `fan_key_4`) signs.\n2. A secret preimage that hashes to value `H` (using SHA-256 applied twice) is provided.",
+      "Y"
+    ],
+    [
+      "and",
+      "and(hash256(H),thresh(1,pk(key_1),pk(key_2),pk(key_3),pk(key_4),pk(key_5),pk(key_6),pk(key_7),pk(key_8),pk(key_9),pk(key_10)))",
+      "This Bitcoin miniscript policy requires that both of the following conditions are met:\n1. One of the ten specified public keys (`key_1`, `key_2`, ..., `key_10`) signs.\n2. A secret preimage that hashes to value `H` (using SHA-256 applied twice) is provided.",
+      "Y"
+    ],
+    [
+      "and",
+      "and(hash256(H),thresh(2,pk(friend_key_1),pk(friend_key_2),pk(friend_key_3),pk(friend_key_4),pk(friend_key_5),pk(friend_key_6)))",
+      "This Bitcoin miniscript policy requires that both of the following conditions are met:\n1. Two of the six specified public keys (`friend_key_1`, `friend_key_2`, ..., `friend_key_10`) sign.\n2. A secret preimage that hashes to value `H` (using SHA-256 applied twice) is provided.",
+      "Y"
+    ],
+    [
+      "and",
+      "and(older(57600), thresh(6, pk(key_1), pk(key_2), pk(key_3), pk(key_4), pk(key_5), pk(key_6), pk(key_7), pk(key_8), pk(key_9), pk(key_10), pk(key_11)))",
+      "This Bitcoin miniscript policy requires that both of the following conditions are met:\n1. Six of the eleven specified public keys (`key_1`, `key_2`, ..., `key_11`) sign.\n2. The nSequence value is at least 57600 blocks (approximately 400 days old).",
+      "Y"
+    ],
+    [
+      "and",
+      "and(pk(key_1), or(pk(key_2), older(144)))",
+      "This Bitcoin miniscript policy requires that both of the following conditions are met:\n1. Public key `key_1` signs.\n2. Public key `key_2` signs or the nSequence value is at least 144 blocks (approximately 1 day old)",
+      "Y"
+    ],
+    [
+      "and",
+      "and(pk(key_user),or(99@pk(key_service),older(12960)))",
+      "This Bitcoin miniscript policy requires that both of the following conditions are met:\n1. Public key `key_user` signs.\n2. Public key `key_service` signs or the nSequence value is at least 12960 blocks (approximately 90 days old) - with the first path being 99 times more likely to be used than the second path.",
+      "Y"
+    ],
+    [
+      "and",
+      "and(ripemd160(H), thresh(1, pk(key_1), pk(key_2), pk(key_3), pk(key_4), pk(key_5), pk(key_6), pk(key_7), pk(key_8), pk(key_9)))",
+      "This Bitcoin miniscript policy requires that both of the following conditions are met:\n1. One of the nine specified public keys (`key_1`, `key_2`, ..., `key_9`) signs.\n2. A secret preimage that hashes to value `H` (using RIPEMD-160) is provided.",
+      "Y"
+    ],
+    [
+      "and",
+      "and(ripemd160(H), thresh(1, pk(key_1), pk(key_2), pk(key_3), pk(key_4), pk(key_5)))",
+      "This Bitcoin miniscript policy requires that both of the following conditions are met:\n1. One of the five specified public keys (`key_1`, `key_2`, `key_3`, `key_4`, `key_5`) signs.\n2. A secret preimage that hashes to value `H` (using RIPEMD-160) is provided.",
+      "Y"
+    ],
+    [
+      "and",
+      "and(ripemd160(H),thresh(1,pk(fan_key_1),pk(fan_key_2),pk(fan_key_3)))",
+      "This Bitcoin miniscript policy requires that both of the following conditions are met:\n1. One of the three specified public keys (`fan_key_1`, `fan_key_2`, `fan_key_3`) signs.\n2. A secret preimage that hashes to value `H` (using RIPEMD-160) is provided.",
+      "Y"
+    ],
+    [
+      "and",
+      "and(ripemd160(H),thresh(1,pk(key_1),pk(key_2),pk(key_3),pk(key_4),pk(key_5),pk(key_6),pk(key_7),pk(key_8),pk(key_9),pk(key_10)))",
+      "This Bitcoin miniscript policy requires that both of the following conditions are met:\n1. One of the ten specified public keys (`key_1`, `key_2`, ..., `key_10`) signs.\n2. A secret preimage that hashes to value `H` (using RIPEMD-160) is provided.",
+      "Y"
+    ],
+    [
+      "and",
+      "and(sha256(H), thresh(1, pk(prog_key_1), pk(prog_key_2), pk(prog_key_3)))\n",
+      "This Bitcoin miniscript policy requires that both of the following conditions are met:\n1. One of the three specified public keys (`prog_key_1`, `prog_key_2`, `prog_key_3`) signs.\n2. A secret preimage that hashes to value `H` (using SHA-256) is provided.",
+      "Y"
+    ],
+    [
+      "and",
+      "and(sha256(H), thresh(1, pk(team_key_1), pk(team_key_2), pk(team_key_3), pk(team_key_4), pk(team_key_5)))\n",
+      "This Bitcoin miniscript policy requires that both of the following conditions are met:\n1. One of the five specified public keys (`team_key_1`, `team_key_2`, `team_key_3`, `team_key_4`, `team_key_5`) signs.\n2. A secret preimage that hashes to value `H` (using SHA-256) is provided.",
+      "Y"
+    ],
+    [
+      "and",
+      "and(sha256(H),thresh(3,pk(compet_key_1),pk(compet_key_2),pk(compet_key_3),pk(compet_key_4),pk(compet_key_5),pk(compet_key_6),pk(compet_key_7),pk(compet_key_8),pk(compet_key_9),pk(compet_key_10)))",
+      "This Bitcoin miniscript policy requires that both of the following conditions are met:\n1. Three of the ten specified public keys (`compet_key_1`, `compet_key_2`, ..., `compet_key_10`) sign.\n2. A secret preimage that hashes to value `H` (using SHA-256) is provided.",
+      "Y"
+    ],
+    [
+      "and",
+      "and(thresh(2, pk(assist_1), pk(assist_2), pk(assist_3)), hash256(H))",
+      "This Bitcoin miniscript policy requires that both of the following conditions are met:\n1. Two of the three specified public keys (`assist_1`, `assist_2`, `assist_3`) sign.\n2. A secret preimage that hashes to value `H` (using SHA-256 applied twice) is provided.",
+      "Y"
+    ],
+    [
+      "and",
+      "and(thresh(2, pk(key_1), pk(key_2), pk(key_3), pk(key_4), pk(key_5), pk(key_6), pk(key_7)), ripemd160(H))",
+      "This Bitcoin miniscript policy requires that both of the following conditions are met:\n1. Two of the seven specified public keys (`key_1`, `key_2`, ..., `key_7`) sign.\n2. A secret preimage that hashes to value `H` (using RIPEMD-160) is provided.",
+      "Y"
+    ],
+    [
+      "and",
+      "and(thresh(2, pk(key_1), pk(key_2), pk(key_3), pk(key_4)), ripemd160(H))",
+      "This Bitcoin miniscript policy requires that both of the following conditions are met:\n1. Two of the four specified public keys (`key_1`, `key_2`, `key_3`, `key_4`) sign.\n2. A secret preimage that hashes to value `H` (using RIPEMD-160) is provided.",
+      "Y"
+    ],
+    [
+      "and",
+      "and(thresh(2, pk(key_1), pk(key_2), pk(key_3)), after(823937))\n",
+      "This Bitcoin miniscript policy requires that two of the following conditions are met:\n1. Two of the three specified public keys (`key_1`, `key_2`, `key_3`) sign.\n4. The nLockTime value is at least 823937 (block height).",
+      "Y"
+    ],
+    [
+      "and",
+      "and(thresh(2, pk(key_1), pk(key_2), pk(key_3)), hash160(H))",
+      "This Bitcoin miniscript policy requires that both of the following conditions are met:\n1. Two of the three specified public keys (`key_1`, `key_2`, `key_3`) sign.\n2. A secret preimage that hashes to value `H` (using SHA-256 followed by RIPEMD-160) is provided.",
+      "Y"
+    ],
+    [
+      "and",
+      "and(thresh(2, pk(op_1), pk(op_2), pk(op_3), pk(op_4)), hash256(H))",
+      "This Bitcoin miniscript policy requires that both of the following conditions are met:\n1. Two of the four specified public keys (`op_1`, `op_2`, `op_3`, `op_4`) sign.\n2. A secret preimage that hashes to value `H` (using SHA-256 applied twice) is provided.",
+      "Y"
+    ],
+    [
+      "and",
+      "and(thresh(2, pk(op_1), pk(op_2), pk(op_3)), sha256(H))",
+      "This Bitcoin miniscript policy requires that both of the following conditions are met:\n1. Two of the three specified public keys (`op_1`, `op_2`, `op_3`) sign.\n2. A secret preimage that hashes to value `H` (using SHA-256) is provided.",
+      "Y"
+    ],
+    [
+      "and",
+      "and(thresh(2, pk(senior_1), pk(senior_2), pk(senior_3)), sha256(H))",
+      "This Bitcoin miniscript policy requires that both of the following conditions are met:\n1. Two of the three specified public keys (`senior_1`, `senior_2`, `senior_3`) sign.\n2. A secret preimage that hashes to value `H` (using SHA-256) is provided.",
+      "Y"
+    ],
+    [
+      "and",
+      "and(thresh(3, pk(key_1), pk(key_2), pk(key_3), pk(key_4), pk(key_5)), after(869245))\n",
+      "This Bitcoin miniscript policy requires that two of the following conditions are met:\n1. Three of the five specified public keys (`key_1`, `key_2`, `key_3`, `key_4`, `key_5`) sign.\n4. The nLockTime value is at least 869245 (block height).",
+      "Y"
+    ],
+    [
+      "andor",
+      "or(99@and(pk(key_researcher),older(52560)),pk(key_organization))",
+      "This Bitcoin miniscript policy specifies that funds can be spent in one of two ways:\n1. Public key `key_organization` signs\n2. Both the public key named `key_researcher` signs and a waiting period of 52560 blocks (approximately 1 year) has passed since the transaction was included in a block.\nThe second path is 99 times more likely to be used than the first.",
+      "Y"
+    ],
+    [
+      "andor",
+      "or(and(older(11520),pk(key_1)),or(pk(key_2),pk(key_3)))",
+      "This Bitcoin miniscript policy specifies that funds can be spent in one of two ways:\n1. Public key `key_1` signs and the nSequence value is at least 11520 blocks (approximately 80 days).\n2. Either `key_2` or `key_3` signs the transaction.",
+      "Y"
+    ],
+    [
+      "andor",
+      "or(and(pk(A), pk(B)), pk(C))",
+      "This Bitcoin miniscript policy specifies that funds can be spent in one of two ways:\n1. Public key `C` signs\n2. Both public keys `A` and `B` sign",
+      "Y"
+    ],
+    [
+      "andor",
+      "or(and(pk(caregiver),thresh(1, pk(son_1), pk(son_2))), pk(father))",
+      "This Bitcoin miniscript policy specifies that funds can be spent in one of two ways:\n1. The father signs\n2. Both the caregiver and one of the two sons sign",
+      "Y"
+    ],
+    [
+      "andor",
+      "or(and(pk(director),thresh(1, pk(trader_1), pk(trader_2), pk(trader_3), pk(trader_4))), pk(ceo))",
+      "This Bitcoin miniscript policy specifies that funds can be spent in one of two ways:\n1. The CEO signs\n2. Both the director and one of the four traders sign",
+      "Y"
+    ],
+    [
+      "andor",
+      "or(and(pk(manager),thresh(1, pk(op_1), pk(op_2), pk(op_3))), pk(owner))",
+      "This Bitcoin miniscript policy specifies that funds can be spent in one of two ways:\n1. The owner signs\n2. Both the manager and one of the three ops sign",
+      "Y"
+    ],
+    [
+      "andor",
+      "or(and(pk(parent1_key), pk(parent2_key)), pk(eldest_child_key))",
+      "This Bitcoin miniscript policy specifies that funds can be spent in one of two ways:\n1. Public key `eldest_child_key` signs\n2. Both public keys `parent1_key` and `parent2_key` sign",
+      "Y"
+    ],
+    [
+      "andor",
+      "or(and(pk(pk(key_employee),older(25920)),99@pk(key_company)",
+      "This Bitcoin miniscript policy specifies that funds can be spent in one of two ways:\n1. Public key `key_company` signs\n2. Both the public key named `key_employee` signs and a waiting period of 25920 blocks (approximately 180 days) has passed since the transaction was included in a block.\nThe first path is 99 times more likely to be used than the second.",
+      "Y"
+    ],
+    [
+      "andor",
+      "or(and(pk(treasurer),thresh(3, pk(member_1), pk(member_2), pk(member_3), pk(member_4), pk(member_5))), pk(president))",
+      "This Bitcoin miniscript policy specifies that funds can be spent in one of two ways:\n1. The president signs\n2. Both the treasurer and one of the five members sign",
+      "Y"
+    ],
+    [
+      "andor",
+      "or(pk(key_revocation),and(pk(key_local),older(1008)))",
+      "This Bitcoin miniscript policy specifies that funds can be spent in one of two ways:\n1. Public key `key_revocation` signs\n2. Both the public key named `key_local` signs and a waiting period of 1008 blocks (approximately 7 days) has passed since the transaction was included in a block.",
+      "Y"
+    ],
+    [
+      "andor",
+      "or(pk(KeyA), and(pk(KeyB), older(144)))",
+      "This Bitcoin miniscript policy specifies that funds can be spent in one of two ways:\n1. Public key `KeyA` signs\n2. Both the public key named `KeyB` signs and a waiting period of 144 blocks (approximately 1 day) has passed since the transaction was included in a block.",
+      "Y"
+    ],
+    [
+      "hashlock",
+      "and(pk(key_1), hash160(H))",
+      "This Bitcoin miniscript policy requires that public key `key_1` signs the transaction and that a secret preimage that hashes to value `HASH` (using SHA-256 followed by RIPEMD-160) is provided.",
+      "Y"
+    ],
+    [
+      "hashlock",
+      "and(pk(key_1), hash256(H))",
+      "This Bitcoin miniscript policy requires that public key `key_1` signs the transaction and that a secret preimage that hashes to value `HASH` (using SHA-256 applied twice) is provided.",
+      "Y"
+    ],
+    [
+      "hashlock",
+      "and(pk(key_1), ripemd160(H))",
+      "This Bitcoin miniscript policy requires that public key `key_1` signs the transaction and that a secret preimage that hashes to value `HASH` (using RIPEMD-160) is provided.",
+      "Y"
+    ],
+    [
+      "hashlock",
+      "and(pk(key_1), sha256(H))",
+      "This Bitcoin miniscript policy requires that public key `key_1` signs the transaction and that a secret preimage that hashes to value `HASH` (using SHA-256) is provided.",
+      "Y"
+    ],
+    [
+      "hashlock",
+      "and(pk(key_123), sha256(H))",
+      "This Bitcoin miniscript policy requires that public key `key_123` signs the transaction and that a secret preimage that hashes to value `H` (using SHA-256) is provided.",
+      "Y"
+    ],
+    [
+      "hashlock",
+      "and(pk(key_abc), ripemd160(H))",
+      "This Bitcoin miniscript policy requires that public key `key_abc` signs the transaction and that a secret preimage that hashes to value `H` (using RIPEMD-160) is provided.",
+      "Y"
+    ],
+    [
+      "hashlock",
+      "and(pk(key_xyz), hash256(H))",
+      "This Bitcoin miniscript policy requires that public key `key_xyz` signs the transaction and that a secret preimage that hashes to value `H` (using SHA-256 applied twice) is provided.",
+      "Y"
+    ],
+    [
+      "hashlock",
+      "and(pk(key), hash160(H))",
+      "This Bitcoin miniscript policy requires that public key `key` signs the transaction and that a secret preimage that hashes to value `H` (using SHA-256 followed by RIPEMD-160) is provided.",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "and(pk(director_key),and(pk(funder_key),older(144)))",
+      "This Bitcoin miniscript policy requires that all of the following conditions are met:\n1. Public key `director_key` signs.\n2. Public key `funder_key` signs.\n3. The nSequence value is at least 144 blocks (approximately 1 day old).",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "and(pk(father_key),and(pk(mother_key),after(1109737)))",
+      "This Bitcoin miniscript policy requires that all of the following conditions are met:\n1. Public key `father_key` signs.\n2. Public key `mother_key` signs.\n3. The nLockTime value is at least 1109737 (block height).",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "and(pk(finance_key),and(pk(planning_key),older(288)))",
+      "This Bitcoin miniscript policy requires that all of the following conditions are met:\n1. Public key `finance_key` signs.\n2. Public key `planning_key` signs.\n3. The nSequence value is at least 288 blocks (approximately 2 days old).",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "and(pk(key_1), pk(key_2))",
+      "This Bitcoin miniscript policy requires that both public keys named `key_1` and `key_2` sign.",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "and(pk(key_1),and(pk(key_2),and(pk(key_3),and(pk(key_4),and(pk(key_5),and(pk(key_6),pk(key_7)))))))",
+      "This Bitcoin miniscript policy requires that all seven specified public keys (`key_1`, `key_2`, ..., `key_7`) sign.",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "and(pk(key_1),and(pk(key_2),and(pk(key_3),and(pk(key_4),and(pk(key_5),pk(key_6))))))",
+      "This Bitcoin miniscript policy requires that all six specified public keys (`key_1`, `key_2`, ..., `key_6`) sign.",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "and(pk(key_1),and(pk(key_2),and(pk(key_3),and(pk(key_4),pk(key_5)))))",
+      "This Bitcoin miniscript policy requires that all five specified public keys (`key_1`, `key_2`, `key_3`, `key_4`, `key_5`) sign.",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "and(pk(key_1),and(pk(key_2),and(pk(key_3),pk(key_4))))",
+      "This Bitcoin miniscript policy requires that all four specified public keys (`key_1`, `key_2`, `key_3`, `key_4`) sign.",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "and(pk(key_1),and(pk(key_2),older(4320)))",
+      "This Bitcoin miniscript policy requires that all of the following conditions are met:\n1. Public key `key_1` signs.\n2. Public key `key_2` signs.\n3. The nSequence value is at least 4320 blocks (approximately 30 days old).",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "and(pk(key_1),and(pk(key_2),pk(key_3)))",
+      "This Bitcoin miniscript policy requires that all three specified public keys (`key_1`, `key_2`, `key_3`) sign.",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "and(pk(key1),and(pk(key2),and(pk(key3),after(876518))))",
+      "This Bitcoin miniscript policy requires that all of the following conditions are met:\n1. Public key `key1` signs.\n2. Public key `key2` signs.\n3. Public key `key3` signs.\n4. The nLockTime value is at least 876518 (block height).",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "and(pk(key1),and(pk(key2),and(pk(key3),after(985822))))",
+      "This Bitcoin miniscript policy requires that all of the following conditions are met:\n1. Public key `key1` signs.\n2. Public key `key2` signs.\n3. Public key `key3` signs.\n4. The nLockTime value is at least 985822 (block height).",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "and(pk(party_1_key), pk(party_2_key))",
+      "This Bitcoin miniscript policy requires that both specified public keys (`party_1_key` and `party_2_key`) sign.",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "thresh(2, pk(key_1), pk(key_2))",
+      "This Bitcoin miniscript policy requires that both specified public keys (`key_1` and `key_2`) sign.",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "thresh(2,pk(key1),pk(key2))",
+      "This Bitcoin miniscript policy requires that both specified public keys (`key1` and `key2`) sign.",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "thresh(2,pk(member1_key),pk(member2_key))",
+      "This Bitcoin miniscript policy requires that both specified public keys (`member1_key` and `member2_key`) sign.",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "thresh(3, pk(key_1), pk(key_2), pk(key_3))",
+      "This Bitcoin miniscript policy requires that all three specified public keys (`key_1`, `key_2`, `key_3`) sign.",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "thresh(3, pk(member_1), pk(member_2), pk(member_3))",
+      "This Bitcoin miniscript policy requires that all three members (`member_1`, `member_2`, `member_3`) sign.",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "thresh(3,pk(A),pk(B),pk(C))",
+      "This Bitcoin miniscript policy requires that all three specified public keys (`A`, `B`, `C`) sign.",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "thresh(3,pk(Alice),pk(Bob),after(286000))",
+      "This Bitcoin miniscript policy requires that all of the following conditions are met:\n1. Alice signs.\n2. Bob signs.\n3. The nLockTime value is at least 286000 (block height).",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "thresh(3,pk(Alice),pk(Bob),hash160(H))",
+      "This Bitcoin miniscript policy requires that all of the following conditions are met:\n1. Alice signs.\n2. Bob signs.\n3. A secret preimage that hashes to value `H` (using SHA-256 followed by RIPEMD-160) is provided.",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "thresh(3,pk(Alice),pk(Bob),hash256(H))",
+      "This Bitcoin miniscript policy requires that all of the following conditions are met:\n1. Alice signs.\n2. Bob signs.\n3. A secret preimage that hashes to value `H` (using SHA-256 applied twice) is provided.",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "thresh(3,pk(Alice),pk(Bob),older(100))",
+      "This Bitcoin miniscript policy requires that all of the following conditions are met:\n1. Alice signs.\n2. Bob signs.\n3. The nSequence value is at least 100 blocks (approximately 16 hours and 40 minutes old).",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "thresh(3,pk(Alice),pk(Bob),ripemd160(H))",
+      "This Bitcoin miniscript policy requires that all of the following conditions are met:\n1. Alice signs.\n2. Bob signs.\n3. A secret preimage that hashes to value `H` (using RIPEMD-160) is provided.",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "thresh(3,pk(Alice),pk(Bob),sha256(H))",
+      "This Bitcoin miniscript policy requires that all of the following conditions are met:\n1. Alice signs.\n2. Bob signs.\n3. A secret preimage that hashes to value `H` (using SHA-256) is provided.",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "thresh(3,pk(owner_key),pk(trustee_key),pk(escrow_key))",
+      "This Bitcoin miniscript policy requires that all three specified public keys (`owner_key`, `trustee_key`, `escrow_key`) sign.",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "thresh(3,pk(personA),pk(personB),pk(personC))",
+      "This Bitcoin miniscript policy requires that all three persons (`personA`, `personB`, `personC`) sign.",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "thresh(4,pk(key_1),pk(key_2),pk(key_3),older(2880))",
+      "This Bitcoin miniscript policy requires that all the following conditions are met:\n1. Public key `key_1` signs.\n2. Public key `key_2` signs.\n3. Public key `key_3` signs.\n4. The nSequence value is at least 2880 blocks (approximately 20 days old).",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "thresh(4,pk(key_1),pk(key_2),pk(key_3),sha256(H))",
+      "This Bitcoin miniscript policy requires that all the following conditions are met:\n1. Public key `key_1` signs.\n2. Public key `key_2` signs.\n3. Public key `key_3` signs.\n4. A secret preimage that hashes to value `H` (using SHA-256) is provided.",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "thresh(4,pk(key1),pk(key2),pk(key3),after(1670047200))",
+      "This Bitcoin miniscript policy requires that all of the following conditions are met:\n1. Public key `key1` signs.\n2. Public key `key2` signs.\n3. Public key `key3` signs.\n4. The nLockTime value is at least 1670047200, which corresponds to December 3 2022 at 06:00:00 UTC.",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "thresh(4,pk(key1),pk(key2),pk(key3),pk(key4))",
+      "This Bitcoin miniscript policy requires that all four specified public keys (`key1`, `key2`, `key3`, `key4`) sign.",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "thresh(5,pk(key1),pk(key2),pk(key3),pk(key4),pk(key5))",
+      "This Bitcoin miniscript policy requires that all five specified public keys (`key1`, `key2`, `key3`, `key4`, `key5`) sign.",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "thresh(6,pk(A),pk(B),pk(C),pk(D),pk(E),after(1893456000))",
+      "This Bitcoin miniscript policy requires that all of the following conditions are met:\n1. Public key `A` signs.\n2. Public key `B` signs.\n3. Public key `C` signs.\n4. Public key `D` signs.\n5. Public key `E` signs.\n6. The nLockTime value is at least 1893456000, which corresponds to January 1 2030 at 00:00:00 UTC.",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "thresh(6,pk(key1),pk(key2),pk(key3),pk(key4),pk(key5),pk(key6),pk(key7))",
+      "This Bitcoin miniscript policy requires that all seven specified public keys (`key1`, `key2`, ..., `key7`) sign.",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "thresh(6,pk(key1),pk(key2),pk(key3),pk(key4),pk(key5),pk(key6))",
+      "This Bitcoin miniscript policy requires that all six specified public keys (key1, key2, ..., key6) sign.",
+      "Y"
+    ],
+    [
+      "n out of n",
+      "thresh(9,pk(member_1),pk(member_2),pk(member_3),pk(member_4),pk(member_5),pk(member_6),pk(member_7),pk(member_8),pk(member_9))",
+      "This Bitcoin miniscript policy requires that all nine members (`member_1`, `member_2`, ..., `member_9`) sign.",
+      "Y"
+    ],
+    [
+      "or",
+      "or(2@thresh(2, pk(op_1), pk(op_2), pk(op_3)), thresh(1, pk(partner_1), pk(partner_2)))",
+      "This Bitcoin miniscript policy requires that one of the two following conditions is met:\n1. Two out of three public keys (`op_1`, `op_2`, `op_3`) sign.\n2. One out of two partners (`partner_1`, `partner_2`) sign.\nThe policy indicates that the first condition is twice as likely to be used than the second condition.",
+      "Y"
+    ],
+    [
+      "or",
+      "or(5@thresh(3, pk(member_1), pk(member_2), pk(member_3), pk(member_4)), thresh(1, pk(chair_1), pk(chair_2)))",
+      "This Bitcoin miniscript policy requires that one of the two following conditions is met:\n1. Three out of four members sign.\n2. One out of two chairs sign (`chair_1`, `chair_2`).\nThe policy indicates that the first condition is five times more likely to be used than the second condition.",
+      "Y"
+    ],
+    [
+      "or",
+      "or(9@pk(key_likely),pk(key_unlikely))",
+      "This Bitcoin miniscript policy requires that one of the two following conditions is met:\n1. Public key `key_likely` signs.\n2. Public key `key_unlikely` signs.\nThe policy indicates that the first condition is nine times more likely to be used than the second condition.",
+      "Y"
+    ],
+    [
+      "or",
+      "or(and(pk(parent1_key), pk(parent2_key)), pk(eldest_child_key))",
+      "This Bitcoin miniscript policy requires that one of the two following conditions is met:\n1. Public key `eldest_child_key` signs.\n2. Either `parent1_key` or `parent2_key` signs.",
+      "Y"
+    ],
+    [
+      "or",
+      "or(pk(@emergencyKey),and(pk(@unvaultKey),older(1008)))",
+      "This Bitcoin miniscript policy requires that one of the two following conditions is met:\n1. Public key `emergencyKey` signs.\n2. Public key `unvaultKey` signs after a delay of at least 1008 blocks (approximately 7 days).",
+      "Y"
+    ],
+    [
+      "or",
+      "or(pk(key_1),or(pk(key_2),pk(key_3)))",
+      "This Bitcoin miniscript policy requires that one of the two following conditions is met:\n1. Public key `key_1` signs.\n2. Either `key_2` or `key_3` signs.",
+      "Y"
+    ],
+    [
+      "or",
+      "or(pk(key_1),pk(key_2))",
+      "This Bitcoin miniscript policy requires that one of the two following conditions is met:\n1. Public key `key_1` signs.\n2. Public key `key_2` signs.",
+      "Y"
+    ],
+    [
+      "or",
+      "or(pk(key_revocation),and(pk(key_remote),or(and(pk(key_local),hash160(H)),older(1008))))",
+      "This Bitcoin miniscript policy requires that one of the two following conditions is met:\n1. Public key `key_revocation` signs.\n2. Public key `key_remote` signs and either public key `key_local` signs and a secret preimage that hashes to value `H` (using SHA-256 followed by RIPEMD-160) is provided, or a waiting period of 1008 blocks (approximately 7 days) has passed since the transaction was included in a block.",
+      "Y"
+    ],
+    [
+      "or",
+      "or(pk(key_revocation),and(pk(key_remote),or(pk(key_local),hash160(H))))",
+      "This Bitcoin miniscript policy requires that one of the two following conditions is met:\n1. Public key `key_revocation` signs.\n2. Public key `key_remote` signs and either public key `key_local` signs or a secret preimage that hashes to value `H` (using SHA-256 followed by RIPEMD-160) is provided.",
+      "Y"
+    ],
+    [
+      "or",
+      "or(pk(key_unlikely),99@pk(key_likely))",
+      "This Bitcoin miniscript policy requires that one of the two following conditions is met:\n1. Public key `key_unlikely` signs.\n2. Public key `key_likely` signs.\nThe policy indicates that the second condition is 99 times more likely to be used than the first condition.",
+      "Y"
+    ],
+    [
+      "or",
+      "or(pk(KeyA), and(pk(KeyB), older(144)))",
+      "This Bitcoin miniscript policy requires that one of the two following conditions is met:\n1. Public key `KeyA` signs.\n2. Public key `KeyB` signs and `KeyB` after a delay of at least 144 blocks (approximately 1 day).",
+      "Y"
+    ],
+    [
+      "or",
+      "or(thresh(1, pk(key_1), pk(key_2), pk(key_3)), thresh(2, pk(key_4), pk(key_5)))",
+      "This Bitcoin miniscript policy requires that one of the two following conditions is met:\n1. One out of three public keys `key_1`, `key_2` and `key_3` signs.\n2. Both public keys `key_4` and `key_5` sign.",
+      "Y"
+    ],
+    [
+      "or",
+      "or(thresh(2, pk(op_1), pk(op_2), pk(op_3), pk(op_4), pk(op_5)), thresh(1, pk(partner_1), pk(partner_2)))",
+      "This Bitcoin miniscript policy requires that one of the two following conditions is met:\n1. Two out of five public keys (`op_1`, `op_2`, `op_3`, `op_4`, `op_5`) sign.\n2. One out of two partners (`partner_1`, `partner_2`) sign.",
+      "Y"
+    ],
+    [
+      "or",
+      "or(thresh(2, pk(op_1), pk(op_2), pk(op_3)), 2@thresh(1, pk(partner_1), pk(partner_2)))",
+      "This Bitcoin miniscript policy requires that one of the two following conditions is met:\n1. Two out of three public keys (`op_1`, `op_2`, `op_3`) sign.\n2. One out of two partners (`partner_1`, `partner_2`) sign.\nThe policy indicates that the second condition is twice as likely to be used than the first condition.",
+      "Y"
+    ],
+    [
+      "or",
+      "or(thresh(2, pk(op_1), pk(op_2), pk(op_3)), 3@thresh(1, pk(partner_1), pk(partner_2)))",
+      "This Bitcoin miniscript policy requires that one of the two following conditions is met:\n1. Two out of three public keys (`op_1`, `op_2`, `op_3`) sign.\n2. One out of two partners (`partner_1`, `partner_2`) sign.\nThe policy indicates that the second condition is three times more likely to be used than the first condition.",
+      "Y"
+    ],
+    [
+      "or",
+      "or(thresh(3, pk(key_1), pk(key_2), pk(key_3)), thresh(2, pk(key_4), pk(key_5)))",
+      "This Bitcoin miniscript policy requires that one of the two following conditions is met:\n1. Two out of three public keys (`key_1`, `key_2`, `key_3`) sign.\n2. Both public keys `key_4` and `key_5` sign.",
+      "Y"
+    ],
+    [
+      "or",
+      "or(thresh(3, pk(sibling_1), pk(sibling_2), pk(sibling_3), pk(sibling_4), pk(sibling_5)), thresh(1, pk(father), pk(mother)))",
+      "This Bitcoin miniscript policy requires that one of the two following conditions is met:\n1. Three out of five siblings sign.\n2. Either the father or mother signs.",
+      "Y"
+    ],
+    [
+      "or",
+      "thresh(1,and(older(12096),pk(key_1)),or(pk(key_2),pk(key_3)))",
+      "This Bitcoin miniscript policy requires that one of the two following conditions is met:\n1. Either `key_2` or `key_3` signs.\n2. `key_1` signs and the transaction has an nSquence value that is at least 12096 blocks (approximately 84 days old).",
+      "Y"
+    ],
+    [
+      "or",
+      "thresh(1,pk(key_1),pk(key_2))",
+      "This Bitcoin miniscript policy requires that one of the two following conditions is met:\n1. Public key `key_1` signs.\n2. Public key `key_2` signs.",
+      "Y"
+    ],
+    [
+      "or",
+      "or(thresh(3, pk(key_1), pk(key_2), pk(key_3)), thresh(2, pk(key_4), pk(key_5)))",
+      "This Bitcoin miniscript policy requires that one of the two following conditions is met:\n1. `thresh(3, pk(key_1), pk(key_2), pk(key_3))`: this condition is met if all three keys `key_1`, `key_2`, and `key_3` sign.\n2. `thresh(2, pk(key_4), pk(key_5))`: this condition is met if both `key_4` and `key_5` sign.",
+      "Y"
+    ],
+    [
+      "policy term",
+      "after(NUM)",
+      "The `after(NUM)` policy term specifies that the transaction can only be included in a block or considered valid after a certain point in time. If `NUM` is less than 500 million, it represents a block height, meaning the transaction can only be included after the blockchain reaches that height; if `NUM` is 500 million or greater, it represents a Unix timestamp, and the transaction can only be included after the corresponding date and time has passed. Note that the time-based nLockTime is compared to the 11-block median time past (the median timestamp of the 11 blocks preceding the block in which the transaction is mined), and that median time past tends to lag the block time by about one hour (give or take).",
+      "Y"
+    ],
+    [
+      "policy term",
+      "and(POL_1,POL_2)",
+      "The `and(POL_1,POL_2)` policy term specifies that both subpolicies, `POL_1` and `POL_2`, must be satisfied in order for the transaction to be valid. This means that whatever conditions or requirements are defined by `POL_1` and `POL_2` must both be met simultaneously.",
+      "Y"
+    ],
+    [
+      "policy term",
+      "hash160(HEX)",
+      "The `hash160(HEX)` policy term specifies that the spender provides a piece of data (preimage) that, when processed through the SHA-256 hash function followed by the RIPEMD-160 hash function, results in the specified 40-character hexadecimal string represented by `HEX`. This ensures that the spender has knowledge of the original data that hashes to the given value.",
+      "Y"
+    ],
+    [
+      "policy term",
+      "hash256(HEX)",
+      "The `hash256(HEX)` policy term specifies that a participant provides a piece of data (preimage) that, when processed through the SHA-256 hash function twice, results in the specified 64-character hexadecimal string represented by `HEX`. This ensures that the spender has knowledge of the original data that hashes to the given value.",
+      "Y"
+    ],
+    [
+      "policy term",
+      "older(NUM)",
+      "The `older(NUM)` policy term specifies that the transaction can only be included in a block if at least `NUM` blocks have been mined since the transaction's input was last confirmed in a block. Assuming an average block time of 10 minutes, this means the transaction must wait approximately `NUM * 10` minutes before it becomes valid for inclusion in the blockchain.",
+      "Y"
+    ],
+    [
+      "policy term",
+      "or(N@POL_1,POL_2)",
+      "The `or(N@POL_1,POL_2)` policy term specifies that to unlock the funds, either one of two subpolicies must be satisfied: `POL_1` or `POL_2`. The `N@` before `POL_1` indicates that `POL_1` is `N` times more likely to be chosen or satisfied compared to `POL_2` when constructing a transaction.",
+      "Y"
+    ],
+    [
+      "policy term",
+      "or(POL_1,N@POL_2)",
+      "The `or(POL_1,N@POL_2)` policy term specifies that to unlock the funds, either one of two subpolicies must be satisfied: `POL_1` or `POL_2`. The `N@` before `POL_2` indicates that `POL_2` is `N` times more likely to be chosen or satisfied compared to `POL_1` when constructing a transaction.",
+      "Y"
+    ],
+    [
+      "policy term",
+      "or(POL_1,POL_2)",
+      "The `or(POL_1,POL_2)` policy term specifies that to unlock the funds protected by this policy, either one of two subpolicies, `POL_1` or `POL_2`, must be satisfied.",
+      "Y"
+    ],
+    [
+      "policy term",
+      "pk(NAME)",
+      "The `pk(NAME)` policy term specifies that a transaction must be signed by the private key corresponding to the public key named `NAME` in order to be valid. `NAME` is a placeholder for any string up to 16 characters that represents a specific public key.",
+      "Y"
+    ],
+    [
+      "policy term",
+      "ripemd160(HEX)",
+      "The `ripemd160(HEX)` policy term specifies that the spender provides a piece of data (preimage) that, when processed through the RIPEMD-160 hash function, results in the specified 40-character hexadecimal string represented by `HEX`. This ensures that the spender has knowledge of the original data that hashes to the given value.",
+      "Y"
+    ],
+    [
+      "policy term",
+      "sha256(HEX)",
+      "The `sha256(HEX)` policy term specifies that a participant provides a piece of data (preimage) that, when processed through the SHA-256 hash function, results in the specific 64-character hexadecimal string represented by `HEX`. This ensures that the spender has knowledge of the original data that hashes to the given value.",
+      "Y"
+    ],
+    [
+      "policy term",
+      "thresh(NUM,POL_1,POL_2,...,POL_n)",
+      "The `thresh(NUM,POL_1,POL_2,...,POL_n)` policy term specifies that at least `NUM` of the specified subpolicies (`POL_1`, `POL_2`, ..., `POL_n`) are fulfilled in order for the transaction to be valid. Each subpolicy (`POL_1`, `POL_2`, ..., `POL_n`) represents a separate condition that can be met independently.",
+      "Y"
+    ],
+    [
+      "single sig",
+      "pk(A)",
+      "This Bitcoin miniscript policy requires that public key `A` signs the transaction.",
+      "Y"
+    ],
+    [
+      "single sig",
+      "pk(key_1)",
+      "This Bitcoin miniscript policy requires that public key `key_1` signs the transaction.",
+      "Y"
+    ],
+    [
+      "single sig",
+      "pk(my_key)",
+      "This Bitcoin miniscript policy requires that public key `my_key` signs the transaction.",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(2, pk(A_hot), pk(A_hard), pk(A_cold))",
+      "This Bitcoin miniscript policy requires the signatures of at least two out of three specified public keys (`A_hot`, `A_hard`, `A_cold`).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(2, pk(A), pk(B), pk(C))",
+      "This Bitcoin miniscript policy requires the signatures of two out of three specified public keys (`A`, `B`, `C`).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(2, pk(key_1), pk(key_2), after(829600))",
+      "This Bitcoin miniscript policy requires that two of the following conditions are met:\n1. Public key `key_1` signs.\n2. Public key `key_2` signs.\n3. The nLockTime value is at least 829600 (block height).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(2, pk(key_1), pk(key_2), hash160(H))",
+      "This Bitcoin miniscript policy requires that two of the following conditions are met:\n1. Public key `key_1` signs.\n2. Public key `key_2` signs.\n3. A secret preimage that hashes to value `H` (using SHA-256 followed by RIPEMD-160) is provided.",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(2, pk(key_1), pk(key_2), hash256(H))",
+      "This Bitcoin miniscript policy requires that two of the following conditions are met:\n1. Public key `key_1` signs.\n2. Public key `key_2` signs.\n3. A secret preimage that hashes to value `H` (using SHA-256 applied twice) is provided.",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(2, pk(key_1), pk(key_2), older(12960))",
+      "This Bitcoin miniscript policy requires that two of the following conditions are met:\n1. Public key `key_1` signs.\n2. Public key `key_2` signs.\n3. The nSequence value is at least 12960 blocks (approximately 90 days old).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(2, pk(key_1), pk(key_2), pk(key_3), older(12960))",
+      "This Bitcoin miniscript policy requires that two of the following conditions are met:\n1. Public key `key_1` signs.\n2. Public key `key_2` signs.\n3. Public key `key_3` signs.\n4. The nSequence value is at least 12960 blocks (approximately 90 days old).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(2, pk(key_1), pk(key_2), pk(key_3), pk(key_4), pk(key_5), pk(key_6), pk(key_7))",
+      "This Bitcoin miniscript policy requires the signatures of two out of seven specified public keys (`key_1`, `key_2`, ..., `key_7`).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(2, pk(key_1), pk(key_2), pk(key_3), pk(key_4), pk(key_5), pk(key_6))",
+      "This Bitcoin miniscript policy requires the signatures of two out of seven specified public keys (`key_1`, `key_2`, ..., `key_6`).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(2, pk(key_1), pk(key_2), pk(key_3), pk(key_4), pk(key_5))",
+      "This Bitcoin miniscript policy requires the signatures of two out of five specified public keys (`key_1`, `key_2`, `key_3`, `key_4`, `key_5`).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(2, pk(key_1), pk(key_2), pk(key_3), pk(key_4))",
+      "This Bitcoin miniscript policy requires the signatures of two out of four specified public keys (`key_1`, `key_2`, `key_3`, `key_4`).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(2, pk(key_1), pk(key_2), pk(key_3))",
+      "This Bitcoin miniscript policy requires the signatures of two out of three specified public keys (`key_1`, `key_2`, `key_3`).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(2, pk(key_1), pk(key_2), ripemd160(H))",
+      "This Bitcoin miniscript policy requires that two of the following conditions are met:\n1. Public key `key_1` signs.\n2. Public key `key_2` signs.\n3. A secret preimage that hashes to value `H` (using RIPEMD-160) is provided.",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(2, pk(key_1), pk(key_2), sha256(H))",
+      "This Bitcoin miniscript policy requires that two of the following conditions are met:\n1. Public key `key_1` signs.\n2. Public key `key_2` signs.\n3. A secret preimage that hashes to value `H` (using SHA-256) is provided.",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(2, pk(key_member1), pk(key_member2), pk(key_member3), pk(key_member4), older(25920))",
+      "This Bitcoin miniscript policy requires that two of the following conditions are met:\n1. Public key `key_member1` signs.\n2. Public key `key_member2` signs.\n3. Public key `key_member3` signs.\n4. Public key `key_member4` signs.\n5. The nSequence value is at least 25920 blocks (approximately 180 days old).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(2, pk(participant_1), pk(participant_2), pk(participant_3), pk(participant_4), pk(participant_5), pk(participant_6), pk(participant_7), pk(participant_8), pk(participant_9))",
+      "This Bitcoin miniscript policy requires the signatures of two out of nine participants, each having their own key.",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(2, pk(participant_1), pk(participant_2), pk(participant_3), pk(participant_4))",
+      "This Bitcoin miniscript policy requires the signatures of two out of four participants, each having their own key.",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(2, pk(participant_1), pk(participant_2), pk(participant_3))",
+      "This Bitcoin miniscript policy requires the signatures of two out of three participants, each having their own key.",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(2,pk(A),and(pk(B),older(144)),or(pk(C),sha256(H)))",
+      "This Bitcoin miniscript policy requires that two of the following conditions are met:\n1. Public key `A` signs.\n2. Public key `B` signs and a waiting period of 144 blocks (approximately 1 day) has passed since the transaction was included in a block.\n3. Either public key `C` signs or a secret preimage that hashes to value `H` (using SHA-256) is provided.",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(2,pk(key_home),pk(key_work),pk(key_friend),older(2160))",
+      "This Bitcoin miniscript policy requires that two of the following conditions are met:\n1. Public key `key_home` signs.\n2. Public key `key_work` signs.\n3. Public key `key_friend` signs.\n4. The nSequence value is at least 2160 blocks (approximately 15 days old).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(2,pk(key1),pk(key2),after(1998256000))",
+      "This Bitcoin miniscript policy requires that two of the following conditions are met:\n1. Public key `key1` signs.\n2. Public key `key2` signs.\n3. The nLockTime value is at least 1998256000, which corresponds to April 27 2033 at 23:06:40 UTC.",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(2,pk(key1),pk(key2),older(14400))",
+      "This Bitcoin miniscript policy requires that two of the following conditions are met:\n1. Public key `key1` signs.\n2. Public key `key2` signs.\n3. The nSequence value is at least 14400 blocks (approximately 100 days old).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(2,pk(my_key),pk(colleague_key),pk(sister_key),older(14400))",
+      "This Bitcoin miniscript policy requires that two of the following conditions are met:\n1. Public key `my_key` signs.\n2. Public key `colleague_key` signs.\n3. Public key `sister_key` signs.\n4. The nSequence value is at least 14400 blocks (approximately 100 days old).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(2,pk(my_key),pk(friend_key),pk(trusted_key),older(18000))",
+      "This Bitcoin miniscript policy requires that two of the following conditions are met:\n1. Public key `my_key` signs.\n2. Public key `friend_key` signs.\n3. Public key `trusted_key` signs.\n4. The nSequence value is at least 18000 blocks (approximately 125 days old).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(2,pk(my_key),pk(partner_key),pk(legal_rep_key),older(10000))",
+      "This Bitcoin miniscript policy requires that two of the following conditions are met:\n1. Public key `my_key` signs.\n2. Public key `partner_key` signs.\n3. Public key `legal_rep_key` signs.\n4. The nSequence value is at least 10000 blocks (approximately 69 days and 10 hours).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(2,pk(parent_key),pk(child_key),pk(grandparent_key),older(7200))",
+      "This Bitcoin miniscript policy requires that two of the following conditions are met: \n1. Public key `parent_key` signs.\n2. Public key `child_key` signs.\n3. Public key `grandparent_key` signs.\n4. The nSequence value is at least 7200 blocks (approximately 5 days old).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(2,pk(tenant),pk(owner), and(pk(lawyer),after(978686)))",
+      "This Bitcoin miniscript policy requires that two of the following conditions are met:\n1. The tenant signs.\n2. The owner signs.\n3. The lawyer signs and The nLockTime value is at least 978686 (block height).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(2,pk(tenant),pk(owner), or(pk(lawyer),after(978686)))",
+      "This Bitcoin miniscript policy requires that two of the following conditions are met:\n1. The tenant signs.\n2. The owner signs.\n3. Either the lawyer signs or the nLockTime value is at least 978686 (block height).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(3, pk(board_member_1), pk(board_member_2), pk(board_member_3), pk(board_member_4), pk(board_member_5))",
+      "This Bitcoin miniscript policy requires the signatures of three out of five board members, each having their own key.",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(3, pk(key_1), pk(key_2), pk(key_3), after(129600))",
+      "This Bitcoin miniscript policy requires that three of the following conditions are met: \n1. Public key `key_1` signs.\n2. Public key `key_2` signs.\n3. Public key `key_3` signs.\n4. The nLockTime value is at least 129600 (block height).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(3, pk(key_1), pk(key_2), pk(key_3), after(1845989100))",
+      "This Bitcoin miniscript policy requires that three of the following conditions are met: \n1. Public key `key_1` signs.\n2. Public key `key_2` signs.\n3. Public key `key_3` signs.\n4. The nLockTime value is at least 1845989100, which corresponds to June 30 2028 at 14:45:00 UTC.",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(3, pk(key_1), pk(key_2), pk(key_3), after(900000))",
+      "This Bitcoin miniscript policy requires that three of the following conditions are met: \n1. Public key `key_1` signs.\n2. Public key `key_2` signs.\n3. Public key `key_3` signs.\n4. The nLockTime value is at least 900000 (block height).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(3, pk(key_1), pk(key_2), pk(key_3), older(129600))",
+      "This Bitcoin miniscript policy requires that three of the following conditions are met: \n1. Public key `key_1` signs.\n2. Public key `key_2` signs.\n3. Public key `key_3` signs.\n4. The nSequence value is at least 129600 blocks (approximately 900 days old).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(3, pk(key_1), pk(key_2), pk(key_3), pk(key_4), sha256(H))",
+      "This Bitcoin miniscript policy requires that three of the following conditions are met:\n1. Public key `key_1` signs.\n2. Public key `key_2` signs.\n3. Public key `key_3` signs.\n4. Public key `key_4` signs.\n5. A secret preimage that hashes to value `H` (using SHA-256) is provided.",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(3, pk(key_member1), pk(key_member2), pk(key_member3), pk(key_member4), older(25920))",
+      "This Bitcoin miniscript policy requires that three of the following conditions are met:\n1. Public key `key_member1` signs.\n2. Public key `key_member2` signs.\n3. Public key `key_member3` signs.\n4. Public key `key_member4` signs.\n5. The nSequence value is at least 25920 blocks (approximately 180 days old).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(3, pk(member1), pk(member2), pk(member3), pk(member4))",
+      "This Bitcoin miniscript policy requires the signatures of three out of four members, each having their own key.",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(3, pk(participant_1), pk(participant_2), pk(participant_3), pk(participant_4), pk(participant_5), pk(participant_6), pk(participant_7), pk(participant_8), pk(participant_9), pk(participant_10), pk(participant_11))",
+      "This Bitcoin miniscript policy requires the signatures of three out of eleven participants, each having their own key.",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(3, pk(participant_1), pk(participant_2), pk(participant_3), pk(participant_4))",
+      "This Bitcoin miniscript policy requires the signatures of three out of four participants, each having their own key.",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(3,phone_key,home_key,office_key,vault_key,service_key)",
+      "This Bitcoin miniscript policy requires the signatures of three out of five specified public keys (`phone_key`, `home_key`, 'office_key, `vault_key`, `service_key`).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(3,pk(A1),pk(A2),and(pk(B),older(144)),or(pk(C),sha256(H)))",
+      "This Bitcoin miniscript policy requires that three of the following conditions are met:\n1. Public key `A1` signs.\n2. Public key `A2` signs.\n2. Public key `B` signs and a waiting period of 144 blocks (approximately 1 day) has passed since the transaction was included in a block.\n3. Either public key `C` signs or a secret preimage that hashes to value `H` (using SHA-256) is provided.",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(3,pk(home_key),pk(work_key),pk(cousin_key),older(16200))",
+      "This Bitcoin miniscript policy requires that three of the following conditions are met: \n1. Public key `home_key` signs.\n2. Public key `work_key` signs.\n3. Public key `cousin_key` signs.\n4. The nSequence value is at least 16200 blocks (approximately 11 days old).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(3,pk(home_key),pk(work_key),pk(daughter_key),older(6480))",
+      "This Bitcoin miniscript policy requires that three of the four conditions are met: \n1. Public key `home_key` signs.\n2. Public key `work_key` signs.\n3. Public key `daughter_key` signs.\n4. The nSequence value is at least 6480 blocks (approximately 45 days old).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(3,pk(home_key),pk(work_key),pk(father_key),older(12960))",
+      "This Bitcoin miniscript policy requires that three of the following four conditions are met:\n1. Public key `home_key` signs.\n2. Public key `work_key` signs.\n3. Public key `father_key` signs.\n4. The nSequence value is at least 12960 blocks (approximately 90 days old).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(3,pk(home_key),pk(work_key),pk(mother_key),older(1800))",
+      "This Bitcoin miniscript policy requires that three of the four conditions are met:\n1. Public key `home_key` signs.\n2. Public key `work_key` signs.\n3. Public key `mother_key` signs.\n4. The nSequence value is at least 1800 blocks (approximately 12.5 days old).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(3,pk(home_key),pk(work_key),pk(partner_key),older(3240))",
+      "This Bitcoin miniscript policy requires that three out of the four conditions are met:\n1. Public key `home_key` signs.\n2. Public key `work_key` signs.\n3. Public key `partner_key` signs.\n4. The nSequence value is at least 3240 blocks (approximately 22.5 days old).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(3,pk(home_key),pk(work_key),pk(sister_key),older(12960))",
+      "This Bitcoin miniscript policy requires that three of the four conditions are met:\n1. Public key `home_key` signs.\n2. Public key `work_key` signs.\n3. Public key `sister_key` signs.\n4. The nSequence value is at least 12960 blocks (approximately 90 days old).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(3,pk(key_1),pk(key_2),pk(key_3),older(12960))",
+      "This Bitcoin miniscript policy requires that three of the following conditions are met:\n1. Public key `key_1` signs.\n2. Public key `key_2` signs.\n3. Public key `key_3` signs.\n4. The nSequence value is at least 12960 blocks (approximately 90 days old).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(3,pk(key1),pk(key2),pk(key3),after(1764203880))",
+      "This Bitcoin miniscript policy requires that three of the following conditions are met:\n1. Public key `key1` signs.\n2. Public key `key2` signs.\n3. Public key `key3` signs.\n4. The nLockTime value is higher than 1764203880, which corresponds to November 27 2025 at 00:38:00 UTC.",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(3,pk(key1),pk(key2),pk(key3),after(300000))",
+      "This Bitcoin miniscript policy requires that three of the following conditions are met:\n1. Public key `key1` signs.\n2. Public key `key2` signs.\n3. Public key `key3` signs.\n4. The nLockTime value is higher than block height 300000.",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(3,pk(key1),pk(key2),pk(key3),older(20160))",
+      "This Bitcoin miniscript policy requires that three of the following conditions are met:\n1. Public key `key1` signs.\n2. Public key `key2` signs.\n3. Public key `key3` signs.\n4. The nSequence value is at least 20160 blocks (approximately 140 days old).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(3,pk(my_key),pk(alice_key),pk(bob_key),older(12960))",
+      "This Bitcoin miniscript policy requires that three of the following conditions are met:\n1. Public key `my_key` signs.\n2. Public key `alice_key` signs.\n3. Public key `bob_key` signs.\n4. The nSequence value is at least 12960 blocks (approximately 90 days old).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(3,pk(my_key),pk(brother1_key),pk(brother2_key),older(6480))",
+      "This Bitcoin miniscript policy requires that three of the following conditions are met:\n1. Public key `my_key` signs.\n2. Public key `brother1_key` signs.\n3. Public key `brother2_key` signs.\n4. The nSequence value is at least 6480 blocks (approximately 45 days old).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(3,pk(my_key),pk(chris_key),pk(david_key),older(28800))",
+      "This Bitcoin miniscript policy requires that three of the following conditions are met:\n1. Public key `my_key` signs.\n2. Public key `chris_key` signs.\n3. Public key `david_key` signs.\n4. The nSequence value is at least 28800 blocks (approximately 200 days old).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(3,pk(my_key),pk(mother_key),pk(grandfather_key),older(12960))",
+      "This Bitcoin miniscript policy requires that three of the following conditions are met:\n1. Public key `my_key` signs.\n2. Public key `mother_key` signs.\n3. Public key `grandfather_key` signs.\n4. The nSequence value is at least 12960 blocks (approximately 9 days old).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(3,pk(my_key),pk(sibling1_key),pk(sibling2_key),older(12960))",
+      "This Bitcoin miniscript policy requires that three of the following conditions are met:\n1. Public key `my_key` signs.\n2. Public key `sibling1_key` signs.\n3. Public key `sibling2_key` signs.\n4. The nSequence value is at least 12960 blocks (approximately 9 days old).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(4, pk(exec_1_key), pk(exec_2_key), pk(exec_3_key), pk(exec_4_key), pk(exec_5_key), pk(exec_6_key))",
+      "This Bitcoin miniscript policy requires the signatures of four out of six specified public keys (`exec_1_key`, `exec_2_key`, ..., `exec_7_key`).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(4, pk(key_member1), pk(key_member2), pk(key_member3), pk(key_member4), older(25920))",
+      "This Bitcoin miniscript policy requires that four of the following conditions are met:\n1. Public key `key_member1` signs.\n2. Public key `key_member2` signs.\n3. Public key `key_member3` signs.\n4. Public key `key_member4` signs.\n5. The nSequence value is at least 25920 blocks (approximately 180 days old).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(4, pk(participant_1), pk(participant_2), pk(participant_3), pk(participant_4), pk(participant_5))",
+      "This Bitcoin miniscript policy requires the signatures of four out of five participants, each having their own key.",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(6, pk(key_1), pk(key_2), pk(key_3), pk(key_4), pk(key_5), pk(key_6), pk(key_7), pk(key_8), pk(key_9), pk(key_10), pk(key_11))",
+      "This Bitcoin miniscript policy requires the signatures of six out of eleven specified public keys (`key_1`, `key_2`, ..., `key_11`).",
+      "Y"
+    ],
+    [
+      "threshold",
+      "thresh(7, pk(member_1), pk(member_2), pk(member_3), pk(member_4), pk(member_5), pk(member_6), pk(member_7), pk(member_8), pk(member_9), pk(member_10))",
+      "This Bitcoin miniscript policy requires the signatures of seven out of ten members, each having their own key.",
+      "Y"
+    ],
+    [
+      "timelock",
+      "and(pk(specific_key), older(288))",
+      "This Bitcoin miniscript policy requires that a specific public key signs the transaction and that the transaction's nSequence value is at least 288 blocks (approximately 2 days based on an average block time of 10 minutes).",
+      "Y"
+    ],
+    [
+      "timelock",
+      "and(pk(specific_key), older(4320))",
+      "This Bitcoin miniscript policy requires that a specific public key signs the transaction and that the transaction's nSequence value is at least 4320 blocks (approximately 30 days based on an average block time of 10 minutes).",
+      "Y"
+    ],
+    [
+      "timelock",
+      "and(pk(specific_key), older(720))",
+      "This Bitcoin miniscript policy requires that a specific public key signs the transaction and that the transaction's nSequence value is at least 720 blocks (approximately 5 days based on an average block time of 10 minutes).",
+      "Y"
+    ],
+    [
+      "timelock",
+      "thresh(2,pk(keyA),after(1742355200))",
+      "This Bitcoin miniscript policy requires that public key keyA signs the transaction and that the transaction's nLockTime value is at least 1742355200, which corresponds to March 19 2025 at 03:33:20 UTC.",
+      "Y"
+    ],
+    [
+      "timelock",
+      "thresh(2,pk(keyA),after(281000))",
+      "This Bitcoin miniscript policy requires that public key keyA signs the transaction and that the transaction's nLockTime value is at least block height 281000.",
+      "Y"
+    ],
+    [
+      "timelock",
+      "thresh(2,pk(my_key),after(287200))",
+      "This Bitcoin miniscript policy requires that public key my_key signs the transaction and that the transaction's nLockTime value is at least block height 287200.",
+      "Y"
+    ],
+    [
+      "timelock",
+      "thresh(2,pk(my_key),older(10080))",
+      "This Bitcoin miniscript policy requires that a public key my_key signs the transaction and that the transaction's nSequence value is at least 10080 blocks (approximately 70 days based on an average block time of 10 minutes).",
+      "Y"
+    ],
+    [
+      "timelock",
+      "thresh(2,pk(my_key),older(14400))",
+      "This Bitcoin miniscript policy requires that a public key my_key signs the transaction and that the transaction's nSequence value is at least 14400 blocks (approximately 100 days based on an average block time of 10 minutes).",
+      "Y"
+    ],
+    [
+      "timelock",
+      "thresh(2,pk(my_key),older(7200))",
+      "This Bitcoin miniscript policy requires that a specific public key signs the transaction and that the transaction's nSequence value is at least 7200 blocks (approximately 50 days based on an average block time of 10 minutes).",
+      "Y"
+    ],
+    [
+      "timelock",
+      "thresh(2,pk(mykey),after(1893456000))",
+      "This Bitcoin miniscript policy requires that public key mykey signs the transaction and that the transaction's nLockTime value is at least 1893456000, which corresponds to January 1 2030 at 00:00:00 UTC.",
+      "Y"
+    ]
+  ]
+}

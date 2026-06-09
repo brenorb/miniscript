@@ -62,6 +62,47 @@ function extractSatisfactions(
   }
 }
 
+function buildFailureSummary(
+  rawInput: string,
+  normalizedInput: string,
+  context: CompileContext,
+  kind: ExpressionKind,
+  miniscript: string,
+  error: string,
+  policyCompilerSane?: boolean,
+  policyCompilerSublevel?: boolean,
+): ScriptSummary {
+  return {
+    kind,
+    input: rawInput,
+    normalizedInput,
+    context,
+    miniscript,
+    asm: '',
+    policyCompilerSane,
+    policyCompilerSublevel,
+    valid: false,
+    sane: false,
+    saneSublevel: false,
+    nonMalleable: false,
+    needsSignature: false,
+    timelockMix: false,
+    hasDuplicateKeys: false,
+    error,
+    satisfactions: { nonMalleable: [], malleable: [] },
+    mermaid:
+      kind === 'policy'
+        ? (() => {
+            try {
+              return policyToMermaid(normalizedInput)
+            } catch {
+              return undefined
+            }
+          })()
+        : undefined,
+  }
+}
+
 export async function summarizeExpression(
   rawInput: string,
   context: CompileContext,
@@ -79,34 +120,61 @@ export async function summarizeExpression(
   let policyCompilerSublevel: boolean | undefined
   let policyError: string | null = null
 
-  if (policyLike) {
-    if (context === 'taproot') {
-      const compiled = compilePolicyTaproot(sanitizedInput)
-      miniscript = compiled.miniscript
-      policyCompilerSane = compiled.issane
-      if (!compiled.issane) {
-        policyError = compiled.miniscript
+  try {
+    if (policyLike) {
+      if (context === 'taproot') {
+        const compiled = compilePolicyTaproot(sanitizedInput)
+        miniscript = compiled.miniscript
+        policyCompilerSane = compiled.issane
+        if (!compiled.issane) {
+          policyError = compiled.miniscript
+        }
+      } else {
+        const compiled = compilePolicy(sanitizedInput)
+        miniscript = compiled.miniscript
+        policyCompilerSane = compiled.issane
+        policyCompilerSublevel = compiled.issanesublevel
+        asm = compiled.asm
+        if (!compiled.issane) {
+          policyError = compiled.miniscript
+        }
       }
     } else {
-      const compiled = compilePolicy(sanitizedInput)
-      miniscript = compiled.miniscript
-      policyCompilerSane = compiled.issane
-      policyCompilerSublevel = compiled.issanesublevel
-      asm = compiled.asm
-      if (!compiled.issane) {
-        policyError = compiled.miniscript
-      }
+      miniscript = sanitizedInput
     }
-  } else {
-    miniscript = sanitizedInput
+  } catch (error) {
+    return buildFailureSummary(
+      rawInput,
+      sanitizedInput,
+      context,
+      policyLike ? 'policy' : 'miniscript',
+      sanitizedInput,
+      error instanceof Error ? error.message : String(error),
+    )
   }
 
-  const compileResult = compileMiniscript(miniscript, {
-    tapscript: context === 'taproot',
-  })
-  const analysis = analyzeMiniscript(miniscript, {
-    tapscript: context === 'taproot',
-  })
+  let compileResult
+  let analysis
+  try {
+    compileResult = compileMiniscript(miniscript, {
+      tapscript: context === 'taproot',
+    })
+    analysis = analyzeMiniscript(miniscript, {
+      tapscript: context === 'taproot',
+    })
+  } catch (error) {
+    return buildFailureSummary(
+      rawInput,
+      sanitizedInput,
+      context,
+      policyLike ? 'policy' : 'miniscript',
+      miniscript,
+      policyError ??
+        (error instanceof Error ? error.message : String(error)),
+      policyCompilerSane,
+      policyCompilerSublevel,
+    )
+  }
 
   const effectiveAsm = asm || compileResult.asm
   const error = policyError ?? compileResult.error ?? analysis.error

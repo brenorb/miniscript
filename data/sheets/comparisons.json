@@ -1,0 +1,101 @@
+{
+  "range": "Comparisons!A1:F994",
+  "values": [
+    [
+      "script policy 1",
+      "script policy 2",
+      "script output 1",
+      "script output 2",
+      "comparison",
+      "confirmed?"
+    ],
+    [
+      "thresh(1,pk(key1),pk(key2))",
+      "or(pk(key1),pk(key2))",
+      "Miniscript output:\nmulti(1,key1,key2)\n\nSpending cost analysis:\nScript: 71 WU\nInput: 74.000000 WU\nTotal: 145.000000 WU\n\nResulting script structure:\n1 <key1> <key2> 2 OP_CHECKMULTISIG",
+      "Miniscript output:\nor_b(pk(key1),s:pk(key2))\n\nSpending cost analysis:\nScript: 72 WU\nInput: 74.000000 WU\nTotal: 146.000000 WU\n\nResulting script structure:\n<key1> OP_CHECKSIG OP_SWAP <key2> OP_CHECKSIG OP_BOOLOR",
+      "The two policies are logically equivalent but compile into different scripts.\n\nThe spending cost is also almost the same assuming the two keys are equally likely to be used (with more weight on the script than the spending transaction in the case of the 'thresh' policy). If however key1 is more likely to be used than key2, the 'or' policy is significantly more economical on average.\n\nTherefore the 'or' script policy should be favored in this case, with the most frequent key in front.",
+      "Y"
+    ],
+    [
+      "thresh(1,pk(key1),pk(key2),pk(key3))",
+      "or(pk(key1),or(pk(key2),pk(key3)))",
+      "Miniscript output:\nmulti(1,key1,key2,key3)\n\nSpending cost analysis:\nScript: 105 WU\nInput: 74.000000 WU\nTotal: 179.000000 WU\n\nResulting script structure:\n1 <key1> <key2> <key3> 3 OP_CHECKMULTISIG",
+      "Miniscript output:\nor_d(pk(key1),c:or_i(pk_h(key2),pk_h(key3)))\n\nSpending cost analysis:\nScript: 90 WU\nInput: 91.250000 WU\nTotal: 181.250000 WU\n\nResulting script structure:\n<key1> OP_CHECKSIG OP_IFDUP OP_NOTIF\n  OP_IF\n    OP_DUP OP_HASH160 <HASH160(key2)> OP_EQUALVERIFY\n  OP_ELSE\n    OP_DUP OP_HASH160 <HASH160(key3)> OP_EQUALVERIFY\n  OP_ENDIF\n  OP_CHECKSIG\nOP_ENDIF",
+      "The two policies are logically equivalent but compile into different scripts.\n\nThe spending cost is also almost the same assuming the two keys are equally likely to be used (with more weight on the script than the spending transaction in the case of the 'thresh' policy). If however key1 is more likely to be used than key2 and key3, the 'or' policy is significantly more economical on average.\n\nTherefore the 'or' script policy should be favored in this case, with the most frequent key in front.",
+      "Y"
+    ],
+    [
+      "thresh(2,pk(key1),pk(key2))",
+      "and(pk(key1),pk(key2))",
+      "Miniscript output:\nand_v(v:pk(key1),pk(key2))\n\nSpending cost analysis:\nScript: 70 WU\nInput: 146.000000 WU\nTotal: 216.000000 WU\n\nResulting script structure:\n<key1> OP_CHECKSIGVERIFY <key2> OP_CHECKSIG",
+      "Miniscript output:\nand_v(v:pk(key1),pk(key2))\n\nSpending cost analysis:\nScript: 70 WU\nInput: 146.000000 WU\nTotal: 216.000000 WU\n\nResulting script structure:\n<key1> OP_CHECKSIGVERIFY <key2> OP_CHECKSIG",
+      "The two policies are logically equivalent and compile into the same script.\n",
+      "Y"
+    ],
+    [
+      "thresh(3,pk(key1),pk(key2),pk(key3))",
+      "and(pk(key1),and(pk(key2),pk(key3)))",
+      "Miniscript output:\nand_v(v:pk(key1),and_v(v:pk(key2),pk(key3)))\n\nSpending cost analysis:\nScript: 105 WU\nInput: 219.000000 WU\nTotal: 324.000000 WU\n\nResulting script structure:\n<key1> OP_CHECKSIGVERIFY <key2> OP_CHECKSIGVERIFY <key3> OP_CHECKSIG",
+      "Miniscript output:\nand_v(v:pk(key1),and_v(v:pk(key2),pk(key3)))\n\nSpending cost analysis:\nScript: 105 WU\nInput: 219.000000 WU\nTotal: 324.000000 WU\n\nResulting script structure:\n<key1> OP_CHECKSIGVERIFY <key2> OP_CHECKSIGVERIFY <key3> OP_CHECKSIG",
+      "The two policies are logically equivalent and compile into the same script.\n",
+      "Y"
+    ],
+    [
+      "thresh(4,pk(key1),pk(key2),pk(key3),pk(key4))",
+      "and(pk(key1),and(pk(key2),and(pk(key3),pk(key4))))",
+      "Miniscript output:\nand_v(v:pk(key1),and_v(v:pk(key2),and_v(v:pk(key3),pk(key4))))\n\nSpending cost analysis:\nScript: 140 WU\nInput: 292.000000 WU\nTotal: 432.000000 WU\n\nResulting script structure:\n<key1> OP_CHECKSIGVERIFY <key2> OP_CHECKSIGVERIFY <key3> OP_CHECKSIGVERIFY\n<key4> OP_CHECKSIG",
+      "Miniscript output:\nand_v(v:pk(key1),and_v(v:pk(key2),and_v(v:pk(key3),pk(key4))))\n\nSpending cost analysis:\nScript: 140 WU\nInput: 292.000000 WU\nTotal: 432.000000 WU\n\nResulting script structure:\n<key1> OP_CHECKSIGVERIFY <key2> OP_CHECKSIGVERIFY <key3> OP_CHECKSIGVERIFY\n<key4> OP_CHECKSIG",
+      "The two policies are logically equivalent and compile into the same script.\n",
+      "Y"
+    ],
+    [
+      "thresh(2,pk(key1),pk(key2),pk(key3))",
+      "or(and(pk(key1),pk(key2)),or(and(pk(key1),pk(key3)),and(pk(key2),pk(key3))))",
+      "Miniscript output:\nmulti(2,key1,key2,key3)\n\nSpending cost analysis:\nScript: 105 WU\nInput: 147.000000 WU\nTotal: 252.000000 WU\n\nResulting script structure:\n2 <key1> <key2> <key3> 3 OP_CHECKMULTISIG",
+      "[compile error]",
+      "The policy with the 'or' and 'and' operators, though it would seem logically equivalent to the 'thresh' policy, actually does not compile into script. Instead it produces an error.",
+      "Y"
+    ],
+    [
+      "and(pk(key),sha256(H))",
+      "and(pk(key),hash256(H))",
+      "Miniscript output:\nand_v(v:pk(key),sha256(H))\n\nSpending cost analysis:\nScript: 74 WU\nInput: 106.000000 WU\nTotal: 180.000000 WU\n\nResulting script structure:\n<key> OP_CHECKSIGVERIFY OP_SIZE <20> OP_EQUALVERIFY OP_SHA256 <H> OP_EQUAL",
+      "Miniscript output:\nand_v(v:pk(key),hash256(H))\n\nSpending cost analysis\nScript: 74 WU\nInput: 106.000000 WU\nTotal: 180.000000 WU\n\nResulting script structure\n<key> OP_CHECKSIGVERIFY OP_SIZE <20> OP_EQUALVERIFY OP_HASH256 <H> OP_EQUAL",
+      "`hash256(H)` applies the SHA-256 hash function twice while `sha256(H)` applies it once. But the spending cost is the same as the on-chain footprint is the same for both operators.",
+      "Y"
+    ],
+    [
+      "and(pk(key),sha256(H))",
+      "and(pk(key),ripemd160(H))",
+      "Miniscript output:\nand_v(v:pk(key),sha256(H))\n\nSpending cost analysis:\nScript: 74 WU\nInput: 106.000000 WU\nTotal: 180.000000 WU\n\nResulting script structure:\n<key> OP_CHECKSIGVERIFY OP_SIZE <20> OP_EQUALVERIFY OP_SHA256 <H> OP_EQUAL",
+      "Miniscript output:\nand_v(v:pk(key),ripemd160(H))\n\nSpending cost analysis:\nScript: 62 WU\nInput: 106.000000 WU\nTotal: 168.000000 WU\n\nResulting script structure:\n<key> OP_CHECKSIGVERIFY OP_SIZE <20> OP_EQUALVERIFY OP_RIPEMD160 <h> OP_EQUAL",
+      "`sha256(H)` results in a 64-character hexadecimal hash while `ripemd160(H)` only results in a 40-character hexadecimal hash. Therefore `ripemd160(H)` has a smaller on-chain footprint and is less costly to spend. ",
+      "Y"
+    ],
+    [
+      "and(pk(key),ripemd160(H))",
+      "and(pk(key),hash160(H))",
+      "Miniscript output:\nand_v(v:pk(key),ripemd160(H))\n\nSpending cost analysis:\nScript: 62 WU\nInput: 106.000000 WU\nTotal: 168.000000 WU\n\nResulting script structure:\n<key> OP_CHECKSIGVERIFY OP_SIZE <20> OP_EQUALVERIFY OP_RIPEMD160 <h> OP_EQUAL",
+      "Miniscript output:\nand_v(v:pk(key),hash160(H))\n\nSpending cost analysis:\nScript: 62 WU\nInput: 106.000000 WU\nTotal: 168.000000 WU\n\nResulting script structure:\n<key> OP_CHECKSIGVERIFY OP_SIZE <20> OP_EQUALVERIFY OP_HASH160 <h> OP_EQUAL",
+      "`hash160(H)` applies the SHA-256 hash function followed by the RIPEMD-160 hash function while `ripemd160(H)` only applies the RIPEMD-160 hash function. But the spending cost is the same as the on-chain footprint is the same for both operators.",
+      "Y"
+    ],
+    [
+      "and(pk(key),hash256(H))",
+      "and(pk(key),hash160(H))",
+      "Miniscript output:\nand_v(v:pk(key),hash256(H))\n\nSpending cost analysis\nScript: 74 WU\nInput: 106.000000 WU\nTotal: 180.000000 WU\n\nResulting script structure\n<key> OP_CHECKSIGVERIFY OP_SIZE <20> OP_EQUALVERIFY OP_HASH256 <H> OP_EQUAL",
+      "Miniscript output:\nand_v(v:pk(key),hash160(H))\n\nSpending cost analysis:\nScript: 62 WU\nInput: 106.000000 WU\nTotal: 168.000000 WU\n\nResulting script structure:\n<key> OP_CHECKSIGVERIFY OP_SIZE <20> OP_EQUALVERIFY OP_HASH160 <h> OP_EQUAL",
+      "`hash256(H)` results in a 64-character hexadecimal hash while `hash160(H)` only results in a 40-character hexadecimal hash. Therefore `hash160(H)` has a smaller on-chain footprint and is less costly to spend. ",
+      "Y"
+    ],
+    [
+      "and(pk(key),after(BLOCK_HEIGHT))",
+      "and(pk(key),after(UNIX_TIMESTAMP))",
+      "Miniscript output:\nand_v(v:pk(key),after(BLOCK_HEIGHT))\n\nSpending cost analysis:\nScript: 40 WU\nInput: 73.000000 WU\nTotal: 113.000000 WU\n\nResulting script structure:\n<key> OP_CHECKSIGVERIFY <BLOCK_HEIGHT> OP_CHECKLOCKTIMEVERIFY",
+      "Miniscript output:\nand_v(v:pk(key),after(UNIX_TIMESTAMP))\n\nSpending cost analysis:\nScript: 41 WU\nInput: 73.000000 WU\nTotal: 114.000000 WU\n\nResulting script structure:\n<key> OP_CHECKSIGVERIFY <UNIX_TIMESTAMP> OP_CHECKLOCKTIMEVERIFY",
+      "There are two types of absolute timelocks: based on block height and based on block time (given as a unix timestamp). If the value of the timelock is lower than 500000000, it is interpreted as a block height threshold, otherwise it is interpreted as a block time threshold. Using a block time threshold is slightly more expensive as it takes more space on-chain, but the time threshold can be targeted more precisely than with a block height.",
+      "Y"
+    ]
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "generatedAt": "2026-06-08T21:33:44.553Z",
+  "counts": {
+    "designRaw": 152,
+    "design": 142,
+    "designTrain": 110,
+    "designEval": 32,
+    "analysisRaw": 207,
+    "analysis": 194,
+    "comparisonsRaw": 11,
+    "comparisons": 10,
+    "repairsRaw": 23,
+    "repairs": 22
+  },
+  "sources": {
+    "trainingRows": 333,
+    "useCaseRows": 97,
+    "analysisRows": 202,
+    "comparisonRows": 11,
+    "errorRows": 43
+  }
+}

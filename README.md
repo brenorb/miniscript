@@ -49,6 +49,16 @@ Relevant files:
 - `src/data/examples.ts`
 - `src/data/optimizedDesignDemos.ts`
 - `src/lib/assistant.ts`
+- `src/lib/assistantScope.ts`
+
+Current Ax structure:
+
+- `designProgram`: intent -> policy, explanation, cautions
+- `inspectProgram`: expression + compiler summary -> explanation, cautions
+- `repairProgram`: invalid policy + compiler feedback -> corrected policy
+- `compareProgram`: left/right policy summaries -> comparison + preference
+
+Off-topic prompts are rejected by a deterministic scope guard before the local model is consulted. That keeps refusal behavior from depending on a tiny browser model.
 
 `src/lib/assistant.ts` also exposes `optimizeDesignDemos(studentAI)` so the design program can be re-tuned with `AxBootstrapFewShot` using a stronger teacher/student model during development.
 
@@ -73,6 +83,21 @@ Policy flowcharts are generated from the fixed parser/simplifier logic in:
 - `src/lib/policyFlowchart.ts`
 
 The browser renders Mermaid previews on demand, and the same logic is mirrored in the Codex skill tooling.
+
+## Evaluation
+
+Run the explicit evaluation suite with:
+
+```bash
+npm run eval
+```
+
+That writes `docs/evaluation-report.json` with:
+
+- off-topic scope accuracy
+- compile + mermaid pass rate across representative policies
+- flowchart regression coverage
+- the current Ax optimization report summary
 
 ## Deployment
 

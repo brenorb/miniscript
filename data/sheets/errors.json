@@ -1,0 +1,293 @@
+{
+  "range": "Errors!A1:E78",
+  "values": [
+    [
+      "error type",
+      "faulty policy",
+      "corrected policy",
+      "error analysis",
+      "confirmed?"
+    ],
+    [
+      "comma",
+      "or(pk(wife_key)pk(husband_key))",
+      "or(pk(wife_key),pk(husband_key))",
+      "The error in the original Bitcoin miniscript policy `or(pk(wife_key)pk(husband_key))` is a violation of the rule that subpolicies in \"or\" must be separated by a comma. To fix this, the policy was refactored to `or(pk(wife_key),pk(husband_key))`, where the subpolicies \"pk(wife_key)\" and \"pk(husband_key)\" are separated by a comma, meeting the requirement ([ N@]POL,[N@]POL).",
+      "Y"
+    ],
+    [
+      "comma",
+      "or(99@and(pk(pk(key_employee); older(25920)); pk(key_company)",
+      "or(99@and(pk(pk(key_employee),older(25920)),pk(key_company)",
+      "The error in the original Bitcoin miniscript policy `or(99@and(pk(pk(key_employee); older(25920)); pk(key_company)` is a violation of the rule that subpolicies in \"or\" & \"and\" must be separated by a comma, instead they were separated by semicolons. To fix this, the policy was refactored to `or(99@and(pk(pk(key_employee),older(25920)),pk(key_company)`, where the subpolicies are separated by a comma, meeting the requirement \"([ N@]POL,[N@]POL)\" & \"and(POL,POL)\".",
+      "Y"
+    ],
+    [
+      "comma",
+      "thresh(1 pk(member_1), pk(member_2), pk(member_3), pk(member_4))",
+      "thresh(1, pk(member_1), pk(member_2), pk(member_3), pk(member_4))",
+      "The error in the original Bitcoin miniscript policy `thresh(1 pk(member_1), pk(member_2), pk(member_3), pk(member_4))` is a violation of the rule that subpolicies in thresh, where is required that NUM out of the following subpolicies are met \"thresh(NUM,POL,POL,...)\", and this number must be separated by a comma, as well as policies. To fix this, the policy was refactored to `thresh(1, pk(member_1), pk(member_2), pk(member_3), pk(member_4))`, where the number in thresh and all subpolicies are separated by a comma, meeting the requirement \"thresh(NUM,POL,POL,...)\".",
+      "Y"
+    ],
+    [
+      "comma",
+      "or,(pk(KeyA), and(pk(KeyB), older(144)))",
+      "or(pk(KeyA), and(pk(KeyB), older(144)))",
+      "The error in the original Bitcoin miniscript policy `or,(pk(KeyA), and(pk(KeyB), older(144)))` is a violation of the rule that subpolicies in \"or\", where an additional comma was inserted unnecessarily right after \"or\" and before the parentheses that open the subpolicies. To fix this, the policy was refactored to `or(pk(KeyA), and(pk(KeyB), older(144)))`, where the excess comma was removed so that the expression fits, meeting the requirement to  \"or([N@]POL,[N@]POL)\".",
+      "Y"
+    ],
+    [
+      "comma",
+      "and(pk,(key_1), sha256,(H))",
+      "and(pk(key_1), sha256(H))",
+      "The error in the original Bitcoin miniscript policy `and(pk,(key_1), sha256,(H))` is a violation of the rule that subpolicies in \"and\", where some additional commas were inserted unnecessarily right after \"pk\" and \"sha256\" and before the the subpolicies name \"(key_1)\" and \"(H)\". To fix this, the policy was refactored to `and(pk(key_1), sha256(H))`, where the excess comma was removed so that the expression fits, meeting the requirement to \"and(POL,POL)\",  \"pk(NAME)\" and \"hash256(H)\".",
+      "Y"
+    ],
+    [
+      "key repeat",
+      "thresh(1, and(pk(key1),pk(key2)), and(pk(key1),pk(key3)))",
+      "and(pk(key1), or(pk(key2), pk(key3)))",
+      "The error in the original Bitcoin miniscript policy is caused by a violation of the rule that the same key cannot appear in two different subpolicies. In the original policy, both `pk(key1)` and `pk(key1)` are used in different subpolicies, which is not allowed. To fix this, the policy was refactored in the corrected version by combining the two subpolicies that use `pk(key1)` into a single subpolicy using the `or` operator. This ensures that the same key is not repeated in different subpolicies, resolving the compilation error. The corrected policy is `and(pk(key1), or(pk(key2), pk(key3)))`.",
+      "Y"
+    ],
+    [
+      "key repeat",
+      "or(and(pk(A),pk(B)),and(pk(A),pk(C)))",
+      "thresh(2, pk(A), or(pk(B),pk(C)))",
+      "The error in the original Bitcoin miniscript policy `or(and(pk(A),pk(B)),and(pk(A),pk(C)))` is a violation of the rule that the same key cannot appear in two different subpolicies. In this case, the key `A` is used in both subpolicies. To fix this, the policy was refactored to `thresh(2, pk(A), or(pk(B),pk(C)))`, where the common key `A` is included in one subpolicy only. This corrected policy satisfies the requirement of having at least two out of the three subpolicies (`pk(A)`, `pk(B)`, `pk(C)`) met.",
+      "Y"
+    ],
+    [
+      "key repeat",
+      "or(thresh(2, pk(partner_1), pk(op_1), pk(op_2), pk(op_3)), thresh(1, pk(partner_1), pk(partner_2)))",
+      "or(thresh(2, pk(op_1), pk(op_2), pk(op_3)), thresh(1, pk(partner_1), pk(partner_2)))",
+      "The error in the original Bitcoin miniscript policy `or(thresh(2, pk(partner_1), pk(op_1), pk(op_2), pk(op_3)), thresh(1, pk(partner_1), pk(partner_2)))`is a violation of the rule that the same key cannot appear in two different subpolicies. In this case, the key `partner_1` is used in both subpolicies. To fix this, the policy was refactored to `or(thresh(2, pk(op_1), pk(op_2), pk(op_3)), thresh(1, pk(partner_1), pk(partner_2)))`, where the common key `partner_1` is included in one subpolicy only. The `thresh` operator appears as two subpolicies of \"or\" (or([N@]POL,[N@]POL)) that require one of subpolicies `thresh` are satisfied and specifies that a certain number of subpolicies must be met, in this case, at least 2 out of the 3 public key subpolicies pk(op_1), pk(op_2), pk(op_3)) must be satisfied, or at least 1 out of the 2 public key subpolicies pk(partner_1), pk(partner_2).'",
+      "Y"
+    ],
+    [
+      "key repeat",
+      "or(pk(pk(key_local),and(pk(key_remote),or(and(pk(key_local),hash160(H)),older(1008))))",
+      "or(pk(key_revocation),and(pk(key_remote),or(and(pk(key_local),hash160(H)),older(1008))))",
+      "The error in the original Bitcoin miniscript policy `or(pk(pk(key_local),and(pk(key_remote),or(and(pk(key_local),hash160(H)),older(1008))))` is a violation of the rule that the same key cannot appear in two different subpolicies. In this case, the key `key_local` is used in both subpolicies. To fix this, the policy was refactored to `or(pk(key_revocation),and(pk(key_remote),or(and(pk(key_local),hash160(H)),older(1008))))`, where the common key `key_local` is included in one subpolicy only. This corrected policy satisfies the requirement of having at least two subpolicies for \"or\" (or([N@]POL,[N@]POL)) that require one of subpolicies are satisfied, one of them being another subpolicy of yet another policy \"and\" (and(POL,POL)).",
+      "Y"
+    ],
+    [
+      "nonexistent",
+      "multi(2, pk(keyA),pk(keyB),pk(keyC))",
+      "thresh(2, pk(keyA),pk(keyB),pk(keyC))",
+      "The error in the original Bitcoin miniscript policy `multi(2, pk(keyA),pk(keyB),pk(keyC))` is caused by using the unsupported operator `multi` instead of the correct operator `thresh`. The `multi` operator is not a valid operator in Bitcoin miniscript. To fix the error, the operator `multi` was replaced with the correct operator `thresh` in the corrected policy `thresh(2, pk(keyA),pk(keyB),pk(keyC))`. The `thresh` operator specifies that a certain number of subpolicies must be met, in this case, at least 2 out of the 3 public key subpolicies (`pk(keyA)`, `pk(keyB)`, `pk(keyC)`) must be satisfied.",
+      "Y"
+    ],
+    [
+      "parenthesis",
+      "thresh(2, pk(keyA), pk(keyB, or(pk(keyC),after(1081201)))",
+      "thresh(2, pk(keyA), pk(keyB), or(pk(keyC),after(1081201)))",
+      "The error in the original Bitcoin miniscript policy is a mismatched parentheses. The opening parentheses after \"pk(keyB\" is not closed, causing a syntax error. In the corrected policy, the missing closing parentheses is added after \"pk(keyB)\". This ensures that the parentheses are balanced and the policy is correctly formatted.",
+      "Y"
+    ],
+    [
+      "parenthesis",
+      "thresh(2, pk(keyA), or(pk(keyB), pkkeyC)))",
+      "thresh(2, pk(keyA), or(pk(keyB), pk(keyC)))",
+      "The error in the original Bitcoin miniscript policy is a mismatched parentheses. The closing parenthesis for the `or` operator is missing, causing a syntax error. In the corrected policy, the missing closing parenthesis is added after `pk(keyC)`, ensuring that the parentheses are balanced. This fixes the syntax error and allows the policy to be compiled successfully.",
+      "Y"
+    ],
+    [
+      "parenthesis",
+      "thresh(2, pk(keyA), orpk(keyB), after(1081201)))",
+      "thresh(2, pk(keyA), or(pk(keyB), after(1081201)))",
+      "The error in the original Bitcoin miniscript policy is a mismatched parentheses. The closing parenthesis after `after(1081201)` is one too many, causing a syntax error. In the corrected policy, the extra closing parenthesis is removed, and the `or` operator is used to combine the subpolicies `pk(keyB)` and `after(1081201)`. This ensures that the policy is properly formatted and can be compiled without errors.",
+      "Y"
+    ],
+    [
+      "parenthesis",
+      "thresh, 3(pk(phone_key),pk(home_key),pk(workplace_key),pk(vault_key),pk(service_key))",
+      "thresh(3,pk(phone_key),pk(home_key),pk(workplace_key),pk(vault_key),pk(service_key))",
+      "The error in the original Bitcoin miniscript policy is a mismatched parentheses in `thresh, 3(pk(phone_key),pk(home_key),pk(workplace_key),pk(vault_key),pk(service_key))`. Theres a missing parenthesis right after `thresh`, causing a syntax error. In the corrected policy, the parenthesis is moved, and in order to fix this, the policy was refactored to `thresh(3,pk(phone_key),pk(home_key),pk(workplace_key),pk(vault_key),pk(service_key))`. This ensures that the policy is properly formatted and can be compiled without errors as \"thresh(NUM,POL,POL,...)\" .",
+      "Y"
+    ],
+    [
+      "parenthesis",
+      "and, sha256(H), thresh(1, pk(team_key_1), pk(team_key_2), pk(team_key_3), pk(team_key_4), pk(team_key_5)))\n",
+      "and(sha256(H), thresh(1, pk(team_key_1), pk(team_key_2), pk(team_key_3), pk(team_key_4), pk(team_key_5)))\n",
+      "The error in the original Bitcoin miniscript policy is a mismatched parentheses in `and, sha256(H), thresh(1, pk(team_key_1), pk(team_key_2), pk(team_key_3), pk(team_key_4), pk(team_key_5)))`. Theres a missing parenthesis right after `and`, involving the expression `sha256(H)`causing a syntax error. In the corrected policy, the parenthesis is added, and in order to fix this, the policy was refactored to `and(sha256(H), thresh(1, pk(team_key_1), pk(team_key_2), pk(team_key_3), pk(team_key_4), pk(team_key_5)))`. This ensures that the policy is properly formatted and can be compiled without errors.",
+      "Y"
+    ],
+    [
+      "timelock",
+      "thresh(1, pk(key1), pk(key2), after(1081201))",
+      "thresh(2, pk(key1), pk(key2), after(1081201))",
+      "The error in the original Bitcoin miniscript policy `thresh(1, pk(key1), pk(key2), after(1081201))` is that the threshold value is set to 1, which means only one out of the three subpolicies needs to be satisfied. However, the `after` subpolicy cannot satisfy the threshold on its own, so the threshold number should be 2 or more. In the corrected policy `thresh(2, pk(key1), pk(key2), after(1081201))`, the threshold value is set to 2, ensuring that at least two out of the three subpolicies need to be met. This fixes the error and ensures that the policy is valid.",
+      "Y"
+    ],
+    [
+      "timelock",
+      "or(pk(key_1),and(pk(key_2),older(TIME)))",
+      "or(pk(key_1),and(pk(key_2),older(144)))",
+      "The error in the original Bitcoin miniscript policy `or(pk(key_1),and(pk(key_2),older(TIME)))` is that the \"older\" value is set to a expression \"TIME\". The \"older\" policy itself states \"Require that the nLockTime/nSequence value is at least NUM. NUM cannot be 0\" and this policy needs to be satisfied. In the corrected policy  `or(pk(key_1),and(pk(key_2),older(1008)))`, the older value is set to 144, expressed in blocks of the Bitcoin blockchain. In the Bitcoin blockchain, a new block is added, in average, every 10 minutes. To calculate how much time 144 blocks represent, simply multiply the number of blocks by the average generation time of each block, ensuring that at least about 7 days need to done after input two keys. This fixes the error and ensures that the policy is valid.",
+      "Y"
+    ],
+    [
+      "timelock",
+      "thresh(2, pk(key1), pk(key2), older(-100))",
+      "thresh(2, pk(key1), pk(key2), older(100))",
+      "The error in the original Bitcoin miniscript policy `thresh(2, pk(key1), pk(key2), older(-100))` is caused by the negative value `-100` used in the `older` subpolicy. The `older` subpolicy requires a positive value for the nSequence value, so using a negative value is not allowed. In the corrected policy `thresh(2, pk(key1), pk(key2), older(100))`, the negative sign is removed, and the value is changed to `100`, which is a valid positive value for the `older` subpolicy. This correction ensures that the policy is syntactically correct and adheres to the rules of Bitcoin miniscript.",
+      "Y"
+    ],
+    [
+      "timelock",
+      "thresh(3,pk(my_key),pk(lisa_key),pk(eric_key),older(1)year),and(older(2)years), pk(lawyer_key)))",
+      "thresh(3,pk(my_key),pk(lisa_key),pk(eric_key),older(52560),and(older(105120),pk(lawyer_key)))",
+      "The error in the original Bitcoin miniscript policy `thresh(3,pk(my_key),pk(lisa_key),pk(eric_key),older1)year),and(older(2)years, pk(lawyer_key)))` is that the older value is set with a number of days expessed by a number and strings \"(1)year\" and \"(2)year\". The \"older\" policy itself establishes \"Require that the nLockTime/nSequence value is at least NUM. NUM cannot be 0\" , and this policy needs to be satisfied. In the corrected policy `thresh(3,pk(my_key),pk(lisa_key),pk(eric_key),older(52560),and(older(105120),pk(lawyer_key)))`, the older value is set to \"52560\" and \"105120\" respectively, expressed in blocks of the Bitcoin blockchain. On the Bitcoin blockchain, a new block is added, on average, every 10 minutes. To calculate how long \"52560\" and \"105120\" blocks represent, simply multiply the number of blocks by the average generation time of each block,ensuring that at least about 1 year and 2 years. This fixes the error and ensures that the policy is valid.",
+      "Y"
+    ],
+    [
+      "typo",
+      "thressh(2, pk(keyA),or(pk(keyB), after(1081201)))",
+      "thresh(2, pk(keyA), or(pk(keyB), after(1081201)))",
+      "The error in the original Bitcoin miniscript policy is a misspelling of the \"thresh\" operator. It is written as \"thressh\" instead of \"thresh\". This causes a compilation error because the misspelled operator is not recognized. In the corrected policy, the misspelling is fixed and the operator is written as \"thresh\". This resolves the compilation error and allows the policy to be properly compiled.",
+      "Y"
+    ],
+    [
+      "key repeat",
+      "and(pk(key_user),or(99@pk(key_user),older(12960)))",
+      "and(pk(key_user),or(99@pk(key_service),older(12960)))",
+      "The error in the original Bitcoin miniscript policy `and(pk(key_user),or(99@pk(key_user),older(12960)))` is a violation of the rule that the same key cannot appear in two different subpolicies. In this case, the key `key_user` is used in both subpolicies. To fix this, the policy was refactored to `and(pk(key_user),or(99@pk(key_service),older(12960)))`, where the common key `key_user` is included in one subpolicy only. This corrected policy satisfies the requirement of having at least two subpolicies for \"and\" (and(POL,POL)) that require both subpolicies are satisfied, one of them being another subpolicy of yet another policy \"or\" (or([N@]POL,[N@]POL)).",
+      "Y"
+    ],
+    [
+      "key repeat",
+      "and(pk(key_1),and(pk(key_1),pk(key_2)))",
+      "and(pk(key_1),and(pk(key_2),pk(key_3)))",
+      "The error in the original Bitcoin miniscript policy `(pk(key_1),and(pk(key_1),pk(key_2)))` is a violation of the rule that the same key cannot appear in two different subpolicies. In this case, the key `key_1` is used in both subpolicies. To fix this, the policy was refactored to `and(pk(key_1),and(pk(key_2),pk(key_3)))`, where the common key `key_1` is included in one subpolicy only. This corrected policy satisfies the requirement of having at least two subpolicies for \"and\" (and(POL,POL)) that require one of subpolicies are satisfied, one of them being another subpolicy of yet another policy \"and\" (`pk(key_1)`, and `pk(key_2)`, `pk(key_3)`).",
+      "Y"
+    ],
+    [
+      "nonexistent",
+      "and(pk(key1),and(pk(key2),and(pk(key3),HTLC(288))))",
+      "and(pk(key1),and(pk(key2),and(pk(key3),older(288))))",
+      "The error in the original Bitcoin miniscript policy `and(pk(key1),and(pk(key2),and(pk(key3),HTLC(288))))` is caused by using the unsupported subpolicy `HTLC` instead of the suported subpolicies to timelock `older` or  `after`. The `HTLC` subpolicy is not a valid subpolicy in Bitcoin miniscript. To fix the error, the subpolicy `HTLC` was replaced with the correct option to timelock `older` in the corrected policy `and(pk(key1),and(pk(key2),and(pk(key3),older(288))))`. The `older` operator specifies that a certain number of blocks need to be processed for the operation to be completed, in this case 288, which is approximately two days.",
+      "Y"
+    ],
+    [
+      "nonexistent",
+      "aor(and(pk(A),time(T)),pk(B))",
+      "or(and(pk(A), older(144)), pk(B))",
+      "The error in the original Bitcoin miniscript policy `aor(and(pk(A),time(T)),pk(B))` is caused by using the unsupported subpolicy `aor` instead a combination of the suported subpolicies `or` and  `and`. The `aor` subpolicy exist in Bitcoin script, but is not a valid subpolicy in Bitcoin miniscript policy compilator. To fix the error, the subpolicy `aor` was replaced withwith a combination of  `or` and `and` to achieve the desired result in the corrected policy `or(pk(KeyA), and(pk(KeyB), older(144)))` where keys A and B will be needed, combined with the 144-block time lock. The `older` operator specifies that a certain number of blocks need to be processed for the operation to be completed, in this case 144, which is approximately one day."
+    ],
+    [
+      "nonexistent",
+      "aor(and(pk(A),time(T)),and(pk(B),hash(H))))",
+      "or(and(pk(A), older(144)), and(pk(B), hash160(H)))",
+      "The error in the original Bitcoin miniscript policy `aor(and(pk(A),time(T)),and(pk(B),hash(H))))` is caused by using the unsupported subpolicy `aor` instead a combination of the suported subpolicies `or` and  `and`. The `aor` subpolicy exist in Bitcoin script, but is not a valid subpolicy in Bitcoin miniscript compilator. Some portals display examples with this policy considering its existence in the script, but it is not a policy that can be compiled by the miniscript compiler. To fix the error, the subpolicy `aor` was replaced withwith a combination of  `or` and `and` to achieve the desired result in the corrected policy `or(and(pk(A), older(144)), and(pk(B), hash160(H)))` where you will need key A combined with a 144 block time lock and key B combined with a predefined hash160. The `older` operator specifies that a certain number of blocks need to be processed for the operation to be completed, in this case 144, which is approximately one day."
+    ],
+    [
+      "nonexistent",
+      "andor(pk(A), pk(B), or(and(pk(A), pk(C)), and(pk(B), pk(C))))\n",
+      "thresh(2,pk(key_A),pk(key_B),pk(arbitrator_key_C))",
+      "The error in the original Bitcoin miniscript policy `andor(pk(A), pk(B), or(and(pk(A), pk(C)), and(pk(B), pk(C))))` is caused by two factors, one of them is use the unsupported subpolicy `andor`. The `andor` is not a valid subpolicy in Bitcoin miniscript compilator.The other is a violation of the rule that the same key cannot appear in two different subpolicies. In this case, the key `pk(C)` is used in both subpolicies. To fix the two errors at same time, the policie `andor` was replaced for `thresh` to achieve the desired result in the corrected policy `thresh(2,pk(key_A),pk(key_B),pk(arbitrator_key_C))` where you will need key A and B in consensus, or, in the absence of this consensus, A or B combined with arbitrator_key_C."
+    ],
+    [
+      "parammeter",
+      "thresh(1, pk(key_1), pk(key_2), after(900000))",
+      "thresh(2, pk(key_1), pk(key_2), pk(key_3), after(900000))",
+      "The error in the original Bitcoin miniscript policy `thresh(1, pk(key_1), pk(key_2), after(900000))` is a violation of the rule that states that when using tresh policies with timelock subpolicies `after` or `older`, the timelock subpolicy must not be the only one, as it would allow anyone to spend the funds, and there must be at least one key or hash required in conjunction with the timelocks conditions `after` or `older`. To fix this, the policy was refactored to `thresh(2, pk(key_1), pk(key_2), pk(key_3), after(900000))`, where the timelock  `after(900000)` need to be must be combined with at least one of the authorized keys `(key_1), pk(key_2), pk(key_3)`. "
+    ],
+    [
+      "parammeter",
+      "thresh(1, pk(key_1), pk(key_2), older(1440))",
+      "thresh(2, pk(key_1), pk(key_2), pk(key_3), older(1440))",
+      "The error in the original Bitcoin miniscript policy `thresh(1, pk(key_1), pk(key_2), after(900000))` is a violation of the rule that states that when using tresh policies with timelock subpolicies `older` or `after`, the timelock subpolicy must not be the only one, as it would allow anyone to spend the funds, and there must be at least one key or hash required in conjunction with the timelocks conditions `older` or `after`. To fix this, the policy was refactored to `thresh(2, pk(key_1), pk(key_2), pk(key_3), older(1440))`, where the timelock  `older(1440)` need to be must be combined with at least one of the authorized keys `(key_1), pk(key_2), pk(key_3)`. "
+    ],
+    [
+      "parammeter",
+      "thresh(5,pk(Key_1),pk(Key_2),pk(Key_3))",
+      "thresh(5,pk(Key_1),pk(Key_2),pk(Key_3),pk(Key_4),pk(Key_5))",
+      "The error in the original Bitcoin miniscript policy `thresh(5,pk(Key_1),pk(Key_2),pk(Key_3))` is a violation of the rule that subpolicies in thresh, where is required that NUM out of the following subpolicies are met \"thresh(NUM,POL,POL,...)\", and this number must be \nless or equal less than or equal to the number of POL indicated. To fix this, the policy was refactored to `thresh(5,pk(Key_1),pk(Key_2),pk(Key_3),pk(Key_4),pk(Key_5))`, where the number in thresh was maintained and more POL parameters were added or created to meet this rule, meeting the requirement \"thresh(NUM,POL,POL,...) with NUM less or equal to the number of POL indicated."
+    ],
+    [
+      "parammeter",
+      "thresh(5,pk(Key_1),pk(Key_2),pk(Key_3))",
+      "thresh(3,pk(Key_1),pk(Key_2),pk(Key_3))",
+      "The error in the original Bitcoin miniscript policy `thresh(5,pk(Key_1),pk(Key_2),pk(Key_3))` is a violation of the rule that subpolicies in thresh, where is required that NUM out of the following subpolicies are met \"thresh(NUM,POL,POL,...)\", and this number must be \nless or equal less than or equal to the number of POL indicated. To fix this, the policy was refactored to `thresh(3,pk(Key_1),pk(Key_2),pk(Key_3))`, where the number in thresh was reduced and the POL parameters was maintained to meet this rule, meeting the requirement \"thresh(NUM,POL,POL,...) with NUM less or equal to the number of POL indicated."
+    ],
+    [
+      "parammeter",
+      "thresh(5,pk(Key_1),pk(Key_2),pk(Key_3))",
+      "thresh(2,pk(Key_1),pk(Key_2),pk(Key_3))",
+      "The error in the original Bitcoin miniscript policy `thresh(5,pk(Key_1),pk(Key_2),pk(Key_3))` is a violation of the rule that subpolicies in thresh, where is required that NUM out of the following subpolicies are met \"thresh(NUM,POL,POL,...)\", and this number must be \nless or equal less than or equal to the number of POL indicated. To fix this, the policy was refactored to `thresh(2,pk(Key_1),pk(Key_2),pk(Key_3))`, where the number in thresh was reduced and the POL parameters was maintained to meet this rule, meeting the requirement \"thresh(NUM,POL,POL,...) with NUM less or equal to the number of POL indicated."
+    ],
+    [
+      "parammeter",
+      "thresh(5,pk(Key_1),pk(Key_2),pk(Key_3))",
+      "thresh(1,pk(Key_1),pk(Key_2),pk(Key_3))",
+      "The error in the original Bitcoin miniscript policy `thresh(5,pk(Key_1),pk(Key_2),pk(Key_3))` is a violation of the rule that subpolicies in thresh, where is required that NUM out of the following subpolicies are met \"thresh(NUM,POL,POL,...)\", and this number must be \nless or equal less than or equal to the number of POL indicated. To fix this, the policy was refactored to `thresh(1,pk(Key_1),pk(Key_2),pk(Key_3))`, where the number in thresh was reduced and the POL parameters was maintained to meet this rule, meeting the requirement \"thresh(NUM,POL,POL,...) with NUM less or equal to the number of POL indicated."
+    ],
+    [
+      "parammeter",
+      "thresh(4,pk(Key_1),pk(Key_2),pk(Key_3))",
+      "thresh(4,pk(Key_1),pk(Key_2),pk(Key_3),pk(Key_4))",
+      "The error in the original Bitcoin miniscript policy `thresh(4,pk(Key_1),pk(Key_2),pk(Key_3))` is a violation of the rule that subpolicies in thresh, where is required that NUM out of the following subpolicies are met \"thresh(NUM,POL,POL,...)\", and this number must be \nless or equal less than or equal to the number of POL indicated. To fix this, the policy was refactored to `thresh(4,pk(Key_1),pk(Key_2),pk(Key_3),pk(Key_4))`, where the number in thresh was maintained and more POL parameters were added or created to meet this rule, meeting the requirement \"thresh(NUM,POL,POL,...) with NUM less or equal to the number of POL indicated."
+    ],
+    [
+      "parammeter",
+      "thresh(4,pk(Key_1),pk(Key_2),pk(Key_3))",
+      "thresh(3,pk(Key_1),pk(Key_2),pk(Key_3))",
+      "The error in the original Bitcoin miniscript policy `thresh(4,pk(Key_1),pk(Key_2),pk(Key_3))` is a violation of the rule that subpolicies in thresh, where is required that NUM out of the following subpolicies are met \"thresh(NUM,POL,POL,...)\", and this number must be \nless or equal less than or equal to the number of POL indicated. To fix this, the policy was refactored to `thresh(3,pk(Key_1),pk(Key_2),pk(Key_3))`, where the number in thresh was reduced and the POL parameters was maintained to meet this rule, meeting the requirement \"thresh(NUM,POL,POL,...) with NUM less or equal to the number of POL indicated."
+    ],
+    [
+      "parammeter",
+      "thresh(4,pk(Key_1),pk(Key_2),pk(Key_3))",
+      "thresh(2,pk(Key_1),pk(Key_2),pk(Key_3))",
+      "The error in the original Bitcoin miniscript policy `thresh(4,pk(Key_1),pk(Key_2),pk(Key_3))` is a violation of the rule that subpolicies in thresh, where is required that NUM out of the following subpolicies are met \"thresh(NUM,POL,POL,...)\", and this number must be \nless or equal less than or equal to the number of POL indicated. To fix this, the policy was refactored to `thresh(2,pk(Key_1),pk(Key_2),pk(Key_3))`, where the number in thresh was reduced and the POL parameters was maintained to meet this rule, meeting the requirement thresh(NUM,POL,POL,...) with NUM less or equal to the number of POL indicated."
+    ],
+    [
+      "parammeter",
+      "thresh(4,pk(Key_1),pk(Key_2),pk(Key_3))",
+      "thresh(1,pk(Key_1),pk(Key_2),pk(Key_3))",
+      "The error in the original Bitcoin miniscript policy `thresh(4,pk(Key_1),pk(Key_2),pk(Key_3))` is a violation of the rule that subpolicies in thresh, where is required that NUM out of the following subpolicies are met \"thresh(NUM,POL,POL,...)\", and this number must be \nless or equal less than or equal to the number of POL indicated. To fix this, the policy was refactored to `thresh(1,pk(Key_1),pk(Key_2),pk(Key_3))`, where the number in thresh was reduced and the POL parameters was maintained to meet this rule, meeting the requirement \"thresh(NUM,POL,POL,...) with NUM less or equal to the number of POL indicated."
+    ],
+    [
+      "timelock",
+      "and(pk(key_1),and(pk(key_2),older(0))",
+      "and(pk(key_1),and(pk(key_2),older(288)))",
+      "The error in the original Bitcoin miniscript policy `and(pk(key_1),and(pk(key_2),older(0))` is that the older value is set to 0, which means in practice, the second policy of \"and\" is null, and \"and\" - \"requires both subpolicies to be satisfied\". Furthermore, the \"older\" policy itself establishes \"Require that the nLockTime/nSequence value is at least NUM. NUM cannot be 0\" needs to be satisfied. In the corrected policy `and(pk(key_1),and(pk(key_2),older(288)))`, the older value is set to 288, expressed in blocks of the Bitcoin blockchain. On the Bitcoin blockchain, a new block is added, on average, every 10 minutes. To calculate how long 288 blocks represent, simply multiply the number of blocks by the average generation time of each block, ensuring that at least about two days need to be met, plus the 2 keys . This fixes the error and ensures that the policy is valid."
+    ],
+    [
+      "timelock",
+      "and(pk(key_1),and(pk(key_2),older(2days)))",
+      "and(pk(key_1),and(pk(key_2),older(4320)))",
+      "The error in the original Bitcoin miniscript policy `and(pk(key_1),and(pk(key_2),older(2days)))` is that the older value is set with a number of days expessed by a number and string \"2days\". The \"older\" policy itself establishes \"Require that the nLockTime/nSequence value is at least NUM. NUM cannot be 0\" , and this policy needs to be satisfied. In the corrected policy `and(pk(key_1),and(pk(key_2),older(4320)))`, the older value is set to 4320, expressed in blocks of the Bitcoin blockchain. On the Bitcoin blockchain, a new block is added, on average, every 10 minutes. To calculate how long 4320 blocks represent, simply multiply the number of blocks by the average generation time of each block,ensuring that at least about 30 days need to be met, plus the 2 keys . This fixes the error and ensures that the policy is valid."
+    ],
+    [
+      "timelock",
+      "and(pk(key_1),and(pk(key_1),older(02/12/2023))",
+      "and(pk(key_1),and(pk(key_2),older(144)))",
+      "The error in the original Bitcoin miniscript policy `and(pk(key_1),and(pk(key_2),older(02/12/2023))` is that the \"older\" value is set to a number of days expressed by a number in date format \"12/02/2023\". The \"older\" policy itself states \"Require that the nLockTime/nSequence value is at least NUM. NUM cannot be 0\" and this policy needs to be satisfied. In the corrected policy  `and(pk(key_1),and(pk(key_2),older(144)))`, the older value is set to 144, expressed in blocks of the Bitcoin blockchain. In the Bitcoin blockchain, a new block is added, in average, every 10 minutes. To calculate how much time 144 blocks represent, simply multiply the number of blocks by the average generation time of each block, ensuring that at least about 1 days (assuming today is 12/01/2023) need to be fulfilled, plus the 2 keys . This fixes the error and ensures that the policy is valid."
+    ],
+    [
+      "typo",
+      "and(pub(key_user),or(99@pub(key_service),older(12960)))",
+      "and(pk(key_user),or(99@pk(key_service),older(12960)))",
+      "The error in the original Bitcoin miniscript policy is a misspelling of the \"pk\" operator. It is written as \"pub\" instead of \"pk\". This causes a compilation error because the misspelled operator is not recognized. In the corrected policy, the misspelling is fixed and the operator is written as \"pk\". This resolves the compilation error and allows the policy to be properly compiled."
+    ],
+    [
+      "typo",
+      "and(thresh(2, pk(op_1), pk(op_2), pk(op_3)), hash(H))",
+      "and(thresh(2, pk(op_1), pk(op_2), pk(op_3)), hash256(H))",
+      "The error in the original Bitcoin miniscript policy is a misspelling of the \"hash256\" operator. It is written as \"hash\" instead of \"hash256\". This causes a compilation error because the misspelled operator is not recognized. In the corrected policy, the misspelling is fixed and the operator is written as \"hash256\". This resolves the compilation error and allows the policy to be properly compiled."
+    ],
+    [
+      "typo",
+      "and(thresh(2, pk(senior_1), pk(senior_2), pk(senior_3)), hash(H))",
+      "and(thresh(2, pk(senior_1), pk(senior_2), pk(senior_3)), hash160(H))",
+      "The error in the original Bitcoin miniscript policy is a misspelling of the \"hash160\" operator. It is written as \"hash\" instead of \"hash160\". This causes a compilation error because the misspelled operator is not recognized. In the corrected policy, the misspelling is fixed and the operator is written as \"hash160\". This resolves the compilation error and allows the policy to be properly compiled."
+    ],
+    [
+      "typo",
+      "or(pk(scout_1),or(pk(scout_2),or(pk(scout_3),or(pk(scout_4),or(pk(scout_5),or(pk(scout_6),or(pk(scout_7),or(pk(scout_8)))))))))\n",
+      "or(pk(scout_1),or(pk(scout_2),or(pk(scout_3),or(pk(scout_4),or(pk(scout_5),or(pk(scout_6),or(pk(scout_7),pk(scout_8))))))))",
+      "The error in the original Bitcoin miniscript policy is a the unnecessary typing of an extra \"or\" parameter in the last subpolicy, which leads to the expectation of another final parameter. It is written as \"...,or(pk(scout_8)))))))))\" instead of just \"...,pk(scout_8))))))))\". This causes a compilation error because the the unnecessary typing of an extra \"or\" parameter in the last subpolicy, leads to the expectation of another final parameter. In the corrected policy, the extra \"or\"  was removed and the operator is written as \"...,pk(scout_8))))))))\" finishing the sequences of \"or\". This resolves the compilation error and allows the policy to be properly compiled."
+    ]
+  ]
+}
