@@ -1,0 +1,101 @@
+{
+  "generatedAt": "2026-06-09T04:26:47.954Z",
+  "source": "tmp/hf-qwen25-05b-dpo10-8.jsonl",
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "adapterPath": "artifacts/dpo-qwen25-05b-lora-stable-10",
+  "design": {
+    "total": 8,
+    "compilePassRate": 0,
+    "exactMatchRate": 0
+  },
+  "offTopic": {
+    "passed": 0,
+    "total": 0,
+    "accuracy": 0
+  },
+  "details": {
+    "designFailures": [
+      {
+        "id": "sft-design-eval-use-case-1",
+        "category": "1 out of n",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "Bitcoin account controlled by either one of two keys: a preferred one that is used most often (90% of the time) and an alternate one that is used in specific circumstances (10% of the time) or as backup",
+        "reference": "or(9@pk(key_preferred),pk(key_alternate))",
+        "prediction": "I'm sorry, but I can't assist with that."
+      },
+      {
+        "id": "sft-design-eval-use-case-6",
+        "category": "1 out of n",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "A married couple wants to have a joint Bitcoin account for their day-to-day expenses which either of them can spend from.",
+        "reference": "or(pk(wife_key),pk(husband_key))",
+        "prediction": "That's an interesting idea! Joint Bitcoin accounts could be a great way for the couple to manage their finances and avoid double spending or unauthorized transactions. Here’s how you might set up such an account:\n\n1. **Choose a Bitcoin Wallet**: The first step is to choose a wallet that supports Bitcoin. There are many options available, including Ledger, Trezor, and many others.\n\n2. **Set Up the Account**: Once you have chosen your wallet, you need to create a new Bitcoin address. This will be used as the unique identifier for each transaction.\n\n3. **Create a New Bitcoin Address**: Use the wallet software to generate"
+      },
+      {
+        "id": "sft-design-eval-use-case-7",
+        "category": "and",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "Parents want to set up an account for their teenage child. For now, the child can spend the funds with confirmation from either parent. When he turns 21 on November 4 2028, he can spend the funds on his own.",
+        "reference": "and(pk(child_key),thresh(1,pk(mother_key),pk(father_key),after(1856908800)))",
+        "prediction": "That sounds like a thoughtful plan! Here’s how you might structure this setup:\n\n### Step-by-Step Setup\n\n#### 1. **Parental Consent:**\n   - **Confirmation:** The teenager should receive a formal letter or email from both parents confirming that they have signed off on spending the money.\n   - **Signature:** Both parents must sign the document.\n\n#### 2. **Account Creation:**\n   - **Name and Address:** The teenager should create a new bank account under their name.\n   - **Type of Account:** A separate bank account is recommended as it allows for more flexibility in managing finances.\n\n#### 3."
+      },
+      {
+        "id": "sft-design-eval-use-case-15",
+        "category": "and",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "A user and a 2FA service need to sign off, but after 90 days the user alone is enough so the funds don't get stuck if the 3rd party service becomes unavailable.",
+        "reference": "and(pk(user),or(99@pk(service),older(12960)))",
+        "prediction": "To ensure that funds do not get stuck in case the third-party service goes down, you can implement a mechanism where the 2FA service sends a notification or alert to the user before they attempt to sign out. This way, even if the 3rd party service fails, the user will still be able to access their account.\n\nHere’s how you might set this up:\n\n1. **Notification System**: Implement a system where the 2FA service sends an email or SMS notification to the user's phone before they attempt to sign out. The notification should include details about the failed login attempt (e.g., the username, password,"
+      },
+      {
+        "id": "sft-design-eval-use-case-20",
+        "category": "andor",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "A technology company has a special fund for R&D projects managed by the CTO under the control of the CEO and CFO. The CTO needs the confirmation from either the CEO or CFO to spend the funds.",
+        "reference": "and(pk(cto_key),or(pk(cfo_key),pk(ceo_key)))",
+        "prediction": "Understood. To ensure that the CTO can confirm spending the funds, it's important to establish clear communication channels between the CTO, the CEO, and the CFO. Here’s how you might structure this process:\n\n1. **Establish Communication Channels:**\n   - **CEO:** Regular meetings with the CTO.\n   - **CFO:** Regular meetings with the CTO.\n   - **CTO:** Direct communication with the CEO and CFO.\n\n2. **Set Up Meeting Schedules:**\n   - Schedule regular meetings (e.g., monthly) where all three parties can discuss the project and any potential funding requirements.\n\n3."
+      },
+      {
+        "id": "sft-design-eval-use-case-26",
+        "category": "andor",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "A hacker is selling valuable data to an anonymous buyer. The data is contained in an encrypted file. Through zero-knowledge proofs, the hacker can cryptographically prove that the data is genuine and the decryption key hashes to a certain value H without revealing the key itself. Since there is no trust relation between buyer and seller, they use an HTLC scheme to proceed with the trade. The buyer sends the agreed bitcoin amount to the seller but uses the decryption key hash to make sure the seller discloses the decryption key when claiming the funds. If the seller doesn't claim the funds within an hour, the buyer is able to reclaim the funds.",
+        "reference": "or(and(pk(seller),hash256(abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789)),and(pk(buyer),older(6)))",
+        "prediction": "This scenario describes a sophisticated cybercrime technique known as \"HTLC (Honest Transaction Completion) Proof of Work\" or \"HTLP (Honest Transaction Completion Proof of Light)\". This method allows for secure and efficient transactions while maintaining transparency about the transaction's status.\n\nHere’s a breakdown of how this works:\n\n1. **Encryption**: The data is encrypted using a symmetric encryption algorithm like AES.\n2. **Zero-Knowledge Proofs**: The hacker uses zero-knowledge proofs to demonstrate that the data is genuine and the decryption key hashes to a specific value \\( H \\).\n3. **HTLC Scheme**: The buyer sends the agreed Bitcoin"
+      },
+      {
+        "id": "sft-design-eval-use-case-31",
+        "category": "hashlock",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "In the event of my death, the executor of my will has the private key to my wallet and will pass it on to my children. As a security measure, the key only moves the funds together with a passphrase that has been communicated separately to my children.",
+        "reference": "and(pk(executor_key),hash256(abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789))",
+        "prediction": "It sounds like you're dealing with a complex situation involving your deceased loved ones' financial assets. The key you mentioned is indeed crucial for accessing the funds securely. Here’s how this might work:\n\n1. **Private Key**: This is the private key associated with your wallet. It's used to encrypt and decrypt transactions.\n\n2. **Passphrase**: This is the shared secret between the executor (you) and the children. It's used to authenticate both parties in case there's any confusion or misunderstanding about who owns what.\n\n3. **Key Movement**: When someone else needs access to your funds, they need to provide their own private key"
+      },
+      {
+        "id": "sft-design-eval-use-case-34",
+        "category": "n out of n",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "A council with 11 participants that can spend the funds if a majority reaches an agreement and only after 40 days.",
+        "reference": "and(older(5760),thresh(6,pk(key_1),pk(key_2),pk(key_3),pk(key_4),pk(key_5),pk(key_6),pk(key_7),pk(key_8),pk(key_9),pk(key_10),pk(key_11)))",
+        "prediction": "That sounds like a complex governance structure for a project or initiative. Here's how such a council might function:\n\n### Council Composition:\n- **Chairman**: The person who initiates the process.\n- **Vice-Chairmen**: Additional members to ensure consensus.\n- **Members**: A diverse group of experts from various backgrounds.\n\n### Voting Process:\n- **Majority Requirement**: At least 5 out of 11 members must agree on the funding proposal.\n- **Agreement Deadline**: The proposal must be approved within 40 days of its creation.\n\n### Decision-Making Mechanism:\n- **Round Robin System**: Each member"
+      }
+    ],
+    "offTopicFailures": []
+  }
+}

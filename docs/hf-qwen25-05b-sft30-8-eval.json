@@ -1,0 +1,101 @@
+{
+  "generatedAt": "2026-06-09T04:25:53.318Z",
+  "source": "tmp/hf-qwen25-05b-sft30-8.jsonl",
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "adapterPath": "artifacts/sft-qwen25-05b-lora-stable",
+  "design": {
+    "total": 8,
+    "compilePassRate": 0,
+    "exactMatchRate": 0
+  },
+  "offTopic": {
+    "passed": 0,
+    "total": 0,
+    "accuracy": 0
+  },
+  "details": {
+    "designFailures": [
+      {
+        "id": "sft-design-eval-use-case-1",
+        "category": "1 out of n",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "Bitcoin account controlled by either one of two keys: a preferred one that is used most often (90% of the time) and an alternate one that is used in specific circumstances (10% of the time) or as backup",
+        "reference": "or(9@pk(key_preferred),pk(key_alternate))",
+        "prediction": "In the context of Bitcoin accounts, it's important to understand how these key types of keys can affect your security and privacy. Here’s a breakdown:\n\n### Preferred Key:\n- **Frequency**: The preferred key is used more frequently than the alternate key.\n- **Impact on Security**: This type of key increases the risk of being compromised because it is easier for attackers to exploit due to its higher frequency of use.\n\n### Alternate Key:\n- **Frequency**: The alternate key is used less frequently than the preferred key.\n- **Impact on Security**: While not as high-frequency as the preferred key, the alternate key still poses a significant risk if it"
+      },
+      {
+        "id": "sft-design-eval-use-case-6",
+        "category": "1 out of n",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "A married couple wants to have a joint Bitcoin account for their day-to-day expenses which either of them can spend from.",
+        "reference": "or(pk(wife_key),pk(husband_key))",
+        "prediction": "That's an interesting idea! Jointly managing a Bitcoin account for daily expenses with one partner and spending it on the other is quite unique and could be beneficial for both partners. Here’s how you might approach this:\n\n1. **Set Up the Account**: Both partners should set up a separate Bitcoin wallet for each account. This ensures that no single person has access to all funds.\n\n2. **Transfer Funds**: One partner (let's call her Partner A) will transfer some or all of the funds from the joint account to their respective bank accounts. This allows them to manage their own finances without interference from the other partner.\n\n3. **"
+      },
+      {
+        "id": "sft-design-eval-use-case-7",
+        "category": "and",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "Parents want to set up an account for their teenage child. For now, the child can spend the funds with confirmation from either parent. When he turns 21 on November 4 2028, he can spend the funds on his own.",
+        "reference": "and(pk(child_key),thresh(1,pk(mother_key),pk(father_key),after(1856908800)))",
+        "prediction": "That sounds like a thoughtful plan! Here’s how you might structure this setup:\n\n### Step-by-Step Setup\n\n1. **Parental Consent:**\n   - The teenager should be given parental consent before setting up any accounts or transactions.\n   - This ensures that both parents have agreed and understand the terms of the agreement.\n\n2. **Account Creation:**\n   - Create a separate bank account specifically for the teenager's spending.\n   - Ensure the account is secure and has strong security measures in place (e.g., two-factor authentication).\n\n3. **Confirmation Process:**\n   - The teenager should receive a confirmation email or text message from"
+      },
+      {
+        "id": "sft-design-eval-use-case-15",
+        "category": "and",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "A user and a 2FA service need to sign off, but after 90 days the user alone is enough so the funds don't get stuck if the 3rd party service becomes unavailable.",
+        "reference": "and(pk(user),or(99@pk(service),older(12960)))",
+        "prediction": "To ensure that funds do not get stuck when the third-party service becomes unavailable, you can implement a mechanism where the 2FA service sends a notification or alert to the user before they attempt to sign out. This way, even if the 3rd party service goes down, the user will still be prompted to log in again.\n\nHere’s how you can set this up:\n\n1. **Set Up 2FA Service**: Ensure your 2FA service is configured correctly with the necessary credentials (e.g., phone number, email).\n\n2. **Notification System**: Implement a system where the 2FA service sends an alert or notification"
+      },
+      {
+        "id": "sft-design-eval-use-case-20",
+        "category": "andor",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "A technology company has a special fund for R&D projects managed by the CTO under the control of the CEO and CFO. The CTO needs the confirmation from either the CEO or CFO to spend the funds.",
+        "reference": "and(pk(cto_key),or(pk(cfo_key),pk(ceo_key)))",
+        "prediction": "Understood. To ensure that the CTO can confirm the spending of the R&D project funds, it's important to establish clear communication channels between the CTO, the CEO, and the CFO. Here’s how you might structure this process:\n\n1. **Establish Communication Channels:**\n   - **CEO:** Regular meetings with the CTO.\n   - **CFO:** Regular meetings with the CTO.\n\n2. **Set Up Meeting Frequency:**\n   - Ensure regular meetings (e.g., monthly) to discuss the R&D project and its funding requirements.\n\n3. **Define Roles and Responsibilities:**\n   - **CTO:**"
+      },
+      {
+        "id": "sft-design-eval-use-case-26",
+        "category": "andor",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "A hacker is selling valuable data to an anonymous buyer. The data is contained in an encrypted file. Through zero-knowledge proofs, the hacker can cryptographically prove that the data is genuine and the decryption key hashes to a certain value H without revealing the key itself. Since there is no trust relation between buyer and seller, they use an HTLC scheme to proceed with the trade. The buyer sends the agreed bitcoin amount to the seller but uses the decryption key hash to make sure the seller discloses the decryption key when claiming the funds. If the seller doesn't claim the funds within an hour, the buyer is able to reclaim the funds.",
+        "reference": "or(and(pk(seller),hash256(abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789)),and(pk(buyer),older(6)))",
+        "prediction": "This scenario describes a sophisticated form of digital fraud known as \"zero-knowledge proof\" or \"proof of work,\" which is a type of cryptographic protocol used for verifying the authenticity of information without revealing any sensitive details.\n\nIn this context, the hacker's encryption process involves using a decryption key that has been hashed (i.e., hashed) to ensure that only the intended recipient can decrypt the data. This is done through a technique called \"zero-knowledge proof,\" where the sender proves that they have the decryption key without revealing it.\n\nThe buyer sends the agreed-upon Bitcoin amount to the seller, who then uses the decryption key hash to verify"
+      },
+      {
+        "id": "sft-design-eval-use-case-31",
+        "category": "hashlock",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "In the event of my death, the executor of my will has the private key to my wallet and will pass it on to my children. As a security measure, the key only moves the funds together with a passphrase that has been communicated separately to my children.",
+        "reference": "and(pk(executor_key),hash256(abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789))",
+        "prediction": "It sounds like you're dealing with a complex situation involving your personal assets and the legal process for transferring them. Here’s a breakdown of what might be happening:\n\n1. **Private Key**: The private key is the cryptographic key used to access your digital assets, such as your wallet or any other encrypted data.\n\n2. **Passphrase**: This is the secret code used to encrypt the private key before sending it over the network. It's typically kept confidential between you and the person who needs to access your assets.\n\n3. **Execution of Will**: When you die, the laws of your country (or state in some cases) dictate how"
+      },
+      {
+        "id": "sft-design-eval-use-case-34",
+        "category": "n out of n",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "A council with 11 participants that can spend the funds if a majority reaches an agreement and only after 40 days.",
+        "reference": "and(older(5760),thresh(6,pk(key_1),pk(key_2),pk(key_3),pk(key_4),pk(key_5),pk(key_6),pk(key_7),pk(key_8),pk(key_9),pk(key_10),pk(key_11)))",
+        "prediction": "That sounds like a complex governance structure for a project or initiative. Here's how such a council might function:\n\n### Council Composition:\n- **Chairman**: The person who initiates the process.\n- **Vice-Chairmen**: Additional members to ensure consensus.\n- **Members**: A diverse group of experts from various backgrounds.\n\n### Voting Process:\n- **Majority Requirement**: At least 5 out of 11 members must agree on the funding proposal.\n- **Agreement Time Frame**: The proposal must be approved within 40 days.\n\n### Decision-Making Mechanism:\n- **Proposal Review**: Each member presents their idea"
+      }
+    ],
+    "offTopicFailures": []
+  }
+}

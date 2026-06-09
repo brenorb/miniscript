@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-09T03:18:12.242Z",
+  "generatedAt": "2026-06-09T03:45:21.281Z",
   "artifactSeed": {
     "optimizerType": "bootstrap",
     "hasSerializedProgram": false,
@@ -28,6 +28,7 @@
     }
   },
   "executedExampleCount": 48,
+  "heldOutExampleCount": 8,
   "categoryCounts": {
     "1 out of n": 4,
     "and": 8,
@@ -41,485 +42,333 @@
     "error": 12,
     "archived-design": 31
   },
+  "benchmarkConfig": {
+    "evalLimit": 8,
+    "perExampleTimeoutMs": 20000,
+    "maxTokens": 160,
+    "think": false
+  },
   "models": [
     {
       "model": "qwen2.5:1.5b",
       "zeroShot": {
-        "total": 32,
-        "compilePassRate": 0.03125,
+        "total": 8,
+        "compilePassRate": 0,
         "exactMatchRate": 0,
-        "durationMs": 37018,
-        "averageLatencyMs": 1157,
+        "durationMs": 5048,
+        "averageLatencyMs": 631,
         "details": [
           {
             "request": "Bitcoin account controlled by either one of two keys: a preferred one that is used most often (90% of the time) and an alternate one that is used in specific circumstances (10% of the time) or as backup",
             "expected": "or(9@pk(key_preferred),pk(key_alternate))",
             "predicted": "prefer_key:pk, after:backup_key:ripemd160, older:prefer_key:hash256, thresh:10%",
             "compileValid": false,
-            "exactMatch": false
+            "exactMatch": false,
+            "error": null
           },
           {
             "request": "A married couple wants to have a joint Bitcoin account for their day-to-day expenses which either of them can spend from.",
             "expected": "or(pk(wife_key),pk(husband_key))",
             "predicted": "(This string field must be included)",
             "compileValid": false,
-            "exactMatch": false
+            "exactMatch": false,
+            "error": null
           },
           {
             "request": "Parents want to set up an account for their teenage child. For now, the child can spend the funds with confirmation from either parent. When he turns 21 on November 4 2028, he can spend the funds on his own.",
             "expected": "and(pk(child_key),thresh(1,pk(mother_key),pk(father_key),after(1856908800)))",
             "predicted": "(This string field must be included)",
             "compileValid": false,
-            "exactMatch": false
+            "exactMatch": false,
+            "error": null
           },
           {
             "request": "A user and a 2FA service need to sign off, but after 90 days the user alone is enough so the funds don't get stuck if the 3rd party service becomes unavailable.",
             "expected": "and(pk(user),or(99@pk(service),older(12960)))",
             "predicted": "After(90, \"days\")",
             "compileValid": false,
-            "exactMatch": false
+            "exactMatch": false,
+            "error": null
           },
           {
             "request": "A technology company has a special fund for R&D projects managed by the CTO under the control of the CEO and CFO. The CTO needs the confirmation from either the CEO or CFO to spend the funds.",
             "expected": "and(pk(cto_key),or(pk(cfo_key),pk(ceo_key)))",
             "predicted": "confirm_spending_funds: (cto, [ceo, cfo])",
             "compileValid": false,
-            "exactMatch": false
+            "exactMatch": false,
+            "error": null
           },
           {
             "request": "A hacker is selling valuable data to an anonymous buyer. The data is contained in an encrypted file. Through zero-knowledge proofs, the hacker can cryptographically prove that the data is genuine and the decryption key hashes to a certain value H without revealing the key itself. Since there is no trust relation between buyer and seller, they use an HTLC scheme to proceed with the trade. The buyer sends the agreed bitcoin amount to the seller but uses the decryption key hash to make sure the seller discloses the decryption key when claiming the funds. If the seller doesn't claim the funds within an hour, the buyer is able to reclaim the funds.",
             "expected": "or(and(pk(seller),hash256(abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789)),and(pk(buyer),older(6)))",
             "predicted": "(This string field must be included)",
             "compileValid": false,
-            "exactMatch": false
+            "exactMatch": false,
+            "error": null
           },
           {
             "request": "In the event of my death, the executor of my will has the private key to my wallet and will pass it on to my children. As a security measure, the key only moves the funds together with a passphrase that has been communicated separately to my children.",
             "expected": "and(pk(executor_key),hash256(abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789))",
             "predicted": "pk(sha256(private_key)) or (hash160(private_key))",
             "compileValid": false,
-            "exactMatch": false
+            "exactMatch": false,
+            "error": null
           },
           {
             "request": "A council with 11 participants that can spend the funds if a majority reaches an agreement and only after 40 days.",
             "expected": "and(older(5760),thresh(6,pk(key_1),pk(key_2),pk(key_3),pk(key_4),pk(key_5),pk(key_6),pk(key_7),pk(key_8),pk(key_9),pk(key_10),pk(key_11)))",
             "predicted": "thresh(3, or(after(11), older(40)))",
             "compileValid": false,
-            "exactMatch": false
-          },
-          {
-            "request": "3 partners in a VC fund control the fund's bitcoin treasury. They all need to sign spending transactions out of the bitcoin treasury.",
-            "expected": "thresh(3,pk(partner_1),pk(partner_2),pk(partner_3))",
-            "predicted": "(This string field must be included)",
-            "compileValid": false,
-            "exactMatch": false
-          },
-          {
-            "request": "A wallet with 5 keys where you need all 5 keys to spend the funds.",
-            "expected": "thresh(5,pk(key_1),pk(key_2),pk(key_3),pk(key_4),pk(key_5))",
-            "predicted": "thresh(5)",
-            "compileValid": false,
-            "exactMatch": false
-          },
-          {
-            "request": "Funds are sent to a recipient, but if the recipient doesn't claim these funds they can be recovered by the sender after 30 days.",
-            "expected": "or(9@pk(recipient),and(pk(sender),older(4320)))",
-            "predicted": "pk(ripemd160(hash256(sender_address)), sha256(redeem_script))",
-            "compileValid": false,
-            "exactMatch": false
-          },
-          {
-            "request": "A DAO requires that all 3 DAO officers agree on the disbursement of funds for projects. Funds get released by to the main treasury after 1 year if they have not been spent due to lack of projects to fund or lack of consensus amongst the officers.",
-            "expected": "or(thresh(3,pk(officer_1),pk(officer_2),pk(officer_3)),and(pk(dao_treasury),older(52560)))",
-            "predicted": "(This string field must be included)",
-            "compileValid": false,
-            "exactMatch": false
-          },
-          {
-            "request": "A personal savings account where funds can only be accessed by the account holder with a single key.",
-            "expected": "pk(account_holder)",
-            "predicted": "pk(sha256(account_holder_key))",
-            "compileValid": false,
-            "exactMatch": false
-          },
-          {
-            "request": "Two technology companies collaborating on R&D establish a joint R&D fund. To manage this fund transparently and securely, they use a bitcoin wallet that requires both companies to sign with their keys. If there is a disagreement between the two companies on the use of funds, a designated arbitrator can sign a transaction jointly with one of the two companies to unlock the funds based on the terms of the agreement between the two companies.",
-            "expected": "thresh(2,pk(company1_key),pk(company2_key),pk(arbitrator_key))",
-            "predicted": "(This string field must be included)",
-            "compileValid": false,
-            "exactMatch": false
-          },
-          {
-            "request": "A wallet requiring any two out of five given keys for spending.",
-            "expected": "thresh(2,pk(key_1),pk(key_2),pk(key_3),pk(key_4),pk(key_5))",
-            "predicted": "thresh(2, 5)",
-            "compileValid": false,
-            "exactMatch": false
-          },
-          {
-            "request": "Imagine I have a 2-of-3 multisig that involves a phone, a ledger hardware wallet, and a trezor hardware wallet.",
-            "expected": "thresh(2,pk(phone_key),pk(ledger_key),pk(trezor_key))",
-            "predicted": "(This string field must be included)",
-            "compileValid": false,
-            "exactMatch": false
-          },
-          {
-            "request": "I want to establish a multisignature wallet with three keys, strategically placed at my home, workplace, and under the care of my close friend. To spend from that wallet, three keys must concur, but after a 90-day waiting period only two keys will be necessary.",
-            "expected": "thresh(3,pk(key_home),pk(key_work),pk(key_friend),older(12960))",
-            "predicted": "(This string field must be included)",
-            "compileValid": false,
-            "exactMatch": false
-          },
-          {
-            "request": "With my two trusted allies, Rebecca and Mark, I am embarking on a Bitcoin investment venture. Our strategy involves creating a multisignature wallet with three keys: one controlled by me, one controlled by Rebecca, and one controlled by Mark. Initially, all three keys are essential for authorizing Bitcoin transactions, but after a semester, our lawyer can sign in place of one of us.",
-            "expected": "thresh(3,pk(me),pk(rebecca),pk(mark),and(older(25920),pk(lawyer)))",
-            "predicted": "(This string field must be included)",
-            "compileValid": false,
-            "exactMatch": false
-          },
-          {
-            "request": "A collaborative custody service offers a 3-of-5 multisig solution for cold storage where the customer holds 4 keys (e.g. phone, home, workplace, vault) and the service holds 1 key in case the customer needs them to sign a transaction.",
-            "expected": "thresh(3,pk(phone_key),pk(home_key),pk(workplace_key),pk(vault_key),pk(service_key))",
-            "predicted": "(This string field must be included)",
-            "compileValid": false,
-            "exactMatch": false
-          },
-          {
-            "request": "A family member who has difficulty managing their spending has their money managed in a time-locked savings account, only allowing access at predetermined intervals to assist with budgeting.",
-            "expected": "and(pk(family_member),older(144))",
-            "predicted": "PK(sha256(\"FamilyMemberID\"), 10) & OR(older(\"LastAccessTime\", \"1 Month Ago\"), after(\"CurrentDate\", \"Next Access Time\")) & AND(thresh(3))",
-            "compileValid": false,
-            "exactMatch": false
-          },
-          {
-            "request": "A trust fund that the child can use once they reach 18 years old on January 20th 2031.",
-            "expected": "and(pk(trust_beneficiary),after(1926633600))",
-            "predicted": "(This string field must be included)",
-            "compileValid": false,
-            "exactMatch": false
-          },
-          {
-            "request": "The following miniscript policy does not compile:\nthresh(1 pk(member_1), pk(member_2), pk(member_3), pk(member_4))\n\nPropose a corrected policy and explain what caused the error and how the corrected policy addresses it.",
-            "expected": "thresh(1,pk(member_1),pk(member_2),pk(member_3),pk(member_4))",
-            "predicted": "thresh(1, pk(member_1), pk(member_2), pk(member_3), pk(member_4))\n\nExplanation:\nThe original miniscript policy uses `thresh` with 1 as its threshold. This means that any single member can activate the script. However, in Bitcoin's scripting language, a threshold of 1 is not valid because it does not meet the requirement for at least two signatures to be sufficient.\n\nTo correct this issue and ensure that the miniscript policy compiles correctly, we need to change the threshold value from 1 to a higher number, such as 2 or more. This ensures that at least two members' signatures are required to activate the script.\n\nHere is the corrected policy:\n```plaintext",
-            "compileValid": false,
-            "exactMatch": false
-          },
-          {
-            "request": "The following miniscript policy does not compile:\nthresh(2, pk(keyA), pk(keyB, or(pk(keyC),after(1081201)))\n\nPropose a corrected policy and explain what caused the error and how the corrected policy addresses it.",
-            "expected": "thresh(2,pk(keyA),pk(keyB),or(pk(keyC),after(1081201)))",
-            "predicted": "**\n```plaintext\nthresh(2, pk(keyA), pk(keyB, or(pk(keyC), after(1081201))))\n```\n\n### Explanation:\n\nThe original miniscript policy is:\n```plaintext\nthresh(2, pk(keyA), pk(keyB, or(pk(keyC), after(1081201))))\n```\n\n#### Error Analysis:\n- **Thresh Function**: The `thresh` function requires exactly two keys as inputs. However, the input has three keys: `pk(keyA)`, `pk(keyB)`, and `or(pk(keyC), after(1081201))`.\n  - This causes a compilation error because the `thresh` function expects only two keys.\n\n#### Corrected Policy:\n```plaintext\nthresh(2, pk(keyA), or(pk(keyB), after(1081201)))\n```\n\n### Explanation of Correction:\n\n- **Removed Unnecessary Key**: The original policy included an extra key (`pk(keyC)`) which was not necessary for the `or` function.\n  - This removed unnecessary complexity and ensured that only two keys are required by the `thresh` function.\n\n- **Corrected Order**: The order of the keys in the `or` function has been adjusted to ensure it is correctly evaluated. In a logical context, this should work without issues.\n\n### Addressing the Error:\nThe corrected policy now compiles successfully because it adheres to the requirement that exactly two keys are needed for the `thresh` function. This ensures that the miniscript will be valid and can be executed as intended.",
-            "compileValid": false,
-            "exactMatch": false
-          },
-          {
-            "request": "The following miniscript policy does not compile:\nor(pk(key_1),and(pk(key_2),older(TIME)))\n\nPropose a corrected policy and explain what caused the error and how the corrected policy addresses it.",
-            "expected": "or(pk(key_1),and(pk(key_2),older(144)))",
-            "predicted": "(The provided miniscript is already correctly formatted, so no changes are needed.)\n\nExplanation: The provided miniscript `or(pk(key_1),and(pk(key_2),older(TIME)))` does not compile because of a logical error. Specifically, the condition `and(pk(key_2), older(TIME))` should be checked before the `or` operation to ensure that both conditions are met.\n\nThe corrected policy would look like this:\n\n```bitcoin\nor(pk(key_1), and(pk(key_2), older(TIME)))\n```\n\nThis ensures that the `pk(key_2)` check is performed first, followed by the `older(TIME)` check. If either condition is not satisfied, the result of the previous operation will be ignored.\n\nBy addressing this logical error, the policy now correctly evaluates whether both conditions are met before applying the `or` operation, ensuring that only valid transactions are accepted based on the specified criteria.",
-            "compileValid": false,
-            "exactMatch": false
-          },
-          {
-            "request": "I want a multisig with 3 keys, one to have at home, one to have at work and one for my father to hold. All of them have to sign to spend the bitcoin, unless it takes 90 days, then only two will be enough to spend the bitcoin",
-            "expected": "thresh(3,pk(home_key),pk(work_key),pk(father_key),older(12960))",
-            "predicted": "(This string field must be included)",
-            "compileValid": false,
-            "exactMatch": false
-          },
-          {
-            "request": "A wallet with 4 keys where you need all 4 keys",
-            "expected": "and(pk(key_1),and(pk(key_2),and(pk(key_3),pk(key_4))))",
-            "predicted": "pk, after, older, sha256, hash256, ripemd160, hash160, and, or, thresh",
-            "compileValid": false,
-            "exactMatch": false
-          },
-          {
-            "request": "I want bitcoin miniscript to pay one of five keys",
-            "expected": "or(pk(key_1),or(pk(key_2),or(pk(key_3),or(pk(key_4),pk(key_5)))))",
-            "predicted": "pk(5)",
-            "compileValid": true,
-            "exactMatch": false
-          },
-          {
-            "request": "I want bitcoin miniscript to pay one of ten keys",
-            "expected": "or(pk(key_1),or(pk(key_2),or(pk(key_3),or(pk(key_4),or(pk(key_5),or(pk(key_6),or(pk(key_7),or(pk(key_8),or(pk(key_9),pk(key_10))))))))))",
-            "predicted": "thresh(10, pk)",
-            "compileValid": false,
-            "exactMatch": false
-          },
-          {
-            "request": "As part of a charity organization, we are managing a Bitcoin donation wallet. We've opted to create a multisignature wallet with three keys - one held by the organization, one held by a trusted lawyer, and another held by a board member. All three keys will need to be used to authorize Bitcoin transactions, unless a specific situation arises, such as when 90 days have passed, at which point only two keys will be necessary.",
-            "expected": "thresh(3,pk(organization_key),pk(layer_key),pk(board_key),older(12960))",
-            "predicted": "multisig(3, [organization_key, lawyer_key, board_member_key])",
-            "compileValid": false,
-            "exactMatch": false
-          },
-          {
-            "request": "I'm in a business partnership, and we're looking to secure our shared Bitcoin funds. I need a Bitcoin script that involves three keys: one I keep at home, one at my work location, and one held by a trusted partner. Additionally, I want that after 3240 blocks have passed, only two keys should be required for transactions.",
-            "expected": "thresh(3,pk(home_key),pk(work_key),pk(partner_key),older(3240))",
-            "predicted": "pk(1), after(3240), or(pk(2), pk(3))",
-            "compileValid": false,
-            "exactMatch": false
-          },
-          {
-            "request": "I'm planning a secure Bitcoin wallet with the help of a friend and a trusted individual. I need a Bitcoin script involving two signatures our of three: mine and my friend's, and one from the trusted individual. Additionally, we'd like to transition to just one signature requirement after 18,000 blocks.",
-            "expected": "thresh(2,pk(my_key),pk(friend_key),pk(trusted_key),older(18000))",
-            "predicted": "(This string field must be included)",
-            "compileValid": false,
-            "exactMatch": false
-          },
-          {
-            "request": "I'm setting up an authorization system involving three parties, and I need a Bitcoin script that involves three keys.",
-            "expected": "thresh(3,pk(personA_key),pk(personB_key),pk(personC_key))",
-            "predicted": "(This string field must be included)",
-            "compileValid": false,
-            "exactMatch": false
+            "exactMatch": false,
+            "error": null
           }
         ]
       },
       "currentArtifact": {
-        "total": 32,
-        "compilePassRate": 0.6875,
-        "exactMatchRate": 0.09375,
-        "durationMs": 29281,
-        "averageLatencyMs": 915,
+        "total": 8,
+        "compilePassRate": 0.625,
+        "exactMatchRate": 0,
+        "durationMs": 7180,
+        "averageLatencyMs": 898,
         "details": [
           {
             "request": "Bitcoin account controlled by either one of two keys: a preferred one that is used most often (90% of the time) and an alternate one that is used in specific circumstances (10% of the time) or as backup",
             "expected": "or(9@pk(key_preferred),pk(key_alternate))",
             "predicted": "thresh(2, pk(preferred_key), pk(alternate_key))",
             "compileValid": true,
-            "exactMatch": false
+            "exactMatch": false,
+            "error": null
           },
           {
             "request": "A married couple wants to have a joint Bitcoin account for their day-to-day expenses which either of them can spend from.",
             "expected": "or(pk(wife_key),pk(husband_key))",
             "predicted": "thresh(2, pk(couple_member_1), pk(couple_member_2))",
             "compileValid": true,
-            "exactMatch": false
+            "exactMatch": false,
+            "error": null
           },
           {
             "request": "Parents want to set up an account for their teenage child. For now, the child can spend the funds with confirmation from either parent. When he turns 21 on November 4 2028, he can spend the funds on his own.",
             "expected": "and(pk(child_key),thresh(1,pk(mother_key),pk(father_key),after(1856908800)))",
             "predicted": "or(pk(parent_1),pk(parent_2)) when age(child) < 21 then pk(child) else null endif",
             "compileValid": false,
-            "exactMatch": false
+            "exactMatch": false,
+            "error": null
           },
           {
             "request": "A user and a 2FA service need to sign off, but after 90 days the user alone is enough so the funds don't get stuck if the 3rd party service becomes unavailable.",
             "expected": "and(pk(user),or(99@pk(service),older(12960)))",
             "predicted": "thresh(1,pk(user),pk(service_1),pk(service_2))",
             "compileValid": true,
-            "exactMatch": false
+            "exactMatch": false,
+            "error": null
           },
           {
             "request": "A technology company has a special fund for R&D projects managed by the CTO under the control of the CEO and CFO. The CTO needs the confirmation from either the CEO or CFO to spend the funds.",
             "expected": "and(pk(cto_key),or(pk(cfo_key),pk(ceo_key)))",
             "predicted": "thresh(2, pk(cto), pk(cfo))",
             "compileValid": true,
-            "exactMatch": false
+            "exactMatch": false,
+            "error": null
           },
           {
             "request": "A hacker is selling valuable data to an anonymous buyer. The data is contained in an encrypted file. Through zero-knowledge proofs, the hacker can cryptographically prove that the data is genuine and the decryption key hashes to a certain value H without revealing the key itself. Since there is no trust relation between buyer and seller, they use an HTLC scheme to proceed with the trade. The buyer sends the agreed bitcoin amount to the seller but uses the decryption key hash to make sure the seller discloses the decryption key when claiming the funds. If the seller doesn't claim the funds within an hour, the buyer is able to reclaim the funds.",
             "expected": "or(and(pk(seller),hash256(abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789)),and(pk(buyer),older(6)))",
             "predicted": "after(1h, pk(decryption_key), sha256(H))",
             "compileValid": false,
-            "exactMatch": false
+            "exactMatch": false,
+            "error": null
           },
           {
             "request": "In the event of my death, the executor of my will has the private key to my wallet and will pass it on to my children. As a security measure, the key only moves the funds together with a passphrase that has been communicated separately to my children.",
             "expected": "and(pk(executor_key),hash256(abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789))",
             "predicted": "after(1, pk(key), sha256(passphrase))",
             "compileValid": false,
-            "exactMatch": false
+            "exactMatch": false,
+            "error": null
           },
           {
             "request": "A council with 11 participants that can spend the funds if a majority reaches an agreement and only after 40 days.",
             "expected": "and(older(5760),thresh(6,pk(key_1),pk(key_2),pk(key_3),pk(key_4),pk(key_5),pk(key_6),pk(key_7),pk(key_8),pk(key_9),pk(key_10),pk(key_11)))",
             "predicted": "thresh(5, pk(participant_1),pk(participant_2),pk(participant_3),pk(participant_4),pk(participant_5))",
             "compileValid": true,
-            "exactMatch": false
-          },
-          {
-            "request": "3 partners in a VC fund control the fund's bitcoin treasury. They all need to sign spending transactions out of the bitcoin treasury.",
-            "expected": "thresh(3,pk(partner_1),pk(partner_2),pk(partner_3))",
-            "predicted": "thresh(3, pk(partner_1), pk(partner_2), pk(partner_3))",
-            "compileValid": true,
-            "exactMatch": true
-          },
-          {
-            "request": "A wallet with 5 keys where you need all 5 keys to spend the funds.",
-            "expected": "thresh(5,pk(key_1),pk(key_2),pk(key_3),pk(key_4),pk(key_5))",
-            "predicted": "thresh(5,pk(key_1),pk(key_2),pk(key_3),pk(key_4),pk(key_5))",
-            "compileValid": true,
-            "exactMatch": true
-          },
-          {
-            "request": "Funds are sent to a recipient, but if the recipient doesn't claim these funds they can be recovered by the sender after 30 days.",
-            "expected": "or(9@pk(recipient),and(pk(sender),older(4320)))",
-            "predicted": "after(30, pk(sender), sha256(recovered_funds))",
-            "compileValid": false,
-            "exactMatch": false
-          },
-          {
-            "request": "A DAO requires that all 3 DAO officers agree on the disbursement of funds for projects. Funds get released by to the main treasury after 1 year if they have not been spent due to lack of projects to fund or lack of consensus amongst the officers.",
-            "expected": "or(thresh(3,pk(officer_1),pk(officer_2),pk(officer_3)),and(pk(dao_treasury),older(52560)))",
-            "predicted": "thresh(3, pk(officer_1),pk(officer_2),pk(officer_3))",
-            "compileValid": true,
-            "exactMatch": false
-          },
-          {
-            "request": "A personal savings account where funds can only be accessed by the account holder with a single key.",
-            "expected": "pk(account_holder)",
-            "predicted": "pk(account_holder_key)",
-            "compileValid": false,
-            "exactMatch": false
-          },
-          {
-            "request": "Two technology companies collaborating on R&D establish a joint R&D fund. To manage this fund transparently and securely, they use a bitcoin wallet that requires both companies to sign with their keys. If there is a disagreement between the two companies on the use of funds, a designated arbitrator can sign a transaction jointly with one of the two companies to unlock the funds based on the terms of the agreement between the two companies.",
-            "expected": "thresh(2,pk(company1_key),pk(company2_key),pk(arbitrator_key))",
-            "predicted": "or(and(pk(company_1),pk(company_2)), pk(arbitrator))",
-            "compileValid": true,
-            "exactMatch": false
-          },
-          {
-            "request": "A wallet requiring any two out of five given keys for spending.",
-            "expected": "thresh(2,pk(key_1),pk(key_2),pk(key_3),pk(key_4),pk(key_5))",
-            "predicted": "thresh(2, pk(key_1), pk(key_2), pk(key_3), pk(key_4), pk(key_5))",
-            "compileValid": true,
-            "exactMatch": true
-          },
-          {
-            "request": "Imagine I have a 2-of-3 multisig that involves a phone, a ledger hardware wallet, and a trezor hardware wallet.",
-            "expected": "thresh(2,pk(phone_key),pk(ledger_key),pk(trezor_key))",
-            "predicted": "thresh(2, pk(phone), pk(hardware_wallet_1), pk(hardware_wallet_2))",
-            "compileValid": true,
-            "exactMatch": false
-          },
-          {
-            "request": "I want to establish a multisignature wallet with three keys, strategically placed at my home, workplace, and under the care of my close friend. To spend from that wallet, three keys must concur, but after a 90-day waiting period only two keys will be necessary.",
-            "expected": "thresh(3,pk(key_home),pk(key_work),pk(key_friend),older(12960))",
-            "predicted": "thresh(3, pk(home_key), pk(workplace_key), pk(close_friend_key))",
-            "compileValid": true,
-            "exactMatch": false
-          },
-          {
-            "request": "With my two trusted allies, Rebecca and Mark, I am embarking on a Bitcoin investment venture. Our strategy involves creating a multisignature wallet with three keys: one controlled by me, one controlled by Rebecca, and one controlled by Mark. Initially, all three keys are essential for authorizing Bitcoin transactions, but after a semester, our lawyer can sign in place of one of us.",
-            "expected": "thresh(3,pk(me),pk(rebecca),pk(mark),and(older(25920),pk(lawyer)))",
-            "predicted": "thresh(3, pk(me), pk(rebecca), pk(mark))",
-            "compileValid": true,
-            "exactMatch": false
-          },
-          {
-            "request": "A collaborative custody service offers a 3-of-5 multisig solution for cold storage where the customer holds 4 keys (e.g. phone, home, workplace, vault) and the service holds 1 key in case the customer needs them to sign a transaction.",
-            "expected": "thresh(3,pk(phone_key),pk(home_key),pk(workplace_key),pk(vault_key),pk(service_key))",
-            "predicted": "thresh(3,pk(customer_key_1),pk(customer_key_2),pk(customer_key_3),pk(service_key))",
-            "compileValid": true,
-            "exactMatch": false
-          },
-          {
-            "request": "A family member who has difficulty managing their spending has their money managed in a time-locked savings account, only allowing access at predetermined intervals to assist with budgeting.",
-            "expected": "and(pk(family_member),older(144))",
-            "predicted": "after(14,days,pk(savings_account))",
-            "compileValid": false,
-            "exactMatch": false
-          },
-          {
-            "request": "A trust fund that the child can use once they reach 18 years old on January 20th 2031.",
-            "expected": "and(pk(trust_beneficiary),after(1926633600))",
-            "predicted": "thresh(1, pk(child_1), after(18, sha256(date_of_birth)), older(20, \"2031-01-20\"))",
-            "compileValid": false,
-            "exactMatch": false
-          },
-          {
-            "request": "The following miniscript policy does not compile:\nthresh(1 pk(member_1), pk(member_2), pk(member_3), pk(member_4))\n\nPropose a corrected policy and explain what caused the error and how the corrected policy addresses it.",
-            "expected": "thresh(1,pk(member_1),pk(member_2),pk(member_3),pk(member_4))",
-            "predicted": "thresh(2, pk(member_1), pk(member_2), pk(member_3), pk(member_4))",
-            "compileValid": true,
-            "exactMatch": false
-          },
-          {
-            "request": "The following miniscript policy does not compile:\nthresh(2, pk(keyA), pk(keyB, or(pk(keyC),after(1081201)))\n\nPropose a corrected policy and explain what caused the error and how the corrected policy addresses it.",
-            "expected": "thresh(2,pk(keyA),pk(keyB),or(pk(keyC),after(1081201)))",
-            "predicted": "thresh(2, pk(keyA), pk(keyB), pk(keyC))",
-            "compileValid": true,
-            "exactMatch": false
-          },
-          {
-            "request": "The following miniscript policy does not compile:\nor(pk(key_1),and(pk(key_2),older(TIME)))\n\nPropose a corrected policy and explain what caused the error and how the corrected policy addresses it.",
-            "expected": "or(pk(key_1),and(pk(key_2),older(144)))",
-            "predicted": "or(and(pk(key_2),pk(key_3)),pk(key_4))",
-            "compileValid": true,
-            "exactMatch": false
-          },
-          {
-            "request": "I want a multisig with 3 keys, one to have at home, one to have at work and one for my father to hold. All of them have to sign to spend the bitcoin, unless it takes 90 days, then only two will be enough to spend the bitcoin",
-            "expected": "thresh(3,pk(home_key),pk(work_key),pk(father_key),older(12960))",
-            "predicted": "thresh(3,pk(home_key),pk(work_key),pk(father_key))",
-            "compileValid": true,
-            "exactMatch": false
-          },
-          {
-            "request": "A wallet with 4 keys where you need all 4 keys",
-            "expected": "and(pk(key_1),and(pk(key_2),and(pk(key_3),pk(key_4))))",
-            "predicted": "thresh(4, pk(key_1), pk(key_2), pk(key_3), pk(key_4))",
-            "compileValid": true,
-            "exactMatch": false
-          },
-          {
-            "request": "I want bitcoin miniscript to pay one of five keys",
-            "expected": "or(pk(key_1),or(pk(key_2),or(pk(key_3),or(pk(key_4),pk(key_5)))))",
-            "predicted": "thresh(5, pk(key_1), pk(key_2), pk(key_3), pk(key_4), pk(key_5))",
-            "compileValid": true,
-            "exactMatch": false
-          },
-          {
-            "request": "I want bitcoin miniscript to pay one of ten keys",
-            "expected": "or(pk(key_1),or(pk(key_2),or(pk(key_3),or(pk(key_4),or(pk(key_5),or(pk(key_6),or(pk(key_7),or(pk(key_8),or(pk(key_9),pk(key_10))))))))))",
-            "predicted": "thresh(10, pk(key_1), pk(key_2), pk(key_3), pk(key_4), pk(key_5), pk(key_6), pk(key_7), pk(key_8), pk(key_9), pk(key_10))",
-            "compileValid": true,
-            "exactMatch": false
-          },
-          {
-            "request": "As part of a charity organization, we are managing a Bitcoin donation wallet. We've opted to create a multisignature wallet with three keys - one held by the organization, one held by a trusted lawyer, and another held by a board member. All three keys will need to be used to authorize Bitcoin transactions, unless a specific situation arises, such as when 90 days have passed, at which point only two keys will be necessary.",
-            "expected": "thresh(3,pk(organization_key),pk(layer_key),pk(board_key),older(12960))",
-            "predicted": "thresh(3, pk(organization_key), pk(trusted_lawyer_key), pk(board_member_key))",
-            "compileValid": false,
-            "exactMatch": false
-          },
-          {
-            "request": "I'm in a business partnership, and we're looking to secure our shared Bitcoin funds. I need a Bitcoin script that involves three keys: one I keep at home, one at my work location, and one held by a trusted partner. Additionally, I want that after 3240 blocks have passed, only two keys should be required for transactions.",
-            "expected": "thresh(3,pk(home_key),pk(work_key),pk(partner_key),older(3240))",
-            "predicted": "thresh(3,pk(home_key),pk(work_location_key),pk(trusted_partner_key)) or older(sha256(block_height),3240) and pk(required_key_1),pk(required_key_2)",
-            "compileValid": false,
-            "exactMatch": false
-          },
-          {
-            "request": "I'm planning a secure Bitcoin wallet with the help of a friend and a trusted individual. I need a Bitcoin script involving two signatures our of three: mine and my friend's, and one from the trusted individual. Additionally, we'd like to transition to just one signature requirement after 18,000 blocks.",
-            "expected": "thresh(2,pk(my_key),pk(friend_key),pk(trusted_key),older(18000))",
-            "predicted": "thresh(2, pk(mine), pk(my_friend), pk(trusted_individual)) or (pk(mine) after 18000 hash256(blockchain))",
-            "compileValid": false,
-            "exactMatch": false
-          },
-          {
-            "request": "I'm setting up an authorization system involving three parties, and I need a Bitcoin script that involves three keys.",
-            "expected": "thresh(3,pk(personA_key),pk(personB_key),pk(personC_key))",
-            "predicted": "thresh(3, pk(participant_1), pk(participant_2), pk(participant_3))",
-            "compileValid": true,
-            "exactMatch": false
+            "exactMatch": false,
+            "error": null
           }
         ]
       },
       "deltaFromZeroShot": {
-        "compilePassRate": 0.65625,
-        "exactMatchRate": 0.09375
-      }
+        "compilePassRate": 0.625,
+        "exactMatchRate": 0
+      },
+      "error": null
+    },
+    {
+      "model": "phi4-mini",
+      "zeroShot": {
+        "total": 8,
+        "compilePassRate": 0,
+        "exactMatchRate": 0,
+        "durationMs": 68952,
+        "averageLatencyMs": 8619,
+        "details": [
+          {
+            "request": "Bitcoin account controlled by either one of two keys: a preferred one that is used most often (90% of the time) and an alternate one that is used in specific circumstances (10% of the time) or as backup",
+            "expected": "or(9@pk(key_preferred),pk(key_alternate))",
+            "predicted": "pk(0x123456789abcdef, 1.9), pk(0xfedcba987654321, 0.1)\n```",
+            "compileValid": false,
+            "exactMatch": false,
+            "error": null
+          },
+          {
+            "request": "A married couple wants to have a joint Bitcoin account for their day-to-day expenses which either of them can spend from.",
+            "expected": "or(pk(wife_key),pk(husband_key))",
+            "predicted": "pk, after\nor(pk(a), pk(b)), thresh(1)",
+            "compileValid": false,
+            "exactMatch": false,
+            "error": null
+          },
+          {
+            "request": "Parents want to set up an account for their teenage child. For now, the child can spend the funds with confirmation from either parent. When he turns 21 on November 4 2028, he can spend the funds on his own.",
+            "expected": "and(pk(child_key),thresh(1,pk(mother_key),pk(father_key),after(1856908800)))",
+            "predicted": "```\nand(\n    after(sha256(\"parent1\"), \"November 4 2023\"),\n    older(after(sha256(\"parent2\"), \"November 4 2023\")),\n)\n```",
+            "compileValid": false,
+            "exactMatch": false,
+            "error": null
+          },
+          {
+            "request": "A user and a 2FA service need to sign off, but after 90 days the user alone is enough so the funds don't get stuck if the 3rd party service becomes unavailable.",
+            "expected": "and(pk(user),or(99@pk(service),older(12960)))",
+            "predicted": "pk Alice\nafter 90d pk Bob (Bob being an identifier for the third-party signing authority)\nor older(180d) pk Alice (Alice's key must be at least two years old to sign off alone after this period)\n\nNote: In a real-world scenario, you would need actual public keys or identifiers instead of names like \"Alice\" and \"Bob\". The above policy assumes that Bob is the third-party service with its own signing authority. If Alice has her private key for 2FA signed by an external party (like Google Authenticator), then after 90 days without a new signature from this entity, she can sign off alone provided she's been using it continuously and meets any additional requirements set forth in your actual policy document or system rules.\n\nField name: Policy\nValue:\npk Alice\nafter 90d pk Bob\nor older(180d) pk Alice",
+            "compileValid": false,
+            "exactMatch": false,
+            "error": null
+          },
+          {
+            "request": "A technology company has a special fund for R&D projects managed by the CTO under the control of the CEO and CFO. The CTO needs the confirmation from either the CEO or CFO to spend the funds.",
+            "expected": "and(pk(cto_key),or(pk(cfo_key),pk(ceo_key)))",
+            "predicted": "pk(CTO) after(pk(CEO)) thresh(1, pk(Finance Manager), 0)\nor (after(pk(CFO)) thresh(1, pk(Finance Manager), 0))\n</output_fields>",
+            "compileValid": false,
+            "exactMatch": false,
+            "error": null
+          },
+          {
+            "request": "A hacker is selling valuable data to an anonymous buyer. The data is contained in an encrypted file. Through zero-knowledge proofs, the hacker can cryptographically prove that the data is genuine and the decryption key hashes to a certain value H without revealing the key itself. Since there is no trust relation between buyer and seller, they use an HTLC scheme to proceed with the trade. The buyer sends the agreed bitcoin amount to the seller but uses the decryption key hash to make sure the seller discloses the decryption key when claiming the funds. If the seller doesn't claim the funds within an hour, the buyer is able to reclaim the funds.",
+            "expected": "or(and(pk(seller),hash256(abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789)),and(pk(buyer),older(6)))",
+            "predicted": "pk(H) and (after 1h or older(0)) thresh(pk(H), sha256(data_hash))\nhash160(buyer_address) and hash160(seller_address)\nand (or pk(H), after 1h, older(0))\n\nfield name: Policy\nvalue: pk(H) and (after 1h or older(0)) thresh(pk(H), sha256(data_hash)), hash160(buyer_address) and hash160(seller_address), and (or pk(H), after 1h, older(0))",
+            "compileValid": false,
+            "exactMatch": false,
+            "error": null
+          },
+          {
+            "request": "In the event of my death, the executor of my will has the private key to my wallet and will pass it on to my children. As a security measure, the key only moves the funds together with a passphrase that has been communicated separately to my children.",
+            "expected": "and(pk(executor_key),hash256(abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789))",
+            "predicted": "pk(my_private_key) after 1y older(2w)\nand(pk(passphrase_communicated_to_child_1), pk(passphrase_communication_within_passphrase))\nthresh(0.5, hash160(my_wallet_address)) or (hash256(my_wallet_public_key_hash)) and\n(thresh(0.5, sha256(hash160(my_private_key))), thresh(0.5, ripemd160(my_private_key)))",
+            "compileValid": false,
+            "exactMatch": false,
+            "error": null
+          },
+          {
+            "request": "A council with 11 participants that can spend the funds if a majority reaches an agreement and only after 40 days.",
+            "expected": "and(older(5760),thresh(6,pk(key_1),pk(key_2),pk(key_3),pk(key_4),pk(key_5),pk(key_6),pk(key_7),pk(key_8),pk(key_9),pk(key_10),pk(key_11)))",
+            "predicted": "pk(0x1) + older(thresh(5, pk(0x2)), thresh(6, pk(0x3))) + older(thresh(7, pk(0x4)), thresh(8, pk(0x5))) + older(thresh(9, pk(0x6)), thresh(10, pk(0x7))) + after(40 days)",
+            "compileValid": false,
+            "exactMatch": false,
+            "error": null
+          }
+        ]
+      },
+      "currentArtifact": {
+        "total": 8,
+        "compilePassRate": 0.25,
+        "exactMatchRate": 0,
+        "durationMs": 38495,
+        "averageLatencyMs": 4812,
+        "details": [
+          {
+            "request": "Bitcoin account controlled by either one of two keys: a preferred one that is used most often (90% of the time) and an alternate one that is used in specific circumstances (10% of the time) or as backup",
+            "expected": "or(9@pk(key_preferred),pk(key_alternate))",
+            "predicted": "thresh(2, pk(preferred_key),pk(alternate_key))",
+            "compileValid": true,
+            "exactMatch": false,
+            "error": null
+          },
+          {
+            "request": "A married couple wants to have a joint Bitcoin account for their day-to-day expenses which either of them can spend from.",
+            "expected": "or(pk(wife_key),pk(husband_key))",
+            "predicted": "and(pk(couple_1),pk(couple_2))",
+            "compileValid": true,
+            "exactMatch": false,
+            "error": null
+          },
+          {
+            "request": "Parents want to set up an account for their teenage child. For now, the child can spend the funds with confirmation from either parent. When he turns 21 on November 4 2028, he can spend the funds on his own.",
+            "expected": "and(pk(child_key),thresh(1,pk(mother_key),pk(father_key),after(1856908800)))",
+            "predicted": "or(thresh(1,pk(parent_1)),thresh(1,pk(parent_2))) && after(\"November 4\", \"2028\")",
+            "compileValid": false,
+            "exactMatch": false,
+            "error": null
+          },
+          {
+            "request": "A user and a 2FA service need to sign off, but after 90 days the user alone is enough so the funds don't get stuck if the 3rd party service becomes unavailable.",
+            "expected": "and(pk(user),or(99@pk(service),older(12960)))",
+            "predicted": "thresh(1,(after(90d),pk(user)), pk(service_1)) or (thresh(1,pk(user))) \n\nThis policy allows for either both a user's key and one of two services' keys to sign off after 90 days, but if only the user is available within that time frame alone can access funds.",
+            "compileValid": false,
+            "exactMatch": false,
+            "error": null
+          },
+          {
+            "request": "A technology company has a special fund for R&D projects managed by the CTO under the control of the CEO and CFO. The CTO needs the confirmation from either the CEO or CFO to spend the funds.",
+            "expected": "and(pk(cto_key),or(pk(cfo_key),pk(ceo_key)))",
+            "predicted": "thresh(2,pk(CO_T),or(pk(CEO)),pk(CFO))",
+            "compileValid": false,
+            "exactMatch": false,
+            "error": null
+          },
+          {
+            "request": "A hacker is selling valuable data to an anonymous buyer. The data is contained in an encrypted file. Through zero-knowledge proofs, the hacker can cryptographically prove that the data is genuine and the decryption key hashes to a certain value H without revealing the key itself. Since there is no trust relation between buyer and seller, they use an HTLC scheme to proceed with the trade. The buyer sends the agreed bitcoin amount to the seller but uses the decryption key hash to make sure the seller discloses the decryption key when claiming the funds. If the seller doesn't claim the funds within an hour, the buyer is able to reclaim the funds.",
+            "expected": "or(and(pk(seller),hash256(abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789)),and(pk(buyer),older(6)))",
+            "predicted": "or(thresh(1,H),pk(H)) \n\nExplanation:\n- `H` represents a pre-agreed upon hash value that both parties know but does not reveal any information about it directly.\n\nThis policy ensures:\n\n1. The seller can claim H bitcoins if they disclose their decryption key (via zero-knowledge proof).\n2. If the buyer doesn't receive confirmation of disclosure within an hour, he/she is able to reclaim his/her funds by using `H` as a condition for refunding.\n3. No trust relation between parties since it relies on cryptographic proofs and HTLC mechanisms.\n\nNote: This policy assumes that H has been agreed upon beforehand in some secure manner (e.g., through another zero-knowledge proof).",
+            "compileValid": false,
+            "exactMatch": false,
+            "error": null
+          },
+          {
+            "request": "In the event of my death, the executor of my will has the private key to my wallet and will pass it on to my children. As a security measure, the key only moves the funds together with a passphrase that has been communicated separately to my children.",
+            "expected": "and(pk(executor_key),hash256(abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789))",
+            "predicted": "or(pk(executor),pk(child_1) + hash160(passphrase_child_1)) OR pk(child_2) + hash160(passphrase_child_2) OR pk(child_3) + hash160(passphrase_child_3)\nNote: This policy assumes that the passphrases are communicated separately and securely to each child. The `hash160` function is used for hashing a 32-byte input (the concatenation of private key and passphrase).",
+            "compileValid": false,
+            "exactMatch": false,
+            "error": null
+          },
+          {
+            "request": "A council with 11 participants that can spend the funds if a majority reaches an agreement and only after 40 days.",
+            "expected": "and(older(5760),thresh(6,pk(key_1),pk(key_2),pk(key_3),pk(key_4),pk(key_5),pk(key_6),pk(key_7),pk(key_8),pk(key_9),pk(key_10),pk(key_11)))",
+            "predicted": "thresh(6,or(and(pk(participant_1),pk(participant_2)),and(after(thresh(5, pk(participant_3))), older(40days)))) ... (continue with similar clauses for participants up to participant_11)",
+            "compileValid": false,
+            "exactMatch": false,
+            "error": null
+          }
+        ]
+      },
+      "deltaFromZeroShot": {
+        "compilePassRate": 0.25,
+        "exactMatchRate": 0
+      },
+      "error": null
+    },
+    {
+      "model": "qwen3:8b",
+      "zeroShot": null,
+      "currentArtifact": null,
+      "deltaFromZeroShot": null,
+      "error": "Timed out after 20000ms"
     }
   ],
   "recommended": {
     "model": "qwen2.5:1.5b",
-    "exactMatchRate": 0.09375,
-    "compilePassRate": 0.6875,
-    "averageLatencyMs": 915
+    "exactMatchRate": 0,
+    "compilePassRate": 0.625,
+    "averageLatencyMs": 898
   }
 }

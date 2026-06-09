@@ -25,6 +25,8 @@ const modelList = (process.env.AX_BENCHMARK_MODELS ||
 const maxTokens = Number(process.env.AX_MAX_TOKENS || '160')
 const think = process.env.AX_OLLAMA_THINK === 'true'
 const configuredExecutedExamples = process.env.AX_EXECUTED_EXAMPLES
+const evalLimit = Number(process.env.AX_EVAL_LIMIT || '0')
+const perExampleTimeoutMs = Number(process.env.AX_PER_EXAMPLE_TIMEOUT_MS || '30000')
 
 await ready
 
@@ -37,6 +39,7 @@ const executedTrainingSet = selectExecutedTrainingSet(
   designTrainingSet,
   maxExecutedExamples,
 )
+const heldOutSet = evalLimit > 0 ? designEvalSet.slice(0, evalLimit) : designEvalSet
 
 const results = []
 
@@ -52,28 +55,53 @@ for (const model of modelList) {
   const currentArtifactProgram = createDesignProgram()
   applyArtifactsToProgram(currentArtifactProgram, artifacts)
 
-  await warmModel(studentAI, zeroShotProgram)
+  try {
+    await warmModel(studentAI, zeroShotProgram, {
+      timeoutMs: perExampleTimeoutMs,
+    })
 
-  const zeroShot = await evaluateHeldOut(studentAI, zeroShotProgram, designEvalSet)
-  const currentArtifact = await evaluateHeldOut(
-    studentAI,
-    currentArtifactProgram,
-    designEvalSet,
-  )
+    const zeroShot = await evaluateHeldOut(studentAI, zeroShotProgram, heldOutSet, {
+      perExampleTimeoutMs,
+    })
+    const currentArtifact = await evaluateHeldOut(
+      studentAI,
+      currentArtifactProgram,
+      heldOutSet,
+      { perExampleTimeoutMs },
+    )
 
-  results.push({
-    model,
-    zeroShot,
-    currentArtifact,
-    deltaFromZeroShot: {
-      compilePassRate:
-        currentArtifact.compilePassRate - zeroShot.compilePassRate,
-      exactMatchRate: currentArtifact.exactMatchRate - zeroShot.exactMatchRate,
-    },
-  })
+    results.push({
+      model,
+      zeroShot,
+      currentArtifact,
+      deltaFromZeroShot: {
+        compilePassRate:
+          currentArtifact.compilePassRate - zeroShot.compilePassRate,
+        exactMatchRate: currentArtifact.exactMatchRate - zeroShot.exactMatchRate,
+      },
+      error: null,
+    })
+  } catch (error) {
+    results.push({
+      model,
+      zeroShot: null,
+      currentArtifact: null,
+      deltaFromZeroShot: null,
+      error: error instanceof Error ? error.message : String(error),
+    })
+  }
 }
 
 results.sort((left, right) => {
+  if (!left.currentArtifact && !right.currentArtifact) {
+    return left.model.localeCompare(right.model)
+  }
+  if (!left.currentArtifact) {
+    return 1
+  }
+  if (!right.currentArtifact) {
+    return -1
+  }
   if (
     right.currentArtifact.exactMatchRate !== left.currentArtifact.exactMatchRate
   ) {
@@ -101,10 +129,17 @@ const report = {
   },
   corpus: corpusSummary,
   executedExampleCount: executedTrainingSet.length,
+  heldOutExampleCount: heldOutSet.length,
   categoryCounts: buildCategoryCounts(designTrainingSet),
+  benchmarkConfig: {
+    evalLimit,
+    perExampleTimeoutMs,
+    maxTokens,
+    think,
+  },
   models: results,
   recommended:
-    results.length === 0
+    results.filter((entry) => entry.currentArtifact).length === 0
       ? null
       : {
           model: results[0].model,

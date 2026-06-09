@@ -48,8 +48,12 @@ Relevant files:
 
 - `src/data/examples.ts`
 - `src/data/optimizedDesignDemos.ts`
+- `src/data/optimizedDesignProgram.ts`
 - `src/lib/assistant.ts`
 - `src/lib/assistantScope.ts`
+- `scripts/lib/hfTrainingData.mjs`
+- `scripts/train_sft_lora.py`
+- `scripts/train_dpo_lora.py`
 
 Current Ax structure:
 
@@ -75,6 +79,29 @@ That script:
 - mixes spreadsheet-derived and generated training examples
 - emits `src/data/optimizedDesignDemos.ts`
 - writes a report to `docs/design-optimization-report.json`
+
+For Hugging Face fine-tuning datasets and trainer entrypoints:
+
+```bash
+npm run datasets:hf
+uv run scripts/train_sft_lora.py --help
+uv run scripts/train_dpo_lora.py --help
+```
+
+The export step writes:
+
+- `data/hf/sft-train.jsonl`
+- `data/hf/sft-eval.jsonl`
+- `data/hf/dpo-train.jsonl`
+- `data/hf/dpo-eval.jsonl`
+- `data/hf/prompt-eval.jsonl`
+- `docs/hf-training-report.json`
+
+The current HF path is:
+
+- LoRA SFT first, using the expanded design, repair, and off-topic refusal corpus
+- LoRA DPO second, using explicit prompt preference pairs where the rejected answer is a weaker or invalid policy
+- Compact model candidates prioritized from recent Hugging Face research: `Qwen/Qwen2.5-1.5B-Instruct`, `Qwen/Qwen3-4B-Instruct-2507`, `HuggingFaceTB/SmolLM3-3B`, and `microsoft/Phi-4-mini-instruct`
 
 ## Flowcharts
 

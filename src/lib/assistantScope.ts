@@ -21,6 +21,7 @@ const POLICY_FUNCTION = /\b(?:pk|after|older|sha256|hash256|ripemd160|hash160|an
 
 const STRONG_TERMS = [
   'bitcoin',
+  'btc',
   'miniscript',
   'taproot',
   'p2wsh',

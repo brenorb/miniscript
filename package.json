@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "corpus:build": "node scripts/build-corpus.mjs",
+    "datasets:hf": "node scripts/export-hf-datasets.mjs",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "benchmark:models": "node scripts/benchmark-design-models.mjs",
+    "eval:hf": "node scripts/evaluate-hf-predictions.mjs",
     "eval": "tsx scripts/evaluate-assistant.ts",
     "optimize:demos": "node scripts/optimize-design-demos.mjs",
     "optimize:gepa": "node scripts/optimize-design-gepa.mjs",

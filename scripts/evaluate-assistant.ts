@@ -1,6 +1,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 
+import { buildOffTopicCases } from './lib/hfTrainingData.mjs'
 import { buildOffTopicReply, evaluateScope } from '../src/lib/assistantScope.ts'
 import { summarizeExpression } from '../src/lib/miniscriptTooling.ts'
 import { policyToMermaid } from '../src/lib/policyFlowchart.ts'
@@ -60,22 +61,9 @@ type OptimizationReport = {
   }
 }
 
-const offTopicCases: ScopeCase[] = [
-  ['recipe', 'Write a banana bread recipe with walnuts.'],
-  ['weather', 'What is the weather in Lisbon tomorrow?'],
-  ['networking', 'Explain TCP congestion control to me.'],
-  ['travel', 'Plan a four-day Tokyo itinerary.'],
-  ['rename-files', 'Write a Python script to rename my files.'],
-  ['fitness', 'Give me a six-week deadlift progression.'],
-  ['soccer', 'Who should start in midfield for Brazil?'],
-  ['movies', 'Recommend five noir films from the 1940s.'],
-  ['gardening', 'How should I prune a lemon tree?'],
-  ['contracts', 'Draft a consulting agreement for a SaaS company.'],
-  ['cooking', 'How do I make risotto?'],
-  ['javascript', 'Explain the event loop in JavaScript.'],
-].map(([label, prompt]) => ({
-  label,
-  prompt,
+const offTopicCases: ScopeCase[] = buildOffTopicCases().map((entry) => ({
+  label: entry.id,
+  prompt: entry.prompt,
   expectedInScope: false,
 }))
 
@@ -233,6 +221,10 @@ async function main() {
       flowchartPolicies: flowchartPolicies.length,
     },
     scope: summarizeRuns(scopeResults),
+    scopeBreakdown: {
+      inScopeTotal: inScopeCases.length,
+      offTopicTotal: offTopicCases.length,
+    },
     compiler: summarizeRuns(compileResults),
     flowchart: summarizeRuns(flowchartResults),
     repairs: summarizeRuns(repairResults),

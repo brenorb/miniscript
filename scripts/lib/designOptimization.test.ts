@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import {
   compareHeldOutMetrics,
+  evaluateHeldOut,
   scorePrediction,
   selectExecutedTrainingSet,
   stripDemosToSignatureFields,
@@ -93,5 +94,24 @@ describe('design optimization helpers', () => {
         ],
       },
     ])
+  })
+
+  it('marks timed out held-out generations as failed instead of crashing the run', async () => {
+    const program = {
+      forward() {
+        return new Promise(() => {})
+      },
+    }
+
+    const result = await evaluateHeldOut(
+      {},
+      program,
+      [{ request: 'single sig', policy: 'pk(key_1)' }],
+      { perExampleTimeoutMs: 5 },
+    )
+
+    expect(result.compilePassRate).toBe(0)
+    expect(result.exactMatchRate).toBe(0)
+    expect(result.details[0].error).toContain('Timed out')
   })
 })

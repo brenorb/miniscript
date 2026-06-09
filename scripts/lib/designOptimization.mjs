@@ -166,22 +166,48 @@ export function createOllamaAI({
   })
 }
 
-export async function warmModel(studentAI, program) {
-  await program.forward(studentAI, {
+export async function warmModel(studentAI, program, options = {}) {
+  const timeoutMs = typeof options.timeoutMs === 'number' ? options.timeoutMs : 0
+  const request = program.forward(studentAI, {
     designBrief: 'Single signature spend for one key only.',
   })
+
+  if (timeoutMs) {
+    await withTimeout(request, timeoutMs)
+    return
+  }
+
+  await request
 }
 
-export async function evaluateHeldOut(studentAI, program, dataset) {
+export async function evaluateHeldOut(studentAI, program, dataset, options = {}) {
+  const perExampleTimeoutMs =
+    typeof options.perExampleTimeoutMs === 'number'
+      ? options.perExampleTimeoutMs
+      : 0
   let exactMatches = 0
   let compilePasses = 0
   const details = []
   const startedAt = Date.now()
 
   for (const example of dataset) {
-    const prediction = await program.forward(studentAI, {
-      designBrief: example.request,
-    })
+    let prediction = null
+    let error = null
+    try {
+      prediction = perExampleTimeoutMs
+        ? await withTimeout(
+            program.forward(studentAI, {
+              designBrief: example.request,
+            }),
+            perExampleTimeoutMs,
+          )
+        : await program.forward(studentAI, {
+            designBrief: example.request,
+          })
+    } catch (caughtError) {
+      error =
+        caughtError instanceof Error ? caughtError.message : String(caughtError)
+    }
     const valid = isCompileValid(prediction?.policy)
     if (valid) {
       compilePasses += 1
@@ -196,6 +222,7 @@ export async function evaluateHeldOut(studentAI, program, dataset) {
       predicted: prediction?.policy || '',
       compileValid: valid,
       exactMatch: exact,
+      error,
     })
   }
 
@@ -344,4 +371,15 @@ async function readJsonMaybe(filePath) {
   } catch {
     return null
   }
+}
+
+function withTimeout(promise, timeoutMs) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => {
+      setTimeout(() => {
+        reject(new Error(`Timed out after ${timeoutMs}ms`))
+      }, timeoutMs)
+    }),
+  ])
 }

@@ -1,0 +1,86 @@
+{
+  "generatedAt": "2026-06-09T04:30:40.243Z",
+  "files": {
+    "sftTrain": "data/hf/sft-train.jsonl",
+    "sftEval": "data/hf/sft-eval.jsonl",
+    "sftPolicyTrain": "data/hf/sft-policy-train.jsonl",
+    "sftPolicyEval": "data/hf/sft-policy-eval.jsonl",
+    "dpoTrain": "data/hf/dpo-train.jsonl",
+    "dpoEval": "data/hf/dpo-eval.jsonl",
+    "promptEval": "data/hf/prompt-eval.jsonl"
+  },
+  "counts": {
+    "sftTrain": 417,
+    "sftEval": 51,
+    "sftPolicyTrain": 180,
+    "sftPolicyEval": 51,
+    "dpoTrain": 290,
+    "dpoEval": 51,
+    "promptEval": 51
+  },
+  "taskCounts": {
+    "sftTrain": {
+      "design": 330,
+      "repair": 34,
+      "off-topic": 53
+    },
+    "sftEval": {
+      "design": 32,
+      "repair": 5,
+      "off-topic": 14
+    },
+    "sftPolicyTrain": {
+      "design": 110,
+      "repair": 17,
+      "off-topic": 53
+    },
+    "sftPolicyEval": {
+      "design": 32,
+      "repair": 5,
+      "off-topic": 14
+    },
+    "dpoTrain": {
+      "design": 220,
+      "repair": 17,
+      "off-topic": 53
+    },
+    "dpoEval": {
+      "design": 32,
+      "repair": 5,
+      "off-topic": 14
+    }
+  },
+  "offTopicPromptCount": 67,
+  "benchmarkModels": [
+    "qwen2.5:1.5b",
+    "phi4-mini",
+    "qwen3:8b"
+  ],
+  "recommendedExperiments": [
+    {
+      "stage": "sft",
+      "model": "Qwen/Qwen2.5-1.5B-Instruct",
+      "reason": "Best local exact-match baseline so far and directly supported by TRL chat-template guidance."
+    },
+    {
+      "stage": "dpo",
+      "model": "Qwen/Qwen2.5-1.5B-Instruct",
+      "reason": "Use the SFT adapter as the policy model and prefer exact policy outputs over compile-valid but weaker variants."
+    },
+    {
+      "stage": "teacher-or-next-candidate",
+      "model": "Qwen/Qwen3-4B-Instruct-2507",
+      "reason": "Current small-model Hugging Face candidate with eval-results tagging and strong popularity in the compact range."
+    },
+    {
+      "stage": "alternate-compact-candidate",
+      "model": "HuggingFaceTB/SmolLM3-3B",
+      "reason": "Small instruct model family worth testing when Qwen adapters are too heavy or licensing preferences change."
+    },
+    {
+      "stage": "alternate-compact-candidate",
+      "model": "microsoft/Phi-4-mini-instruct",
+      "reason": "Strong 3.8B-class instruct baseline with eval-results tagging and multilingual coverage."
+    }
+  ]
+}

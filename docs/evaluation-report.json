@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-09T03:18:26.553Z",
+  "generatedAt": "2026-06-09T03:36:16.115Z",
   "dataset": {
     "designTrain": 110,
     "designEval": 32,
@@ -10,9 +10,13 @@
     "flowchartPolicies": 250
   },
   "scope": {
-    "passed": 296,
-    "total": 304,
-    "accuracy": 0.9736842105263158
+    "passed": 353,
+    "total": 359,
+    "accuracy": 0.9832869080779945
+  },
+  "scopeBreakdown": {
+    "inScopeTotal": 292,
+    "offTopicTotal": 67
   },
   "compiler": {
     "passed": 283,
@@ -127,9 +131,9 @@
         "label": "design-train-10",
         "prompt": "A treasure hunt involving a series of stages is open to 5 pre-registered teams. Each stage reveals reveals an essential clue to solve the next stage. The first team to solve the last stage in the series gets to claim a 1 BTC prize.",
         "expectedInScope": true,
-        "actualInScope": false,
-        "reason": "off-topic",
-        "passed": false
+        "actualInScope": true,
+        "reason": "bitcoin-miniscript",
+        "passed": true
       },
       {
         "label": "design-train-11",
@@ -223,9 +227,9 @@
         "label": "design-train-22",
         "prompt": "A hacking competition open to any individual or team where 10 independent hacking challenges are submitted by the organizer. Each challenge reveals a private key when solved. All private keys are needed in order to claim the 0.5 BTC prize.",
         "expectedInScope": true,
-        "actualInScope": false,
-        "reason": "off-topic",
-        "passed": false
+        "actualInScope": true,
+        "reason": "bitcoin-miniscript",
+        "passed": true
       },
       {
         "label": "design-train-23",

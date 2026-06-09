@@ -22,6 +22,7 @@ describe('assistant scope guard', () => {
     'Explain this Bitcoin Miniscript: or(pk(Alice),and(pk(Bob),older(144)))',
     'Design a taproot recovery wallet with a 2-of-3 quorum.',
     'Compare thresh(2,pk(Alice),pk(Bob),pk(Carol)) to a delayed recovery path.',
+    'A treasure hunt where the winner can claim a 1 BTC prize after solving the final clue.',
   ])('accepts in-scope prompt: %s', (prompt) => {
     const decision = evaluateScope({
       mode: 'design',
