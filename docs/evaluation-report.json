@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-08T22:07:26.104Z",
+  "generatedAt": "2026-06-09T03:18:26.553Z",
   "dataset": {
     "designTrain": 110,
     "designEval": 32,
@@ -39,10 +39,14 @@
     "executedExamples": 48,
     "executionCoverage": 0.43636363636363634,
     "heldOutTotal": 32,
-    "heldOutCompilePassRate": 0.71875,
-    "heldOutExactMatchRate": 0.1875,
+    "heldOutCompilePassRate": 0.625,
+    "heldOutExactMatchRate": 0.15625,
+    "currentArtifactCompilePassRate": 0,
+    "currentArtifactExactMatchRate": 0,
     "baselineCompilePassRate": 0.03125,
     "baselineExactMatchRate": 0,
+    "deltaFromCurrentArtifactCompilePassRate": 0,
+    "deltaFromCurrentArtifactExactMatchRate": 0,
     "bestScore": 0
   },
   "details": {

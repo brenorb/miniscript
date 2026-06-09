@@ -8,52 +8,28 @@ export const optimizedDesignDemos = [
   {
     "traces": [
       {
-        "designBrief": "A joint fund requiring two out of four participants to authorize a transaction.",
-        "policy": "thresh(2,pk(participant_1),pk(participant_2),pk(participant_3),pk(participant_4))",
-        "explanation": "This miniscript policy uses the `thresh` operator with a threshold of 2, thereby requiring that any two out of the four participants (`participant_1`, `participant_2`, `participant_3`, `participant_4`) must authorize a transaction by signing with their key.",
-        "cautions": [],
-        "source": "sheet-use-cases",
-        "category": "threshold"
-      },
-      {
-        "designBrief": "A 3-of-3 multisig, requiring all specified private keys for spending.",
-        "policy": "thresh(3,pk(key_1),pk(key_2),pk(key_3))",
-        "explanation": "The miniscript policy `thresh(3, pk(key_1), pk(key_2), pk(key_3))` specifies a 3-of-3 multisig, meaning that in order to spend the funds, all three specified private keys (`key_1`, `key_2`, and `key_3`) must provide their signatures.",
-        "cautions": [],
-        "source": "sheet-use-cases",
-        "category": "n out of n"
+        "designBrief": "A wallet requiring two out of six specific keys for spending.",
+        "policy": "thresh(2, pk(key_1), pk(key_2), pk(key_3), pk(key_4), pk(key_5), pk(key_6))"
       },
       {
         "designBrief": "A corporation wants to enhance the security of its cryptocurrency treasury. To prevent unauthorized access and ensure corporate governance, the corporation decides to implement a multi-signature wallet where three corporate officers must agree to execute a transaction",
-        "policy": "thresh(3,pk(officer_1),pk(officer_2),pk(officer_3))",
-        "explanation": "This miniscript policy addresses the use case by requiring the agreement of three corporate officers to execute a transaction. Each officer is represented by a public key, named `officer_1`, `officer_2`, and `officer_3`. The `thresh` function with threshold 3 ensures that all three public keys must sign. This means that any transaction from the corporation's multi-signature wallet will only be valid if it is signed by all three officers, enhancing security and ensuring corporate governance by preventing unauthorized access to the cryptocurrency treasury.",
-        "cautions": [],
-        "source": "sheet-use-cases",
-        "category": "n out of n"
+        "policy": "thresh(3,pk(officer_1),pk(officer_2),pk(officer_3))"
       },
       {
-        "designBrief": "The following miniscript policy does not compile:\nthresh(1, and(pk(key1),pk(key2)), and(pk(key1),pk(key3)))\n\nPropose a corrected policy and explain what caused the error and how the corrected policy addresses it.",
-        "policy": "and(pk(key1),or(pk(key2),pk(key3)))",
-        "explanation": "Suggested policy with corrections:\n\n\nThe error in the original Bitcoin miniscript policy is caused by a violation of the rule that the same key cannot appear in two different subpolicies. In the original policy, both `pk(key1)` and `pk(key1)` are used in different subpolicies, which is not allowed. To fix this, the policy was refactored in the corrected version by combining the two subpolicies that use `pk(key1)` into a single subpolicy using the `or` operator. This ensures that the same key is not repeated in different subpolicies, resolving the compilation error. The corrected policy is `and(pk(key1), or(pk(key2), pk(key3)))`.",
-        "cautions": [],
-        "source": "sheet-training",
-        "category": "error"
+        "designBrief": "A wallet with 4 keys where you need all 4 keys to spend the funds.",
+        "policy": "thresh(4,pk(key_1),pk(key_2),pk(key_3),pk(key_4))"
       },
       {
-        "designBrief": "The following miniscript policy does not compile:\nthresh(2, pk(keyA), orpk(keyB), after(1081201)))\n\nPropose a corrected policy and explain what caused the error and how the corrected policy addresses it.",
-        "policy": "thresh(2,pk(keyA),or(pk(keyB),after(1081201)))",
-        "explanation": "Suggested policy with corrections:\n\n\nThe error in the original Bitcoin miniscript policy is a mismatched parentheses. The closing parenthesis after `after(1081201)` is one too many, causing a syntax error. In the corrected policy, the extra closing parenthesis is removed, and the `or` operator is used to combine the subpolicies `pk(keyB)` and `after(1081201)`. This ensures that the policy is properly formatted and can be compiled without errors.",
-        "cautions": [],
-        "source": "sheet-training",
-        "category": "error"
+        "designBrief": "The following miniscript policy does not compile:\nor(and(pk(A),pk(B)),and(pk(A),pk(C)))\n\nPropose a corrected policy and explain what caused the error and how the corrected policy addresses it.",
+        "policy": "or(and(pk(A),pk(B)),pk(C))"
       },
       {
-        "designBrief": "A wallet requiring two out of six specific keys for spending.",
-        "policy": "thresh(2,pk(key_1),pk(key_2),pk(key_3),pk(key_4),pk(key_5),pk(key_6))",
-        "explanation": "This miniscript policy uses the `thresh` operator with a threshold to 2, ensuring that two of the six specified keys (`key_1`, `key_2`, ..., `key_6`) must sign.",
-        "cautions": [],
-        "source": "sheet-use-cases",
-        "category": "threshold"
+        "designBrief": "A contest with a Bitcoin prize that's open to a select few participants (say, 6 participants). The first to solve an elaborate puzzle set up by the organizer can claim the prize.",
+        "policy": "thresh(6,pk(participant_1),pk(participant_2),pk(participant_3),pk(participant_4),pk(participant_5),pk(participant_6))"
+      },
+      {
+        "designBrief": "Design a script policy requiring any two out of seven specified keys for spending.",
+        "policy": "thresh(2, pk(key_1), pk(key_2), pk(key_3), pk(key_4), pk(key_5), pk(key_6), pk(key_7))"
       }
     ],
     "programId": "design"

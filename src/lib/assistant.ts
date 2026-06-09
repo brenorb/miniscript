@@ -4,6 +4,7 @@ import {
   type AxAIService,
   ai,
   ax,
+  axDeserializeOptimizedProgram,
 } from '@ax-llm/ax'
 import { CreateMLCEngine } from '@mlc-ai/web-llm'
 
@@ -15,6 +16,7 @@ import {
   repairExamples,
 } from '../data/examples'
 import { optimizedDesignDemos } from '../data/optimizedDesignDemos'
+import { serializedOptimizedDesignProgram } from '../data/optimizedDesignProgram'
 import { buildOffTopicReply, evaluateScope } from './assistantScope'
 import type { CompileContext, ScriptSummary } from './miniscriptTooling'
 import { summarizeExpression } from './miniscriptTooling'
@@ -75,17 +77,19 @@ export type AssistantRequest = DesignRequest | InspectRequest | CompareRequest
 
 type ProgressCallback = (progress: AssistantProgress) => void
 
-const designProgram = ax(
-  'designBrief:string -> policy:string, explanation:string, cautions:string[]',
-  {
-    description:
-      'Design Bitcoin Miniscript policies. Only use supported policy functions: pk, after, older, sha256, hash256, ripemd160, hash160, and, or, thresh. Return policy syntax only, never prose in the policy field.',
-    maxRetries: 2,
-  },
-)
+const designProgram = ax('designBrief:string -> policy:string', {
+  description:
+    'Design Bitcoin Miniscript policies. Only use supported policy functions: pk, after, older, sha256, hash256, ripemd160, hash160, and, or, thresh. Return policy syntax only, never prose in the policy field.',
+  maxRetries: 2,
+})
 
 designProgram.setId('design')
 designProgram.setDemos(optimizedDesignDemos)
+if (serializedOptimizedDesignProgram) {
+  designProgram.applyOptimization(
+    axDeserializeOptimizedProgram(serializedOptimizedDesignProgram),
+  )
+}
 
 const inspectProgram = ax(
   'expressionText:string, analysisSummary:string -> explanation:string, cautions:string[]',

@@ -1,4 +1,5 @@
 {
+  "optimizerType": "bootstrap",
   "model": "qwen2.5:1.5b",
   "corpus": {
     "generatedAt": "2026-06-08T21:33:44.553Z",
@@ -56,6 +57,8 @@
       "total": 32,
       "compilePassRate": 0.03125,
       "exactMatchRate": 0,
+      "durationMs": 36645,
+      "averageLatencyMs": 1145,
       "details": [
         {
           "request": "Bitcoin account controlled by either one of two keys: a preferred one that is used most often (90% of the time) and an alternate one that is used in specific circumstances (10% of the time) or as backup",
@@ -285,8 +288,10 @@
     },
     "optimized": {
       "total": 32,
-      "compilePassRate": 0.71875,
-      "exactMatchRate": 0.1875,
+      "compilePassRate": 0.625,
+      "exactMatchRate": 0.15625,
+      "durationMs": 218314,
+      "averageLatencyMs": 6822,
       "details": [
         {
           "request": "Bitcoin account controlled by either one of two keys: a preferred one that is used most often (90% of the time) and an alternate one that is used in specific circumstances (10% of the time) or as backup",
@@ -305,7 +310,7 @@
         {
           "request": "Parents want to set up an account for their teenage child. For now, the child can spend the funds with confirmation from either parent. When he turns 21 on November 4 2028, he can spend the funds on his own.",
           "expected": "and(pk(child_key),thresh(1,pk(mother_key),pk(father_key),after(1856908800)))",
-          "predicted": "or(pk(parent_1_key),pk(parent_2_key))",
+          "predicted": "or(pk(parent_1),pk(parent_2))",
           "compileValid": true,
           "exactMatch": false
         },
@@ -326,15 +331,15 @@
         {
           "request": "A hacker is selling valuable data to an anonymous buyer. The data is contained in an encrypted file. Through zero-knowledge proofs, the hacker can cryptographically prove that the data is genuine and the decryption key hashes to a certain value H without revealing the key itself. Since there is no trust relation between buyer and seller, they use an HTLC scheme to proceed with the trade. The buyer sends the agreed bitcoin amount to the seller but uses the decryption key hash to make sure the seller discloses the decryption key when claiming the funds. If the seller doesn't claim the funds within an hour, the buyer is able to reclaim the funds.",
           "expected": "or(and(pk(seller),hash256(abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789)),and(pk(buyer),older(6)))",
-          "predicted": "or(and(pk(decryption_key),hash256(abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789)),pk(buyer))",
-          "compileValid": true,
+          "predicted": "or(and(pk(decryption_key),after(3600)),and(hash256(0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef),thresh(1,pk(decryption_key))))",
+          "compileValid": false,
           "exactMatch": false
         },
         {
           "request": "In the event of my death, the executor of my will has the private key to my wallet and will pass it on to my children. As a security measure, the key only moves the funds together with a passphrase that has been communicated separately to my children.",
           "expected": "and(pk(executor_key),hash256(abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789))",
-          "predicted": "or(and(pk(executor_key),pk(passphrase)),thresh(2,pk(child_1_key),pk(child_2_key)))",
-          "compileValid": true,
+          "predicted": "or(and(pk(executor_key),sha256(passphrase)),pk(child_1_key),pk(child_2_key))",
+          "compileValid": false,
           "exactMatch": false
         },
         {
@@ -382,7 +387,7 @@
         {
           "request": "Two technology companies collaborating on R&D establish a joint R&D fund. To manage this fund transparently and securely, they use a bitcoin wallet that requires both companies to sign with their keys. If there is a disagreement between the two companies on the use of funds, a designated arbitrator can sign a transaction jointly with one of the two companies to unlock the funds based on the terms of the agreement between the two companies.",
           "expected": "thresh(2,pk(company1_key),pk(company2_key),pk(arbitrator_key))",
-          "predicted": "or(and(pk(company_1),pk(company_2)),thresh(1,pk(arbitrator_key)))",
+          "predicted": "or(thresh(2,pk(company_1_key),pk(company_2_key)),thresh(1,pk(arbitrator_key)))",
           "compileValid": true,
           "exactMatch": false
         },
@@ -438,7 +443,7 @@
         {
           "request": "The following miniscript policy does not compile:\nthresh(1 pk(member_1), pk(member_2), pk(member_3), pk(member_4))\n\nPropose a corrected policy and explain what caused the error and how the corrected policy addresses it.",
           "expected": "thresh(1,pk(member_1),pk(member_2),pk(member_3),pk(member_4))",
-          "predicted": "thresh(1, pk(member_1), pk(member_2), pk(member_3), pk(member_4))",
+          "predicted": "thresh(1, pk(member_1),pk(member_2),pk(member_3),pk(member_4))",
           "compileValid": true,
           "exactMatch": true
         },
@@ -452,7 +457,7 @@
         {
           "request": "The following miniscript policy does not compile:\nor(pk(key_1),and(pk(key_2),older(TIME)))\n\nPropose a corrected policy and explain what caused the error and how the corrected policy addresses it.",
           "expected": "or(pk(key_1),and(pk(key_2),older(144)))",
-          "predicted": "or(and(pk(key_1),pk(key_2)),after(0))",
+          "predicted": "or(and(pk(key_1),pk(key_2)),older(3600))",
           "compileValid": false,
           "exactMatch": false
         },
@@ -473,9 +478,9 @@
         {
           "request": "I want bitcoin miniscript to pay one of five keys",
           "expected": "or(pk(key_1),or(pk(key_2),or(pk(key_3),or(pk(key_4),pk(key_5)))))",
-          "predicted": "or(pk(key_1),or(pk(key_2),or(pk(key_3),or(pk(key_4),pk(key_5)))))",
-          "compileValid": true,
-          "exactMatch": true
+          "predicted": "or(pk(key_1),or(pk(key_2),pk(key_3),pk(key_4),pk(key_5)))",
+          "compileValid": false,
+          "exactMatch": false
         },
         {
           "request": "I want bitcoin miniscript to pay one of ten keys",
@@ -515,8 +520,8 @@
       ]
     },
     "delta": {
-      "compilePassRate": 0.6875,
-      "exactMatchRate": 0.1875
+      "compilePassRate": 0.59375,
+      "exactMatchRate": 0.15625
     }
   },
   "optimizerConfig": {
@@ -527,7 +532,7 @@
     "think": false
   },
   "stats": {
-    "totalCalls": 28,
+    "totalCalls": 15,
     "successfulDemos": 6,
     "estimatedTokenUsage": 0,
     "earlyStopped": false,
@@ -550,49 +555,87 @@
     {
       "traces": [
         {
-          "designBrief": "A joint fund requiring two out of four participants to authorize a transaction.",
-          "policy": "thresh(2,pk(participant_1),pk(participant_2),pk(participant_3),pk(participant_4))",
-          "explanation": "This miniscript policy uses the `thresh` operator with a threshold of 2, thereby requiring that any two out of the four participants (`participant_1`, `participant_2`, `participant_3`, `participant_4`) must authorize a transaction by signing with their key.",
-          "source": "sheet-use-cases",
-          "category": "threshold"
+          "designBrief": "A wallet requiring two out of six specific keys for spending.",
+          "policy": "thresh(2, pk(key_1), pk(key_2), pk(key_3), pk(key_4), pk(key_5), pk(key_6))"
         },
         {
-          "designBrief": "A 3-of-3 multisig, requiring all specified private keys for spending.",
-          "policy": "thresh(3,pk(key_1),pk(key_2),pk(key_3))",
-          "explanation": "The miniscript policy `thresh(3, pk(key_1), pk(key_2), pk(key_3))` specifies a 3-of-3 multisig, meaning that in order to spend the funds, all three specified private keys (`key_1`, `key_2`, and `key_3`) must provide their signatures.",
+          "designBrief": "A corporation wants to enhance the security of its cryptocurrency treasury. To prevent unauthorized access and ensure corporate governance, the corporation decides to implement a multi-signature wallet where three corporate officers must agree to execute a transaction",
+          "policy": "thresh(3,pk(officer_1),pk(officer_2),pk(officer_3))"
+        },
+        {
+          "designBrief": "A wallet with 4 keys where you need all 4 keys to spend the funds.",
+          "policy": "thresh(4,pk(key_1),pk(key_2),pk(key_3),pk(key_4))"
+        },
+        {
+          "designBrief": "The following miniscript policy does not compile:\nor(and(pk(A),pk(B)),and(pk(A),pk(C)))\n\nPropose a corrected policy and explain what caused the error and how the corrected policy addresses it.",
+          "policy": "or(and(pk(A),pk(B)),pk(C))"
+        },
+        {
+          "designBrief": "A contest with a Bitcoin prize that's open to a select few participants (say, 6 participants). The first to solve an elaborate puzzle set up by the organizer can claim the prize.",
+          "policy": "thresh(6,pk(participant_1),pk(participant_2),pk(participant_3),pk(participant_4),pk(participant_5),pk(participant_6))"
+        },
+        {
+          "designBrief": "Design a script policy requiring any two out of seven specified keys for spending.",
+          "policy": "thresh(2, pk(key_1), pk(key_2), pk(key_3), pk(key_4), pk(key_5), pk(key_6), pk(key_7))"
+        }
+      ],
+      "programId": "design"
+    }
+  ],
+  "detailedDemos": [
+    {
+      "traces": [
+        {
+          "designBrief": "A wallet requiring two out of six specific keys for spending.",
+          "policy": "thresh(2,pk(key_1),pk(key_2),pk(key_3),pk(key_4),pk(key_5),pk(key_6))",
+          "explanation": "This miniscript policy uses the `thresh` operator with a threshold to 2, ensuring that two of the six specified keys (`key_1`, `key_2`, ..., `key_6`) must sign.",
+          "cautions": [],
           "source": "sheet-use-cases",
-          "category": "n out of n"
+          "category": "threshold"
         },
         {
           "designBrief": "A corporation wants to enhance the security of its cryptocurrency treasury. To prevent unauthorized access and ensure corporate governance, the corporation decides to implement a multi-signature wallet where three corporate officers must agree to execute a transaction",
           "policy": "thresh(3,pk(officer_1),pk(officer_2),pk(officer_3))",
           "explanation": "This miniscript policy addresses the use case by requiring the agreement of three corporate officers to execute a transaction. Each officer is represented by a public key, named `officer_1`, `officer_2`, and `officer_3`. The `thresh` function with threshold 3 ensures that all three public keys must sign. This means that any transaction from the corporation's multi-signature wallet will only be valid if it is signed by all three officers, enhancing security and ensuring corporate governance by preventing unauthorized access to the cryptocurrency treasury.",
+          "cautions": [],
           "source": "sheet-use-cases",
           "category": "n out of n"
         },
         {
-          "designBrief": "The following miniscript policy does not compile:\nthresh(1, and(pk(key1),pk(key2)), and(pk(key1),pk(key3)))\n\nPropose a corrected policy and explain what caused the error and how the corrected policy addresses it.",
-          "policy": "and(pk(key1),or(pk(key2),pk(key3)))",
-          "explanation": "Suggested policy with corrections:\n\n\nThe error in the original Bitcoin miniscript policy is caused by a violation of the rule that the same key cannot appear in two different subpolicies. In the original policy, both `pk(key1)` and `pk(key1)` are used in different subpolicies, which is not allowed. To fix this, the policy was refactored in the corrected version by combining the two subpolicies that use `pk(key1)` into a single subpolicy using the `or` operator. This ensures that the same key is not repeated in different subpolicies, resolving the compilation error. The corrected policy is `and(pk(key1), or(pk(key2), pk(key3)))`.",
+          "designBrief": "A wallet with 4 keys where you need all 4 keys to spend the funds.",
+          "policy": "thresh(4,pk(key_1),pk(key_2),pk(key_3),pk(key_4))",
+          "explanation": "This miniscript policy uses a `thresh` policy with a threshold of 4 with 4 subpolicies, meaning all 4 subpolicies must be verified. Here, all four keys (`key_1`, `key_2`, `key_3`, `key_4`) are required to spend the funds.",
+          "cautions": [],
+          "source": "sheet-use-cases",
+          "category": "n out of n"
+        },
+        {
+          "designBrief": "The following miniscript policy does not compile:\nor(and(pk(A),pk(B)),and(pk(A),pk(C)))\n\nPropose a corrected policy and explain what caused the error and how the corrected policy addresses it.",
+          "policy": "thresh(2,pk(A),or(pk(B),pk(C)))",
+          "explanation": "Suggested policy with corrections:\n\n\nThe error in the original Bitcoin miniscript policy `or(and(pk(A),pk(B)),and(pk(A),pk(C)))` is a violation of the rule that the same key cannot appear in two different subpolicies. In this case, the key `A` is used in both subpolicies. To fix this, the policy was refactored to `thresh(2, pk(A), or(pk(B),pk(C)))`, where the common key `A` is included in one subpolicy only. This corrected policy satisfies the requirement of having at least two out of the three subpolicies (`pk(A)`, `pk(B)`, `pk(C)`) met.",
+          "cautions": [],
           "source": "sheet-training",
           "category": "error"
         },
         {
-          "designBrief": "The following miniscript policy does not compile:\nthresh(2, pk(keyA), orpk(keyB), after(1081201)))\n\nPropose a corrected policy and explain what caused the error and how the corrected policy addresses it.",
-          "policy": "thresh(2,pk(keyA),or(pk(keyB),after(1081201)))",
-          "explanation": "Suggested policy with corrections:\n\n\nThe error in the original Bitcoin miniscript policy is a mismatched parentheses. The closing parenthesis after `after(1081201)` is one too many, causing a syntax error. In the corrected policy, the extra closing parenthesis is removed, and the `or` operator is used to combine the subpolicies `pk(keyB)` and `after(1081201)`. This ensures that the policy is properly formatted and can be compiled without errors.",
-          "source": "sheet-training",
-          "category": "error"
+          "designBrief": "A contest with a Bitcoin prize that's open to a select few participants (say, 6 participants). The first to solve an elaborate puzzle set up by the organizer can claim the prize.",
+          "policy": "and(sha256(0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef),thresh(1,pk(participant_1),pk(participant_2),pk(participant_3),pk(participant_4),pk(participant_5),pk(participant_6)))",
+          "explanation": "This miniscript policy requires that both of the following conditions are met:\n1. One of the six designated participants must sign, which guarantees that only one of them can claim the prize.\n2. The preimage corresponding to the puzzle solution must be provided.\nNote that the puzzle solution should be a complex message. Otherwise a participant might brute-force the hash preimage and claim the prize without having actually solved the organizer's puzzle.",
+          "cautions": [],
+          "source": "sheet-use-cases",
+          "category": "and"
         },
         {
-          "designBrief": "A wallet requiring two out of six specific keys for spending.",
-          "policy": "thresh(2,pk(key_1),pk(key_2),pk(key_3),pk(key_4),pk(key_5),pk(key_6))",
-          "explanation": "This miniscript policy uses the `thresh` operator with a threshold to 2, ensuring that two of the six specified keys (`key_1`, `key_2`, ..., `key_6`) must sign.",
+          "designBrief": "Design a script policy requiring any two out of seven specified keys for spending.",
+          "policy": "thresh(2,pk(key_1),pk(key_2),pk(key_3),pk(key_4),pk(key_5),pk(key_6),pk(key_7))",
+          "explanation": "This miniscript policy uses the `thresh` operator with a threshold to 2, ensuring that two of the seven specified keys (`key_1`, `key_2`, ..., `key_7`) must sign.",
+          "cautions": [],
           "source": "sheet-use-cases",
           "category": "threshold"
         }
       ],
       "programId": "design"
     }
-  ]
+  ],
+  "serializedOptimizedProgram": null
 }

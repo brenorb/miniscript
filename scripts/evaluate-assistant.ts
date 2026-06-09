@@ -259,10 +259,20 @@ async function main() {
             optimizationRaw.heldOutEvaluation?.optimized?.compilePassRate ?? 0,
           heldOutExactMatchRate:
             optimizationRaw.heldOutEvaluation?.optimized?.exactMatchRate ?? 0,
+          currentArtifactCompilePassRate:
+            optimizationRaw.heldOutEvaluation?.currentArtifact?.compilePassRate ?? 0,
+          currentArtifactExactMatchRate:
+            optimizationRaw.heldOutEvaluation?.currentArtifact?.exactMatchRate ?? 0,
           baselineCompilePassRate:
             optimizationRaw.heldOutEvaluation?.baseline?.compilePassRate ?? 0,
           baselineExactMatchRate:
             optimizationRaw.heldOutEvaluation?.baseline?.exactMatchRate ?? 0,
+          deltaFromCurrentArtifactCompilePassRate:
+            optimizationRaw.heldOutEvaluation?.deltaFromCurrentArtifact?.compilePassRate ??
+            0,
+          deltaFromCurrentArtifactExactMatchRate:
+            optimizationRaw.heldOutEvaluation?.deltaFromCurrentArtifact?.exactMatchRate ??
+            0,
           bestScore: optimizationRaw.stats?.bestScore ?? 0,
         }
       : null,
