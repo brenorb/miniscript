@@ -199,6 +199,15 @@ function toPreferencePair(prompt, chosen, rejected) {
   }
 }
 
+function toTriplePreferencePair(prompt, reference, chosen, rejected) {
+  return {
+    prompt: [{ role: 'user', content: prompt }],
+    reference: [{ role: 'assistant', content: reference }],
+    chosen: [{ role: 'assistant', content: chosen }],
+    rejected: [{ role: 'assistant', content: rejected }],
+  }
+}
+
 function toPromptCompletion(prompt, completion) {
   return {
     prompt,
@@ -213,8 +222,20 @@ function toConversationalPromptCompletion(prompt, completion) {
   )
 }
 
+function messageContent(value) {
+  if (Array.isArray(value)) {
+    return value
+      .map((entry) => String(entry?.content || '').trim())
+      .filter(Boolean)
+      .join('\n')
+      .trim()
+  }
+
+  return String(value || '').trim()
+}
+
 function normalizeText(value) {
-  return String(value || '').replace(/\s+/g, ' ').trim()
+  return messageContent(value).replace(/\s+/g, ' ').trim()
 }
 
 function slugify(value) {
@@ -318,6 +339,109 @@ export function makeRejectedPolicy(policy) {
   }
 
   return `${policy})`
+}
+
+function gatherTopLevelArguments(raw) {
+  const args = []
+  let depth = 0
+  let current = ''
+
+  for (const character of raw) {
+    if (character === ',' && depth === 0) {
+      args.push(current.trim())
+      current = ''
+      continue
+    }
+
+    if (character === '(') {
+      depth += 1
+    } else if (character === ')') {
+      depth -= 1
+    }
+
+    current += character
+  }
+
+  if (current.trim()) {
+    args.push(current.trim())
+  }
+
+  return args
+}
+
+function flattenBinaryKeyword(policy, keyword) {
+  const prefix = `${keyword}(`
+  if (!policy.startsWith(prefix) || !policy.endsWith(')')) {
+    return null
+  }
+
+  const inner = policy.slice(prefix.length, -1)
+  const args = gatherTopLevelArguments(inner)
+  if (args.length !== 2) {
+    return null
+  }
+
+  const leaves = []
+  for (const arg of args) {
+    if (arg.startsWith(`${keyword}(`)) {
+      const nested = flattenBinaryKeyword(arg, keyword)
+      if (!nested) {
+        return null
+      }
+      leaves.push(...nested)
+      continue
+    }
+
+    if (!arg.startsWith('pk(') || !arg.endsWith(')')) {
+      return null
+    }
+    leaves.push(arg)
+  }
+
+  return leaves
+}
+
+export function makeEquivalentChosenPolicy(policy) {
+  const orLeaves = flattenBinaryKeyword(policy, 'or')
+  if (orLeaves && orLeaves.length >= 2) {
+    return `thresh(1,${orLeaves.join(',')})`
+  }
+
+  const andLeaves = flattenBinaryKeyword(policy, 'and')
+  if (andLeaves && andLeaves.length >= 2) {
+    return `thresh(${andLeaves.length},${andLeaves.join(',')})`
+  }
+
+  const threshMatch = policy.match(/^thresh\((\d+),([\s\S]+)\)$/)
+  if (!threshMatch) {
+    return policy
+  }
+
+  const threshold = Number(threshMatch[1])
+  const args = gatherTopLevelArguments(threshMatch[2])
+  if (!args.length || !args.every((arg) => arg.startsWith('pk(') && arg.endsWith(')'))) {
+    return policy
+  }
+
+  if (threshold === 1) {
+    return args.reduceRight((accumulator, arg) => {
+      if (accumulator === null) {
+        return arg
+      }
+      return `or(${arg},${accumulator})`
+    }, null)
+  }
+
+  if (threshold === args.length) {
+    return args.reduceRight((accumulator, arg) => {
+      if (accumulator === null) {
+        return arg
+      }
+      return `and(${arg},${accumulator})`
+    }, null)
+  }
+
+  return policy
 }
 
 export function buildHardNegativeExamplesFromPredictions(predictions, source = 'hf-predictions') {
@@ -493,6 +617,108 @@ export function buildHfTrainingDatasets({
     })),
   ]
 
+  const tpoTrain = [
+    ...designTrainingSet.map((example) => ({
+      id: `tpo-design-train-${example.id}`,
+      task: 'design',
+      source: example.source,
+      category: example.category,
+      ...toTriplePreferencePair(
+        buildStrictDesignPrompt(example.request),
+        example.policy,
+        makeEquivalentChosenPolicy(example.policy),
+        makeRejectedPolicy(example.policy),
+      ),
+    })),
+    ...repairSplit.train.map((example) => ({
+      id: `tpo-repair-train-${example.id}`,
+      task: 'repair',
+      source: example.source,
+      category: example.errorType,
+      ...toTriplePreferencePair(
+        buildStrictRepairPrompt(example),
+        example.correctedPolicy,
+        example.correctedPolicy,
+        example.invalidPolicy,
+      ),
+    })),
+    ...offTopicSplit.train.map((example) => ({
+      id: `tpo-off-topic-train-${example.id}`,
+      task: 'off-topic',
+      source: 'generated-off-topic',
+      category: example.category,
+      ...toTriplePreferencePair(
+        buildStrictOffTopicPrompt(example.prompt),
+        refusalText,
+        refusalText,
+        buildDpoOffTopicRejected(example.category),
+      ),
+    })),
+    ...hardNegativeSplit.train.map((example) => ({
+      id: `tpo-${example.id}`,
+      task: example.task,
+      source: example.source,
+      category: example.category,
+      ...toTriplePreferencePair(
+        messageContent(example.prompt),
+        messageContent(example.chosen),
+        messageContent(example.chosen),
+        messageContent(example.rejected),
+      ),
+    })),
+  ]
+
+  const tpoEval = [
+    ...designEvalSet.map((example) => ({
+      id: `tpo-design-eval-${example.id}`,
+      task: 'design',
+      source: example.source,
+      category: example.category,
+      ...toTriplePreferencePair(
+        buildStrictDesignPrompt(example.request),
+        example.policy,
+        makeEquivalentChosenPolicy(example.policy),
+        makeRejectedPolicy(example.policy),
+      ),
+    })),
+    ...repairSplit.eval.map((example) => ({
+      id: `tpo-repair-eval-${example.id}`,
+      task: 'repair',
+      source: example.source,
+      category: example.errorType,
+      ...toTriplePreferencePair(
+        buildStrictRepairPrompt(example),
+        example.correctedPolicy,
+        example.correctedPolicy,
+        example.invalidPolicy,
+      ),
+    })),
+    ...offTopicSplit.eval.map((example) => ({
+      id: `tpo-off-topic-eval-${example.id}`,
+      task: 'off-topic',
+      source: 'generated-off-topic',
+      category: example.category,
+      ...toTriplePreferencePair(
+        buildStrictOffTopicPrompt(example.prompt),
+        refusalText,
+        refusalText,
+        buildDpoOffTopicRejected(example.category),
+      ),
+    })),
+    ...hardNegativeSplit.eval.map((example) => ({
+      id: `tpo-${example.id}`,
+      task: example.task,
+      source: example.source,
+      category: example.category,
+      ...toTriplePreferencePair(
+        messageContent(example.prompt),
+        messageContent(example.chosen),
+        messageContent(example.chosen),
+        messageContent(example.rejected),
+      ),
+    })),
+  ]
+
   const sftPolicyTrain = [
     ...designTrainingSet.map((example) => ({
       id: `sft-policy-design-train-${example.id}`,
@@ -564,21 +790,21 @@ export function buildHfTrainingDatasets({
       id: `prompt-design-${example.id}`,
       task: 'design',
       category: example.category,
-      prompt: buildStrictDesignPrompt(example.request),
+      prompt: [{ role: 'user', content: buildStrictDesignPrompt(example.request) }],
       reference: example.policy,
     })),
     ...repairSplit.eval.map((example) => ({
       id: `prompt-repair-${example.id}`,
       task: 'repair',
       category: example.errorType,
-      prompt: buildStrictRepairPrompt(example),
+      prompt: [{ role: 'user', content: buildStrictRepairPrompt(example) }],
       reference: example.correctedPolicy,
     })),
     ...offTopicSplit.eval.map((example) => ({
       id: `prompt-off-topic-${example.id}`,
       task: 'off-topic',
       category: example.category,
-      prompt: buildStrictOffTopicPrompt(example.prompt),
+      prompt: [{ role: 'user', content: buildStrictOffTopicPrompt(example.prompt) }],
       reference: refusalText,
     })),
   ]
@@ -590,6 +816,8 @@ export function buildHfTrainingDatasets({
     sftPolicyEval,
     dpoTrain,
     dpoEval,
+    tpoTrain,
+    tpoEval,
     promptEval,
     report: {
       generatedAt: new Date().toISOString(),
@@ -600,6 +828,8 @@ export function buildHfTrainingDatasets({
         sftPolicyEval: 'data/hf/sft-policy-eval.jsonl',
         dpoTrain: 'data/hf/dpo-train.jsonl',
         dpoEval: 'data/hf/dpo-eval.jsonl',
+        tpoTrain: 'data/hf/tpo-train.jsonl',
+        tpoEval: 'data/hf/tpo-eval.jsonl',
         promptEval: 'data/hf/prompt-eval.jsonl',
       },
       counts: {
@@ -610,6 +840,8 @@ export function buildHfTrainingDatasets({
         sftPolicyEval: sftPolicyEval.length,
         dpoTrain: dpoTrain.length,
         dpoEval: dpoEval.length,
+        tpoTrain: tpoTrain.length,
+        tpoEval: tpoEval.length,
         promptEval: promptEval.length,
       },
       taskCounts: {
@@ -623,6 +855,8 @@ export function buildHfTrainingDatasets({
         ),
         dpoTrain: buildCategoryCounts(dpoTrain.map((entry) => ({ category: entry.task }))),
         dpoEval: buildCategoryCounts(dpoEval.map((entry) => ({ category: entry.task }))),
+        tpoTrain: buildCategoryCounts(tpoTrain.map((entry) => ({ category: entry.task }))),
+        tpoEval: buildCategoryCounts(tpoEval.map((entry) => ({ category: entry.task }))),
       },
       offTopicPromptCount: offTopicCases.length,
       hardNegativeSource: 'data/corpus/hf-hard-negatives.jsonl',
@@ -637,6 +871,11 @@ export function buildHfTrainingDatasets({
           stage: 'dpo',
           model: 'Qwen/Qwen2.5-1.5B-Instruct',
           reason: 'Use the SFT adapter as the policy model and prefer exact policy outputs over real hard-negative generations, not only mutated policies.',
+        },
+        {
+          stage: 'tpo',
+          model: 'Qwen/Qwen2.5-1.5B-Instruct',
+          reason: 'TRL TPO supports prompt/chosen/rejected/reference preference data and is a better fit when we want to preserve the exact gold policy while still penalizing malformed alternatives.',
         },
         {
           stage: 'teacher-or-next-candidate',
@@ -677,6 +916,8 @@ export async function writeHfDatasetArtifacts(datasets) {
   )
   await writeJsonl(path.join(hfDataDir, 'dpo-train.jsonl'), datasets.dpoTrain)
   await writeJsonl(path.join(hfDataDir, 'dpo-eval.jsonl'), datasets.dpoEval)
+  await writeJsonl(path.join(hfDataDir, 'tpo-train.jsonl'), datasets.tpoTrain)
+  await writeJsonl(path.join(hfDataDir, 'tpo-eval.jsonl'), datasets.tpoEval)
   await writeJsonl(path.join(hfDataDir, 'prompt-eval.jsonl'), datasets.promptEval)
 
   await mkdir(path.dirname(hfDatasetReportPath), { recursive: true })

@@ -4,6 +4,7 @@ import {
   buildHardNegativeExamplesFromPredictions,
   buildHfTrainingDatasets,
   buildOffTopicCases,
+  makeEquivalentChosenPolicy,
   makeRejectedPolicy,
 } from './hfTrainingData.mjs'
 
@@ -61,6 +62,15 @@ describe('hf training datasets', () => {
     expect(datasets.sftTrain.some((entry) => entry.task === 'off-topic')).toBe(true)
     expect(datasets.dpoTrain.every((entry) => entry.prompt.length === 1)).toBe(true)
     expect(
+      datasets.tpoTrain.every(
+        (entry) =>
+          Array.isArray(entry.prompt) &&
+          Array.isArray(entry.reference) &&
+          Array.isArray(entry.chosen) &&
+          Array.isArray(entry.rejected),
+      ),
+    ).toBe(true)
+    expect(
       datasets.sftPolicyTrain.every(
         (entry) => Array.isArray(entry.prompt) && entry.prompt[0]?.role === 'user',
       ),
@@ -71,8 +81,14 @@ describe('hf training datasets', () => {
           Array.isArray(entry.completion) && entry.completion[0]?.role === 'assistant',
       ),
     ).toBe(true)
+    expect(
+      datasets.promptEval.every(
+        (entry) => Array.isArray(entry.prompt) && entry.prompt[0]?.role === 'user',
+      ),
+    ).toBe(true)
     expect(datasets.report.counts.sftTrain).toBeGreaterThan(3)
     expect(datasets.report.counts.dpoEval).toBeGreaterThan(1)
+    expect(datasets.report.counts.tpoTrain).toBeGreaterThan(3)
   })
 
   it('prefers compile-valid rejected policies before falling back to invalid ones', () => {
@@ -82,13 +98,24 @@ describe('hf training datasets', () => {
     expect(rejected.startsWith('thresh(')).toBe(true)
   })
 
+  it('creates equivalent chosen-policy alternates for simple canonical cases', () => {
+    expect(makeEquivalentChosenPolicy('or(pk(alice),pk(bob))')).toBe(
+      'thresh(1,pk(alice),pk(bob))',
+    )
+    expect(
+      makeEquivalentChosenPolicy(
+        'thresh(3,pk(key_1),pk(key_2),pk(key_3))',
+      ),
+    ).toBe('and(pk(key_1),and(pk(key_2),pk(key_3)))')
+  })
+
   it('builds reusable hard-negative preference rows from bad model generations', () => {
     const hardNegatives = buildHardNegativeExamplesFromPredictions([
       {
         id: 'prompt-design-1',
         task: 'design',
         category: '2 of 3',
-        prompt: 'Return only a policy',
+        prompt: [{ role: 'user', content: 'Return only a policy' }],
         reference: 'thresh(2,pk(alice),pk(bob),pk(carol))',
         prediction: 'Explain the tradeoffs first.',
       },
@@ -96,7 +123,7 @@ describe('hf training datasets', () => {
         id: 'prompt-design-2',
         task: 'design',
         category: '2 of 3',
-        prompt: 'Return only a policy',
+        prompt: [{ role: 'user', content: 'Return only a policy' }],
         reference: 'or(pk(alice),pk(bob))',
         prediction: 'or(pk(alice),pk(bob))',
       },

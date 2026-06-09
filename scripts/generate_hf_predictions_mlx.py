@@ -36,6 +36,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-new-tokens", type=int, default=128)
     parser.add_argument("--limit", type=int, default=0)
     parser.add_argument(
+        "--reasoning",
+        choices=["auto", "on", "off"],
+        default="auto",
+        help="Control chat-template reasoning mode for models that support enable_thinking.",
+    )
+    parser.add_argument(
         "--repair-passes",
         type=int,
         default=0,
@@ -60,7 +66,17 @@ def message_content(value):
     return str(value or "").strip()
 
 
-def build_prompt_text(tokenizer, row: dict) -> tuple[str, str]:
+def build_chat_template_kwargs(model_id: str, reasoning: str) -> dict:
+    if reasoning == "on":
+        return {"enable_thinking": True}
+    if reasoning == "off":
+        return {"enable_thinking": False}
+    if model_id.startswith("Qwen/Qwen3") or model_id.startswith("mlx-community/Qwen3"):
+        return {"enable_thinking": False}
+    return {}
+
+
+def build_prompt_text(tokenizer, row: dict, chat_template_kwargs: dict) -> tuple[str, str]:
     if "messages" in row:
         prompt_messages = row["messages"][:-1]
         reference = row["messages"][-1]["content"]
@@ -68,6 +84,7 @@ def build_prompt_text(tokenizer, row: dict) -> tuple[str, str]:
             prompt_messages,
             tokenize=False,
             add_generation_prompt=True,
+            **chat_template_kwargs,
         )
         prompt_text = prompt_messages[-1]["content"]
     else:
@@ -78,11 +95,20 @@ def build_prompt_text(tokenizer, row: dict) -> tuple[str, str]:
                 prompt_value,
                 tokenize=False,
                 add_generation_prompt=True,
+                **chat_template_kwargs,
             )
             prompt_text = prompt_value[-1]["content"]
         else:
-            text = str(prompt_value)
-            prompt_text = text
+            prompt_text = str(prompt_value)
+            if getattr(tokenizer, "chat_template", None):
+                text = tokenizer.apply_chat_template(
+                    [{"role": "user", "content": prompt_text}],
+                    tokenize=False,
+                    add_generation_prompt=True,
+                    **chat_template_kwargs,
+                )
+            else:
+                text = prompt_text
 
     return text, prompt_text, reference
 
@@ -114,13 +140,18 @@ def main() -> None:
 
     formatter_tokenizer = AutoTokenizer.from_pretrained(args.model_id, trust_remote_code=True)
     model, mlx_tokenizer = mlx_load(args.model_id)
+    chat_template_kwargs = build_chat_template_kwargs(args.model_id, args.reasoning)
 
     output_path = Path(args.output_file)
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     with output_path.open("w") as handle:
         for index, row in enumerate(eval_rows, start=1):
-            text, prompt_text, reference = build_prompt_text(formatter_tokenizer, row)
+            text, prompt_text, reference = build_prompt_text(
+                formatter_tokenizer,
+                row,
+                chat_template_kwargs,
+            )
             prediction = mlx_generate(
                 model,
                 mlx_tokenizer,

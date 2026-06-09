@@ -1,0 +1,101 @@
+{
+  "generatedAt": "2026-06-09T06:02:53.815Z",
+  "source": "tmp/hf-qwen25-05b-tpo10-8.jsonl",
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "adapterPath": "artifacts/tpo-qwen25-05b-10",
+  "design": {
+    "total": 8,
+    "compilePassRate": 0,
+    "exactMatchRate": 0
+  },
+  "offTopic": {
+    "passed": 0,
+    "total": 0,
+    "accuracy": 0
+  },
+  "details": {
+    "designFailures": [
+      {
+        "id": "prompt-design-use-case-1",
+        "category": "1 out of n",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "Return only a valid Bitcoin Miniscript policy. Use only pk, after, older, sha256, hash256, ripemd160, hash160, and, or, thresh. Do not explain. Do not add markdown. Do not add prose.\n\nRequest: Bitcoin account controlled by either one of two keys: a preferred one that is used most often (90% of the time) and an alternate one that is used in specific circumstances (10% of the time) or as backup",
+        "reference": "or(9@pk(key_preferred),pk(key_alternate))",
+        "prediction": "pk, older, sha256, hash256, ripemd160, hash160, thresh, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or, or"
+      },
+      {
+        "id": "prompt-design-use-case-6",
+        "category": "1 out of n",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "Return only a valid Bitcoin Miniscript policy. Use only pk, after, older, sha256, hash256, ripemd160, hash160, and, or, thresh. Do not explain. Do not add markdown. Do not add prose.\n\nRequest: A married couple wants to have a joint Bitcoin account for their day-to-day expenses which either of them can spend from.",
+        "reference": "or(pk(wife_key),pk(husband_key))",
+        "prediction": "pk: 8974e3d9-4c9f-4a0b-ba0a-440000000000\n\nafter: 0x0000000000000000000000000000000000000000\n\nsha256: 0x00000000000000000000000000000000000"
+      },
+      {
+        "id": "prompt-design-use-case-7",
+        "category": "and",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "Return only a valid Bitcoin Miniscript policy. Use only pk, after, older, sha256, hash256, ripemd160, hash160, and, or, thresh. Do not explain. Do not add markdown. Do not add prose.\n\nRequest: Parents want to set up an account for their teenage child. For now, the child can spend the funds with confirmation from either parent. When he turns 21 on November 4 2028, he can spend the funds on his own.",
+        "reference": "and(pk(child_key),thresh(1,pk(mother_key),pk(father_key),after(1856908800)))",
+        "prediction": "pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk: pk:"
+      },
+      {
+        "id": "prompt-design-use-case-15",
+        "category": "and",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "Return only a valid Bitcoin Miniscript policy. Use only pk, after, older, sha256, hash256, ripemd160, hash160, and, or, thresh. Do not explain. Do not add markdown. Do not add prose.\n\nRequest: A user and a 2FA service need to sign off, but after 90 days the user alone is enough so the funds don't get stuck if the 3rd party service becomes unavailable.",
+        "reference": "and(pk(user),or(99@pk(service),older(12960)))",
+        "prediction": "pk=pk,after=sha256(847d9e9a9f8b9c944044444444444444),older=hash256(1234567890),thresh=thresh(1)"
+      },
+      {
+        "id": "prompt-design-use-case-20",
+        "category": "andor",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "Return only a valid Bitcoin Miniscript policy. Use only pk, after, older, sha256, hash256, ripemd160, hash160, and, or, thresh. Do not explain. Do not add markdown. Do not add prose.\n\nRequest: A technology company has a special fund for R&D projects managed by the CTO under the control of the CEO and CFO. The CTO needs the confirmation from either the CEO or CFO to spend the funds.",
+        "reference": "and(pk(cto_key),or(pk(cfo_key),pk(ceo_key)))",
+        "prediction": "pk: cto_confirmation\n\nafter: rdp_confirmation\n\nsha256: 43b987d9c9e9f8a14444444444444444\n\nhash256: 43b987d9c9e9f8a14444444444444444\n\nripemd160: 0x00000000000000000000000000000"
+      },
+      {
+        "id": "prompt-design-use-case-26",
+        "category": "andor",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "Return only a valid Bitcoin Miniscript policy. Use only pk, after, older, sha256, hash256, ripemd160, hash160, and, or, thresh. Do not explain. Do not add markdown. Do not add prose.\n\nRequest: A hacker is selling valuable data to an anonymous buyer. The data is contained in an encrypted file. Through zero-knowledge proofs, the hacker can cryptographically prove that the data is genuine and the decryption key hashes to a certain value H without revealing the key itself. Since there is no trust relation between buyer and seller, they use an HTLC scheme to proceed with the trade. The buyer sends the agreed bitcoin amount to the seller but uses the decryption key hash to make sure the seller discloses the decryption key when claiming the funds. If the seller doesn't claim the funds within an hour, the buyer is able to reclaim the funds.",
+        "reference": "or(and(pk(seller),hash256(abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789)),and(pk(buyer),older(6)))",
+        "prediction": "pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk"
+      },
+      {
+        "id": "prompt-design-use-case-31",
+        "category": "hashlock",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "Return only a valid Bitcoin Miniscript policy. Use only pk, after, older, sha256, hash256, ripemd160, hash160, and, or, thresh. Do not explain. Do not add markdown. Do not add prose.\n\nRequest: In the event of my death, the executor of my will has the private key to my wallet and will pass it on to my children. As a security measure, the key only moves the funds together with a passphrase that has been communicated separately to my children.",
+        "reference": "and(pk(executor_key),hash256(abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789))",
+        "prediction": "pk,after,older,sha256,hash256,ripemd160,hash160,thresh"
+      },
+      {
+        "id": "prompt-design-use-case-34",
+        "category": "n out of n",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "Return only a valid Bitcoin Miniscript policy. Use only pk, after, older, sha256, hash256, ripemd160, hash160, and, or, thresh. Do not explain. Do not add markdown. Do not add prose.\n\nRequest: A council with 11 participants that can spend the funds if a majority reaches an agreement and only after 40 days.",
+        "reference": "and(older(5760),thresh(6,pk(key_1),pk(key_2),pk(key_3),pk(key_4),pk(key_5),pk(key_6),pk(key_7),pk(key_8),pk(key_9),pk(key_10),pk(key_11)))",
+        "prediction": "pk(pk=pk, later=after(40), older=hash256(\"A council with 11 participants\"), sha256(hash=\"A council with 11 participants\"), ripemd160(ripemd160(\"A council with 11 participants\")), hash160(\"A council with 11 participants\"), thresh(thresh(0.95)))"
+      }
+    ],
+    "offTopicFailures": []
+  }
+}

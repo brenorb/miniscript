@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-09T05:14:41.578Z",
+  "generatedAt": "2026-06-09T05:53:24.499Z",
   "files": {
     "sftTrain": "data/hf/sft-train.jsonl",
     "sftEval": "data/hf/sft-eval.jsonl",
@@ -7,6 +7,8 @@
     "sftPolicyEval": "data/hf/sft-policy-eval.jsonl",
     "dpoTrain": "data/hf/dpo-train.jsonl",
     "dpoEval": "data/hf/dpo-eval.jsonl",
+    "tpoTrain": "data/hf/tpo-train.jsonl",
+    "tpoEval": "data/hf/tpo-eval.jsonl",
     "promptEval": "data/hf/prompt-eval.jsonl"
   },
   "counts": {
@@ -17,6 +19,8 @@
     "sftPolicyEval": 51,
     "dpoTrain": 322,
     "dpoEval": 59,
+    "tpoTrain": 212,
+    "tpoEval": 59,
     "promptEval": 51
   },
   "taskCounts": {
@@ -49,6 +53,16 @@
       "design": 40,
       "repair": 5,
       "off-topic": 14
+    },
+    "tpoTrain": {
+      "design": 142,
+      "repair": 17,
+      "off-topic": 53
+    },
+    "tpoEval": {
+      "design": 40,
+      "repair": 5,
+      "off-topic": 14
     }
   },
   "offTopicPromptCount": 67,
@@ -68,6 +82,11 @@
       "stage": "dpo",
       "model": "Qwen/Qwen2.5-1.5B-Instruct",
       "reason": "Use the SFT adapter as the policy model and prefer exact policy outputs over real hard-negative generations, not only mutated policies."
+    },
+    {
+      "stage": "tpo",
+      "model": "Qwen/Qwen2.5-1.5B-Instruct",
+      "reason": "TRL TPO supports prompt/chosen/rejected/reference preference data and is a better fit when we want to preserve the exact gold policy while still penalizing malformed alternatives."
     },
     {
       "stage": "teacher-or-next-candidate",

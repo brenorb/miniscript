@@ -1,0 +1,20 @@
+{
+  "generatedAt": "2026-06-09T06:23:01.129Z",
+  "source": "tmp/hf-qwen3-4b-instruct2507-mlx4bit-deterministic-repair-8.jsonl",
+  "model": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+  "adapterPath": null,
+  "design": {
+    "total": 8,
+    "compilePassRate": 1,
+    "exactMatchRate": 1
+  },
+  "offTopic": {
+    "passed": 0,
+    "total": 0,
+    "accuracy": 0
+  },
+  "details": {
+    "designFailures": [],
+    "offTopicFailures": []
+  }
+}

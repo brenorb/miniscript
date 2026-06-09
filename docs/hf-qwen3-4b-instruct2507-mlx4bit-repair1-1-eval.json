@@ -1,0 +1,31 @@
+{
+  "generatedAt": "2026-06-09T06:06:55.626Z",
+  "source": "tmp/hf-qwen3-4b-instruct2507-mlx4bit-repair1-1.jsonl",
+  "model": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+  "adapterPath": null,
+  "design": {
+    "total": 1,
+    "compilePassRate": 0,
+    "exactMatchRate": 0
+  },
+  "offTopic": {
+    "passed": 0,
+    "total": 0,
+    "accuracy": 0
+  },
+  "details": {
+    "designFailures": [
+      {
+        "id": "prompt-design-use-case-1",
+        "category": "1 out of n",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "Return only a valid Bitcoin Miniscript policy. Use only pk, after, older, sha256, hash256, ripemd160, hash160, and, or, thresh. Do not explain. Do not add markdown. Do not add prose.\n\nRequest: Bitcoin account controlled by either one of two keys: a preferred one that is used most often (90% of the time) and an alternate one that is used in specific circumstances (10% of the time) or as backup",
+        "reference": "or(9@pk(key_preferred),pk(key_alternate))",
+        "prediction": "The policy should reflect the requirement: a preferred key (used 90% of the time) and an alternate key (used 10% of the time or as backup). Use only the allowed primitives.\n\npk(\"02a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4\") after(90), or, pk(\"03e"
+      }
+    ],
+    "offTopicFailures": []
+  }
+}

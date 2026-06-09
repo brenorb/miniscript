@@ -16,6 +16,7 @@ The app is intentionally not a generic chatbot. It is a constrained workbench wi
 - `compare`: evaluate two constructions side by side
 
 Every result is forced through the actual compiler/analyzer before it is shown as final.
+When a model draft is malformed, the app now also tries a deterministic syntax-repair layer before falling back to LLM-based repair. That keeps common structured near-miss outputs from dying at the compiler when a valid policy skeleton can be recovered safely.
 
 ## Local development
 
@@ -54,6 +55,7 @@ Relevant files:
 - `scripts/lib/hfTrainingData.mjs`
 - `scripts/train_sft_lora.py`
 - `scripts/train_dpo_lora.py`
+- `scripts/train_tpo_lora.py`
 
 Current Ax structure:
 
@@ -86,6 +88,7 @@ For Hugging Face fine-tuning datasets and trainer entrypoints:
 npm run datasets:hf
 uv run scripts/train_sft_lora.py --help
 uv run scripts/train_dpo_lora.py --help
+uv run scripts/train_tpo_lora.py --help
 ```
 
 The export step writes:
@@ -94,6 +97,8 @@ The export step writes:
 - `data/hf/sft-eval.jsonl`
 - `data/hf/dpo-train.jsonl`
 - `data/hf/dpo-eval.jsonl`
+- `data/hf/tpo-train.jsonl`
+- `data/hf/tpo-eval.jsonl`
 - `data/hf/prompt-eval.jsonl`
 - `docs/hf-training-report.json`
 
@@ -101,6 +106,7 @@ The current HF path is:
 
 - LoRA SFT first, using the expanded design, repair, and off-topic refusal corpus
 - LoRA DPO second, using explicit prompt preference pairs where the rejected answer is a weaker or invalid policy
+- LoRA TPO third, using triple-preference rows with `prompt`, `reference`, `chosen`, and `rejected` so the model can keep a gold canonical policy while still learning to prefer acceptable alternatives over malformed ones
 - Compact model candidates prioritized from recent Hugging Face research: `Qwen/Qwen2.5-1.5B-Instruct`, `Qwen/Qwen3-4B-Instruct-2507`, `HuggingFaceTB/SmolLM3-3B`, and `microsoft/Phi-4-mini-instruct`
 
 ## Flowcharts

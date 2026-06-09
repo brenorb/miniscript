@@ -18,6 +18,7 @@ import {
 import { optimizedDesignDemos } from '../data/optimizedDesignDemos'
 import { serializedOptimizedDesignProgram } from '../data/optimizedDesignProgram'
 import { buildOffTopicReply, evaluateScope } from './assistantScope'
+import { deterministicPolicyRepair } from './deterministicPolicyRepair'
 import type { CompileContext, ScriptSummary } from './miniscriptTooling'
 import { summarizeExpression } from './miniscriptTooling'
 
@@ -197,6 +198,22 @@ export async function loadAssistant(
           designBrief: request.prompt,
         })
         let summary = await summarizeExpression(draft.policy, request.context)
+
+        if (summary.error || !summary.valid) {
+          const deterministicRepair = deterministicPolicyRepair(
+            request.prompt,
+            draft.policy,
+          )
+          if (deterministicRepair) {
+            const repairedSummary = await summarizeExpression(
+              deterministicRepair,
+              request.context,
+            )
+            if (repairedSummary.valid && !repairedSummary.error) {
+              summary = repairedSummary
+            }
+          }
+        }
 
         if (summary.error || !summary.valid) {
           onProgress?.({

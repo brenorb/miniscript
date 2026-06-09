@@ -41,6 +41,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-new-tokens", type=int, default=128)
     parser.add_argument("--limit", type=int, default=0)
     parser.add_argument(
+        "--reasoning",
+        choices=["auto", "on", "off"],
+        default="auto",
+        help="Control chat-template reasoning mode for models that support enable_thinking.",
+    )
+    parser.add_argument(
         "--device",
         choices=["auto", "mps", "cpu"],
         default="auto",
@@ -63,6 +69,16 @@ def message_content(value):
     if isinstance(value, list):
         return "\n".join(str(entry.get("content", "")).strip() for entry in value).strip()
     return str(value or "").strip()
+
+
+def build_chat_template_kwargs(model_id: str, reasoning: str) -> dict:
+    if reasoning == "on":
+        return {"enable_thinking": True}
+    if reasoning == "off":
+        return {"enable_thinking": False}
+    if model_id.startswith("Qwen/Qwen3") or model_id.startswith("mlx-community/Qwen3"):
+        return {"enable_thinking": False}
+    return {}
 
 
 def load_model(args: argparse.Namespace):
@@ -99,6 +115,7 @@ def main() -> None:
         eval_rows = eval_rows[: args.limit]
 
     tokenizer, model = load_model(args)
+    chat_template_kwargs = build_chat_template_kwargs(args.model_id or "", args.reasoning)
     if args.device == "mps":
         device = "mps"
     elif args.device == "cpu":
@@ -119,6 +136,7 @@ def main() -> None:
                     prompt_messages,
                     tokenize=False,
                     add_generation_prompt=True,
+                    **chat_template_kwargs,
                 )
                 prompt_text = prompt_messages[-1]["content"]
             else:
@@ -129,11 +147,20 @@ def main() -> None:
                         prompt_value,
                         tokenize=False,
                         add_generation_prompt=True,
+                        **chat_template_kwargs,
                     )
                     prompt_text = prompt_value[-1]["content"]
                 else:
-                    text = str(prompt_value)
-                    prompt_text = text
+                    prompt_text = str(prompt_value)
+                    if getattr(tokenizer, "chat_template", None):
+                        text = tokenizer.apply_chat_template(
+                            [{"role": "user", "content": prompt_text}],
+                            tokenize=False,
+                            add_generation_prompt=True,
+                            **chat_template_kwargs,
+                        )
+                    else:
+                        text = prompt_text
             inputs = tokenizer(text, return_tensors="pt").to(device)
             with torch.no_grad():
                 generated = model.generate(

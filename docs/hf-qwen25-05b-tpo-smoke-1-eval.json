@@ -1,0 +1,31 @@
+{
+  "generatedAt": "2026-06-09T05:55:11.670Z",
+  "source": "tmp/hf-qwen25-05b-tpo-smoke-1.jsonl",
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "adapterPath": "artifacts/tpo-qwen25-05b-smoke",
+  "design": {
+    "total": 1,
+    "compilePassRate": 0,
+    "exactMatchRate": 0
+  },
+  "offTopic": {
+    "passed": 0,
+    "total": 0,
+    "accuracy": 0
+  },
+  "details": {
+    "designFailures": [
+      {
+        "id": "prompt-design-use-case-1",
+        "category": "1 out of n",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "Return only a valid Bitcoin Miniscript policy. Use only pk, after, older, sha256, hash256, ripemd160, hash160, and, or, thresh. Do not explain. Do not add markdown. Do not add prose.\n\nRequest: Bitcoin account controlled by either one of two keys: a preferred one that is used most often (90% of the time) and an alternate one that is used in specific circumstances (10% of the time) or as backup",
+        "reference": "or(9@pk(key_preferred),pk(key_alternate))",
+        "prediction": "pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk pk"
+      }
+    ],
+    "offTopicFailures": []
+  }
+}

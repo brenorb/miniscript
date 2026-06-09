@@ -4,6 +4,7 @@ import path from 'node:path'
 import { ai, ax } from '@ax-llm/ax'
 
 import { repairExamples } from '../src/data/examples.ts'
+import { deterministicPolicyRepair } from '../src/lib/deterministicPolicyRepair.ts'
 import { summarizeExpression } from '../src/lib/miniscriptTooling.ts'
 
 type PredictionRow = {
@@ -95,6 +96,24 @@ async function main() {
     if (!summary.error && summary.valid) {
       repairedRows.push(row)
       continue
+    }
+
+    const deterministicRepair = deterministicPolicyRepair(
+      extractRepairBrief(row.prompt),
+      row.prediction,
+    )
+    if (deterministicRepair) {
+      const deterministicSummary = await summarizeExpression(
+        deterministicRepair,
+        'p2wsh',
+      )
+      if (!deterministicSummary.error && deterministicSummary.valid) {
+        repairedRows.push({
+          ...row,
+          prediction: deterministicRepair,
+        })
+        continue
+      }
     }
 
     const repaired = await repairProgram.forward(llm, {

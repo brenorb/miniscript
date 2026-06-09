@@ -1,0 +1,101 @@
+{
+  "generatedAt": "2026-06-09T05:41:30.767Z",
+  "source": "tmp/hf-qwen25-15b-mlx4bit-chatfix-8.jsonl",
+  "model": "mlx-community/Qwen2.5-1.5B-Instruct-4bit",
+  "adapterPath": null,
+  "design": {
+    "total": 8,
+    "compilePassRate": 0,
+    "exactMatchRate": 0
+  },
+  "offTopic": {
+    "passed": 0,
+    "total": 0,
+    "accuracy": 0
+  },
+  "details": {
+    "designFailures": [
+      {
+        "id": "prompt-design-use-case-1",
+        "category": "1 out of n",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "Return only a valid Bitcoin Miniscript policy. Use only pk, after, older, sha256, hash256, ripemd160, hash160, and, or, thresh. Do not explain. Do not add markdown. Do not add prose.\n\nRequest: Bitcoin account controlled by either one of two keys: a preferred one that is used most often (90% of the time) and an alternate one that is used in specific circumstances (10% of the time) or as backup",
+        "reference": "or(9@pk(key_preferred),pk(key_alternate))",
+        "prediction": "pk = hash160(ripemd160(sha256(OR \"key1\" \"key2\")))"
+      },
+      {
+        "id": "prompt-design-use-case-6",
+        "category": "1 out of n",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "Return only a valid Bitcoin Miniscript policy. Use only pk, after, older, sha256, hash256, ripemd160, hash160, and, or, thresh. Do not explain. Do not add markdown. Do not add prose.\n\nRequest: A married couple wants to have a joint Bitcoin account for their day-to-day expenses which either of them can spend from.",
+        "reference": "or(pk(wife_key),pk(husband_key))",
+        "prediction": "pk:pk:pk:after:older:sha256:hash256:ripemd160:hash160:and:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh:thresh"
+      },
+      {
+        "id": "prompt-design-use-case-7",
+        "category": "and",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "Return only a valid Bitcoin Miniscript policy. Use only pk, after, older, sha256, hash256, ripemd160, hash160, and, or, thresh. Do not explain. Do not add markdown. Do not add prose.\n\nRequest: Parents want to set up an account for their teenage child. For now, the child can spend the funds with confirmation from either parent. When he turns 21 on November 4 2028, he can spend the funds on his own.",
+        "reference": "and(pk(child_key),thresh(1,pk(mother_key),pk(father_key),after(1856908800)))",
+        "prediction": "pk = \"PARENT1_PUBKEY\"\nafter = \"PARENT2_PUBKEY\"\nolder = \"PARENT1_PUBKEY\"\nsha256 = \"PARENT1_PUBKEY\"\nhash256 = \"PARENT2_PUBKEY\"\nripemd160 = \"PARENT1_PUBKEY\"\nhash160 = \"PARENT2_PUBKEY\"\nthresh = \"PARENT1_PUBKEY\""
+      },
+      {
+        "id": "prompt-design-use-case-15",
+        "category": "and",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "Return only a valid Bitcoin Miniscript policy. Use only pk, after, older, sha256, hash256, ripemd160, hash160, and, or, thresh. Do not explain. Do not add markdown. Do not add prose.\n\nRequest: A user and a 2FA service need to sign off, but after 90 days the user alone is enough so the funds don't get stuck if the 3rd party service becomes unavailable.",
+        "reference": "and(pk(user),or(99@pk(service),older(12960)))",
+        "prediction": "pk:pk[0] xor pk:pk[1] xor pk:pk[2] xor pk:pk[3] xor pk:pk[4] xor pk:pk[5] xor pk:pk[6] xor pk:pk[7] xor pk:pk[8] xor pk:pk[9] xor pk:pk[10] xor pk:pk[11] xor pk:pk[12] xor pk:pk[13] xor pk:pk[14] xor pk:pk[15] xor pk:pk[16] xor pk:pk[17] xor pk:pk[18] xor pk:pk[19"
+      },
+      {
+        "id": "prompt-design-use-case-20",
+        "category": "andor",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "Return only a valid Bitcoin Miniscript policy. Use only pk, after, older, sha256, hash256, ripemd160, hash160, and, or, thresh. Do not explain. Do not add markdown. Do not add prose.\n\nRequest: A technology company has a special fund for R&D projects managed by the CTO under the control of the CEO and CFO. The CTO needs the confirmation from either the CEO or CFO to spend the funds.",
+        "reference": "and(pk(cto_key),or(pk(cfo_key),pk(ceo_key)))",
+        "prediction": "pk:pk[thresh(1,2)]"
+      },
+      {
+        "id": "prompt-design-use-case-26",
+        "category": "andor",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "Return only a valid Bitcoin Miniscript policy. Use only pk, after, older, sha256, hash256, ripemd160, hash160, and, or, thresh. Do not explain. Do not add markdown. Do not add prose.\n\nRequest: A hacker is selling valuable data to an anonymous buyer. The data is contained in an encrypted file. Through zero-knowledge proofs, the hacker can cryptographically prove that the data is genuine and the decryption key hashes to a certain value H without revealing the key itself. Since there is no trust relation between buyer and seller, they use an HTLC scheme to proceed with the trade. The buyer sends the agreed bitcoin amount to the seller but uses the decryption key hash to make sure the seller discloses the decryption key when claiming the funds. If the seller doesn't claim the funds within an hour, the buyer is able to reclaim the funds.",
+        "reference": "or(and(pk(seller),hash256(abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789)),and(pk(buyer),older(6)))",
+        "prediction": "pk = hash160(sha256(encrypted_data))\nafter = hash160(sha256(encrypted_data))\nolder = hash160(sha256(encrypted_data))\nsha256 = hash256(encrypted_data)\nhash256 = hash256(encrypted_data)\nripemd160 = hash160(sha256(encrypted_data))\nhash160 = hash160(sha256(encrypted_data))\nhash160 = hash160(sha256(encrypted_data))\nhash1"
+      },
+      {
+        "id": "prompt-design-use-case-31",
+        "category": "hashlock",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "Return only a valid Bitcoin Miniscript policy. Use only pk, after, older, sha256, hash256, ripemd160, hash160, and, or, thresh. Do not explain. Do not add markdown. Do not add prose.\n\nRequest: In the event of my death, the executor of my will has the private key to my wallet and will pass it on to my children. As a security measure, the key only moves the funds together with a passphrase that has been communicated separately to my children.",
+        "reference": "and(pk(executor_key),hash256(abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789))",
+        "prediction": "pk = <private_key>\nafter = <passphrase>\nolder = <private_key>\nsha256 = <private_key>\nhash256 = <private_key>\nripemd160 = <private_key>\nhash160 = <private_key>\nhash160 = <private_key>\nhash160 = <private_key>\nhash160 = <private_key>\nhash160 = <private_key>\nhash160 = <private_key>\nhash160 = <private_key>\nhash160 = <private_key>\nhash160 = <private_key>\nhash"
+      },
+      {
+        "id": "prompt-design-use-case-34",
+        "category": "n out of n",
+        "compileValid": false,
+        "exactMatch": false,
+        "passed": false,
+        "prompt": "Return only a valid Bitcoin Miniscript policy. Use only pk, after, older, sha256, hash256, ripemd160, hash160, and, or, thresh. Do not explain. Do not add markdown. Do not add prose.\n\nRequest: A council with 11 participants that can spend the funds if a majority reaches an agreement and only after 40 days.",
+        "reference": "and(older(5760),thresh(6,pk(key_1),pk(key_2),pk(key_3),pk(key_4),pk(key_5),pk(key_6),pk(key_7),pk(key_8),pk(key_9),pk(key_10),pk(key_11)))",
+        "prediction": "pk = hash160(ripemd160(sha256(\"Council\")))\n\nthresh = 5\n\nafter = hash160(ripemd160(sha256(\"40 days\")))\n\nolder = hash160(ripemd160(sha256(\"11 participants\")))\n\nor = hash160(ripemd160(sha256(\"agreement\")))\n\nand = hash160(ripemd160(sha256(\"1 participant\")))\n\npk = pk or after\npk = pk or older"
+      }
+    ],
+    "offTopicFailures": []
+  }
+}
